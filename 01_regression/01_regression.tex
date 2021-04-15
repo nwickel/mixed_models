@@ -112,7 +112,8 @@
 \section{Simple regression}
 
 \begin{frame}{Simple linear regression}
-    For the pairs
+  \begin{itemize}
+    \item For the pairs
       \[
         (x_1, y_1), \ldots, (x_n, y_n),
       \]\\[2ex]
@@ -122,10 +123,12 @@
         \varepsilon_i & \sim N(0, \sigma^2)~\text{i.i.d.}
       \end{align*}
 for all $i = 1, \dots, n$
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Simple linear regression}
-  From the properties of the error variables, we conclude
+  \begin{itemize}
+    \item From the properties of the error variables, we conclude
 \[
   E(y_i) = E(\beta_0 + \beta_1 \cdot x_i + \varepsilon_i) =
   \beta_0 + \beta_1 \cdot x_i = \bar{y}
@@ -133,9 +136,10 @@ for all $i = 1, \dots, n$
 and
 \[
   Var(y_i) = Var(\beta_0 + \beta_1 \cdot x_i + \varepsilon_i) = \sigma^2
-\]\\[1ex]
-For a given $x_i$, the stochastical independence of $\varepsilon_i$
+\]
+\item For a given $x_i$, the stochastical independence of $\varepsilon_i$
   transfers to $y_i$\\[2ex]
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Simple linear regression}
