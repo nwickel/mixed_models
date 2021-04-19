@@ -1,17 +1,15 @@
-# session1.R
+# 01_exercises.R
 #
 # content: (1) Exercise 1
 #          (2) Exercise 2
 #          (3) Anscombe
 #
 # input: --
-# output: anscombe.pdf
+# output: --
 #
-# last mod: April/15/2021, NU
+# last mod: April/19/2021, NU
 
 library(lattice)
-
-setwd("C:/Users/numbach/Nextcloud/Documents/teaching/regression/01_regression/figures/")
 
 #--------------- (1) Exercise 1 ---------------
 
@@ -87,10 +85,7 @@ abline(lm4, lwd=2)
 dat <- reshape(anscombe, direction="long", varying=list(1:4, 5:8),
                timevar="reg", v.names=c("x", "y"))[,-4]
 
-pdf("anscombe.pdf", height=5, width=5.5, pointsize=10)
 xyplot(y ~ x | as.factor(reg), dat, pch=16, type=c("p", "r"))
-dev.off()
-
 xyplot(y ~ x | as.factor(reg), dat, pch=16, type=c("p", "smooth"))
 xyplot(y ~ x | as.factor(reg), dat, pch=16, type=c("p", "spline"))
 
