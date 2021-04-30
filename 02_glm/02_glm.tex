@@ -98,7 +98,7 @@
         $X \sim N(1,1)$ and $Y \sim N(2,1)$.
       \item Create a data frame with variables \texttt{id}, \texttt{group}
         and \texttt{score}. $x$ and $y$ are your score values.
-      \item Conduct a t test assuming that $X$ and $Y$ are independent 
+      \item Conduct a $t$ test assuming that $X$ and $Y$ are independent 
         having the same variances.
       \item Then use the function \texttt{aov()} to compute an analysis of
         variance for these data.
@@ -153,8 +153,7 @@ from the exponential family
 \begin{frame}[fragile]{Families}
   \begin{itemize}
     \item Each response distribution admits a variety of link functions to
-      connect the mean with the linear predictor. Those automatically
-      available are shown in the following table:
+      connect the mean with the linear predictor:
 
   \begin{lstlisting}[style=plain]
 ## Family name       Link functions
@@ -213,7 +212,7 @@ summary(glml)
 
 # Interpretation as odds ratio
 exp(coef(glml))
-# --> odds of going blind are increased by a factor
+# --> Odds of going blind are increased by a factor
 # of 1.08 when age increases by one year
 \end{lstlisting}
 \end{frame}
@@ -317,20 +316,20 @@ Poisson regression is used to model count variables\footnote{Simulated dataset f
 
 \begin{frame}[fragile]{Poisson regression}
   \begin{lstlisting}
-# read data
+# Read data
 dat <- read.csv("poisson_sim.csv")
 
-# define factors
+# Define factors
 dat$prog <- factor(dat$prog, levels=1:3,
   labels=c("General", "Academic", "Vocational"))
 dat$id <- factor(dat$id)
 
-# fit poisson regression
+# Fit poisson regression
 m1 <- glm(num_awards ~ prog + math, family="poisson",
   data=dat)
 summary(m1)
 
-# evaluate goodness-of-fit
+# Evaluate goodness-of-fit
 1 - pchisq(m1$deviance, m1$df.residual)
 \end{lstlisting}
 \end{frame}
@@ -413,9 +412,10 @@ summary(m1)
 # Fit poisson regression
 m2 <- glm(num_awards ~ prog + math, 
   family="quasipoisson", dat)
+summary(m2)
 
-# Results show that estimated parameters are still
-# the same, but the standard errors are slightly
+# --> Results show that estimated parameters are
+# still the same, but standard errors are slightly
 # higher
 \end{lstlisting}
 \end{frame}
@@ -426,7 +426,7 @@ m2 <- glm(num_awards ~ prog + math,
   \begin{itemize}
     \item When using \texttt{family = "quasipoisson"} or \texttt{family =
       "quasibinomial"}, likelihood-ratio tests are not meaningful anymore
-      (even though R will let you do it)
+      (even though R will let you do them)
     \item Goodness-of-fit tests are not necessarily meaningful for
       \emph{continuous} predictors for poisson and binomial regression, so
       use with caution
@@ -470,7 +470,7 @@ using \texttt{glm()} with $logit(p_{pos}) = \beta_0 + \beta_1x$ where
       \item Create a plot for the probability to give a positive answer
         depending on the intensity of the comparison
       \item Use \texttt{predict()} to obtain the predicted values and add
-        the logistic psychometric function to this plot
+        the logistic psychometric function to the plot
       \item Use \texttt{abline()} to add parameter $c$ to the plot
     \end{itemize}
   \end{block}
