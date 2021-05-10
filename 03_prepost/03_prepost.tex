@@ -87,55 +87,54 @@
 \titlepage
 \end{frame}
 
-\begin{frame}{Outline}
-\tableofcontents
-\end{frame}
+% \begin{frame}{Outline}
+% \tableofcontents
+% \end{frame}
 
 
-\begin{frame}{Analyse von Longitudinaldaten}
+\begin{frame}{Analyis of longitudinal data}
 Advantages
 
 \begin{itemize}
 \item More Power than cross sectional studies
 \item Each subject is its own control person
-\item Information of individual changes
+\item Information about individual changes
 \end{itemize}
 
 Challenges
 \begin{itemize}
-\item Manche Testergebnisse nur ueber Simulationen verfuegbar
-\item Fehlende Werte (Completer-Analyse, last observation carried forward,
+\item Missing values (completer analysis, last observation carried forward,
   observed cases)
-\item Praediktoren koennen sich ueber die Zeit veraendern
-\item In Cross-Over-Designs: Carry-Over-Effekte
+\item Predictors can change over time
+\item In cross over designs: carry over effects
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Notation}
-\begin{itemize}
-\item $i = 1, \dots, N$ persons\\[2ex]
-
-\item $j = 1, \dots, n_i$ time points for person $i$\\[2ex]
-
-\item All observations: $\displaystyle\sum_i^N n_i$\\[2ex]
-
-\item Vector of all observations for person $i$
-\[
-  (\vect{y}_i)_{n_i \times 1}
-\]
-%
-\item Vector of covariates for person $i$ at time point $j$
-\[
-  (\vect{x}_{ij})_{p \times 1}
-\]
-%
-\item All covariates of person $i$
-\[
-  (\vect{X}_i)_{n_i \times p}
-\]
-\end{itemize}
-\end{frame}
+% \begin{frame}{Notation}
+% \begin{itemize}
+% \item $i = 1, \dots, N$ persons\\[2ex]
+% 
+% \item $j = 1, \dots, n_i$ time points for person $i$\\[2ex]
+% 
+% \item All observations: $\displaystyle\sum_i^N n_i$\\[2ex]
+% 
+% \item Vector of all observations for person $i$
+% \[
+%   (\vect{y}_i)_{n_i \times 1}
+% \]
+% %
+% \item Vector of covariates for person $i$ at time point $j$
+% \[
+%   (\vect{x}_{ij})_{p \times 1}
+% \]
+% %
+% \item All covariates of person $i$
+% \[
+%   (\vect{X}_i)_{n_i \times p}
+% \]
+% \end{itemize}
+% \end{frame}
 
 
 \begin{frame}{Data schema}
@@ -162,7 +161,7 @@ $N$    & $n_N$     & $y_{Nn_N}$  & $x_{Nn_N1}$ & \dots & $x_{Nn_Np}$\\
 
 \begin{frame}{$t$ test for dependent samples}
 \begin{itemize}
-  \item Most simple analysis for two measurements $n = 2$
+  \item Straightforward analysis for two time points $n = 2$
   \item Written as linear model
     \begin{align*}
          d_i &= y_{i2} - y_{i1} \\
@@ -170,21 +169,18 @@ $N$    & $n_N$     & $y_{Nn_N}$  & $x_{Nn_N1}$ & \dots & $x_{Nn_Np}$\\
       y_{i2} &= \beta_0 + y_{i1} + \varepsilon_i
     \end{align*}
     with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
-  \item Research question
-  \begin{itemize}
-    \item Is there change between the first and second time point ($H_0\colon \beta_0 = 0$)?
-  \end{itemize}
+  \item Research question:\\
+    Is there change between the first and second time point ($H_0\colon \beta_0 = 0$)?
   \item Which effects are not considered by this?
 \end{itemize}
 \end{frame}
 
 
-\section{Zwei Messzeitpunkte}
-
-\begin{frame}{Zwei Messzeitpunkte}
+\begin{frame}{Two time points}
 Design
 \begin{itemize}
-    \item Mindestens zwei Gruppen werden vor ($y_{i1}$) und nach ($y_{i2}$) einem Treatment beobachtet
+    \item At least two groups are observed before ($y_{i1}$) and after
+      ($y_{i2}$) a treatment
         \begin{center}
         \begin{tikzpicture}
         \tikzstyle{every node}=[align=center]
@@ -210,37 +206,34 @@ Design
         \draw[>=stealth,->] (4) -- (6) node[below] {$t$};
         \end{tikzpicture}
         \end{center}
-    \item Fragestellung
-    \begin{itemize}
-      \item Unterscheiden sich die Gruppen in der Stärke der Veränderung?
-    \end{itemize}
+      \item Research question:\\
+      Do groups differ in the strength of their change?
 \end{itemize}
 \end{frame}
 
-\begin{frame}{t-Test zum Vergleich zweier Zeitpunkte}
+\begin{frame}{$t$ test for comparing two time points}
 \begin{itemize}
-  \item Man betrachtet für jede Person den Change-Score $d_i = y_{i2} - y_{i1}$ und das Regressionsmodell
-    {\color{iwmorange}\begin{align*}
+  \item Consider for each person the change score $d_i = y_{i2} - y_{i1}$
+    and the regression model
+    \begin{align*}
          d_i &= \beta_0 + \varepsilon_i \\
       y_{i2} &= \beta_0 + y_{i1} + \varepsilon_i
-    \end{align*}}
-    mit $\varepsilon_i \sim N(0, \sigma^2)$ unabhängig
+    \end{align*}
+    with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
   \item Interpretation
     \begin{center}
     \begin{tabular}{ll}
-    $\beta_0$ & mittlerer Change-Score
+    $\beta_0$ & average change score
     \end{tabular}
     \end{center}
-  \item Hypothese
-    \begin{itemize}
-        \item Gibt es eine Veränderung zwischen erstem und zweitem Zeitpunkt ($H_0\colon \beta_0 = 0$)?
-    \end{itemize}
-  \item Es bleibt unklar, ob die Veränderung auf das Treatment zurückzuführen oder Ergebnis eines Reifungsprozesses ist
+  \item Hypothesis:\\
+        Is there change between the first and second time point ($H_0\colon \beta_0 = 0$)?
+  \item It is unclear if change is due to the treatment or just appeared
+    over time
 \end{itemize}
 \end{frame}
 
-
-\begin{frame}{t-Test zum Vergleich zweier Zeitpunkte}
+\begin{frame}{$t$ test for comparing two time points}
 \begin{center}
 \begin{tikzpicture}[>=stealth, y=.6cm, x=.6cm, font=\small]
 \draw[->] (0,0) -- coordinate (x axis mid) (10,0);
@@ -255,31 +248,54 @@ Design
 \end{center}
 \end{frame}
 
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
 
-\begin{frame}{t-Test der Follow-Up-Werte zweier Gruppen}
+\begin{frame}[fragile]{$t$ test for comparing two time points}
+\begin{lstlisting}
+# simulate two dependent time points
+sim <- MASS::mvrnorm(n=100, mu=c(10,10), 
+                Sigma=matrix(c(1,.9,.9,1), 2))
+sim <- as.data.frame(sim)
+names(sim) <- c("t1", "t2")
+plot(sim)
+
+# t test
+t.test(sim$t2, sim$t1, paired=TRUE)
+
+# add change score
+sim$d <- sim$t2 - sim$t1
+lm1 <- lm(d ~ 1, sim)
+lm2 <- lm(t2 ~ offset(t1), sim)
+\end{lstlisting}
+\end{frame}
+
+}
+
+
+\begin{frame}{$t$ test of follow-up score of two groups}
 \begin{itemize}
-  \item Regressionsdarstellung  mit $x_i = 1$, falls $i$-te Person zur Treatment-Gruppe gehört, und $0$ sonst:
-    {\color{iwmorange}\[
+  \item In regression notation with $x_i = 1$, if $i$th person is part of
+    the treatment group, and else $0$:
+    \[
       y_{i2} = \beta_0 + \beta_1 \, x_i + \varepsilon_i
-    \]}
-    mit $\varepsilon_i \sim N(0, \sigma^2)$ unabhängig
+    \]
+    with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
   \item Interpretation
     \begin{center}
     \begin{tabular}{ll}
-    $\beta_0$ & mittlerer Follow-Up-Wert in Referenzgruppe\\
-    $\beta_1$ & Effekt der Treatment-Gruppe
+    $\beta_0$ & average follow-up score of reference group\\
+    $\beta_1$ & effect of treatment group
     \end{tabular}
     \end{center}
-  \item Hypothese
-    \begin{itemize}
-        \item Unterscheiden sich die Gruppen zum zweitem Zeitpunkt ($H_0\colon \beta_1 = 0$)?
-    \end{itemize}
-  \item Da der Baseline-Wert unberücksichtigt bleibt, ist die Schätzung der Veränderung verzerrt
+  \item Hypothesis:\\
+        Do groups differ at the second time point ($H_0\colon \beta_1 = 0$)?
+  \item Since the baseline score is not considered, estimate of the change
+    is biased
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{t-Test der Follow-Up-Werte zweier Gruppen}
+\begin{frame}{$t$ test of follow-up score of two groups}
 \begin{center}
 \begin{tikzpicture}[>=stealth, y=.6cm, x=.6cm, font=\small]
 \draw[->] (0,0) -- coordinate (x axis mid) (10,0);
@@ -293,32 +309,48 @@ Design
 \end{center}
 \end{frame}
 
-\begin{frame}{Change-Score-Analyse}
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
+
+\begin{frame}[fragile]{$t$ test of follow-up score of two groups}
+\begin{lstlisting}
+# add group variable
+sim$group <- factor(rep(c("TG", "CG"), each=50))
+
+# group means
+aggregate(t2 ~ group, sim, mean)
+
+# t test
+t.test(t2 ~ group, sim, var.equal=TRUE)
+lm3 <- lm(t2 ~ group, sim)
+\end{lstlisting}
+\end{frame}
+
+}
+
+\begin{frame}{Change score analysis}
 \begin{itemize}
-  \item Regressionsdarstellung
-    {\color{iwmorange}\begin{align*}
+  \item Regression model
+    \begin{align*}
                   d_i &= \beta_0 + \beta_1 \, x_i + \varepsilon_i \\
       y_{i2} - y_{i1} &= \beta_0 + \beta_1 \, x_i + \varepsilon_i \\
                y_{i2} &= \beta_0 + y_{i1} + \beta_1 \, x_i + \varepsilon_i
-    \end{align*}}
-    mit $\varepsilon_i \sim N(0, \sigma^2)$ unabhängig
+    \end{align*}
+    with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
   \item Interpretation
-    \begin{center}
     \begin{tabular}{lp{10cm}}
-    $\beta_0$ & mittlerer Change-Score in  der Referenzgruppe\\
-    $\beta_1$ & Differenz zu $\beta_0$ in der Treatment-Gruppe
+    $\beta_0$ & average change score for reference group\\
+    $\beta_1$ & difference to $\beta_0$ in treatment group
     \end{tabular}
-    \end{center}
-  \item Hypothesen
+  \item Hypothesis
     \begin{itemize}
-        \item Gibt es eine Veränderung in der Referenzgruppe ($H_0\colon \beta_0 = 0$)?
-        \item Unterscheidet sich die Veränderung in den Gruppen ($H_0\colon \beta_1 =0$)?
+        \item Is there change in the reference group ($H_0\colon \beta_0 = 0$)?
+        \item Does the change differ between groups ($H_0\colon \beta_1 =0$)?
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Change-Score-Analyse}
+\begin{frame}{Change score analysis}
 \begin{center}
 \begin{tikzpicture}[>=stealth, y=.6cm, x=.6cm, font=\small]
 \draw[->] (0,0) -- coordinate (x axis mid) (10,0);
@@ -335,44 +367,58 @@ Design
 \end{center}
 \end{frame}
 
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
 
+\begin{frame}[fragile]{Change score analysis}
+\begin{lstlisting}
+# regression model
+lm4 <- lm(t2 ~ offset(t1) + group, sim)
 
-\begin{frame}{Regression zum Mittelwert}
+# visualization
+library(lattice)
+xyplot(t2 ~ t1, sim, groups=group, type=c("p", "r"))
+\end{lstlisting}
+\end{frame}
+
+}
+
+\begin{frame}{Regression to the mean}
 \begin{itemize}
-  \item Die Change-Score-Analyse basiert auf der häufig zu restriktiven Annahme, dass der Follow-Up-Wert vom Baseline-Wert mit Steigung $1$ abhängt
-  \item Oftmals sind Baseline-Werte negativ mit den Change-Scores korreliert
-    \begin{itemize}
-      \item Personen mit niedrigen (schlechten) Werten verbessern sich stärker als Personen mit hohen Werten
-    \end{itemize}
-  \item Dieses als Regression zum Mittelwert bekannte Phänomen lässt also eine Steigung $< 1$ erwarten, die daher aus den Daten geschätzt werden sollte
+  \item Change score analysis is based on the often too restrictive
+    assumption that the follow-up score depends on the baseline score with
+    a slope of $1$
+  \item Often baseline scores are negatively correlated with the change
+    scores:\\
+    Persons with low (bad) scores improve more than persons with high scores
+  \item This regression to the mean lets us expect a slope of $< 1$ which
+    has to be estimated from the data
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Kovarianzanalyse (ANCOVA)}
+\begin{frame}{Analysis of covariance (ANCOVA)}
 \begin{itemize}
-  \item Regressionsdarstellung
-    {\color{iwmorange}\[
+  \item Regression model
+    \[
       y_{i2} = \beta_0 + \beta_1 \, y_{i1} + \beta_2 \, x_i + \varepsilon_i
-    \]}
-    mit $\varepsilon_i \sim N(0, \sigma^2)$ unabhängig
+    \]
+    with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
   \item Interpretation
-    \begin{center}
     \begin{tabular}{lp{10cm}}
-    $\beta_0$ & mittlerer Follow-Up-Wert der Referenzgruppe für $y_{i1} = 0$\\
-    $\beta_1$ & Effekt des Baseline-Werts\\
-    $\beta_2$ & Differenz zum Follow-Up-Wert in der Treatment-Gruppe
+    $\beta_0$ & average follow-up score in the reference group for $y_{i1} = 0$\\
+    $\beta_1$ & effect of baseline score\\
+    $\beta_2$ & difference to follow-up score in the treatment group
     \end{tabular}
-    \end{center}
-  \item Hypothesen
+  \item Hypothesis
     \begin{itemize}
-        \item Hängen Baseline- und Follow-Up-Wert zusammen ($H_0\colon \beta_1 = 0$)?
-        \item Unterscheiden sich die Follow-Up-Werte der Gruppen für Personen mit gleichem Baseline-Wert ($H_0\colon \beta_2 = 0$)?
+        \item Is there a relationship between baseline and follow-up score ($H_0\colon \beta_1 = 0$)?
+        \item Do the follow-up scores in the groups differ for persons with
+          identical baseline scores ($H_0\colon \beta_2 = 0$)?
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Kovarianzanalyse (ANCOVA)}
+\begin{frame}{Analysis of covariance (ANCOVA)}
 \begin{center}
 \begin{tikzpicture}[>=stealth, y=.6cm, x=.6cm, font=\small]
 \draw[->] (0,0) -- coordinate (x axis mid) (10,0);
@@ -392,49 +438,79 @@ Design
 \end{frame}
 
 
-\begin{frame}{Adjustierte Mittelwerte}
+\begin{frame}{Adjusted means}
 \begin{itemize}
-  \item Mit dem ANCOVA-Modell lassen sich für die Gruppen mittlere Follow-Up-Werte vorhersagen für Personen mit gleichem Baseline-Wert
-  \begin{itemize}
-      \item Beispielsweise erhält man
-        \[
-          \hat{y}_{i2} = \hat{\beta}_0 + \hat{\beta}_1 \, \bar{y}_1 +
-                         \hat{\beta}_2 \, x_i
-        \]
-        für den durchschnittlichen Baseline-Wert $\bar{y}_1$
-  \end{itemize}
-  \item Diese bedingten Mittelwerte werden manchmal als (Baseline-)adjustierte Mittelwerte bezeichnet
+  \item With an ANCOVA model we can predict average follow-up scores for
+    persons with the same baseline score
+  \item For example, we get
+    \[
+      \hat{y}_{i2} = \hat{\beta}_0 + \hat{\beta}_1 \, \bar{y}_1 +
+                     \hat{\beta}_2 \, x_i
+    \]
+    for an average baseline score $\bar{y}_1$
+\item These conditional means are sometimes called (baseline) adjusted
+  means
 \end{itemize}
 \end{frame}
 
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
 
-\begin{frame}{Unterschiedliche Steigungen in den Gruppen}
+\begin{frame}[fragile]{Analysis of covariance (ANCOVA)}
+\begin{lstlisting}
+# ancova
+lm5 <- lm(t2 ~ t1 + group, sim)
+
+# adjusted means
+predict(lm5, newdat=data.frame(t1=mean(sim$t1), 
+                               group=c("CG", "TG")))
+
+# ancova with change score
+lm5a <- lm(d ~ t1 + group, sim)
+
+\end{lstlisting}
+\end{frame}
+
+}
+
+\begin{frame}{Analysis of covariance with change score}
 \begin{itemize}
-  \item Regressionsmodell
-    {\color{iwmorange}\[
+  \item Regression model
+    \begin{align*}
+                  d_i &= \beta_0 + \beta_1 \, y_{i1} + \beta_2 \, x_i + \varepsilon_i \\
+      y_{i2} - y_{i1} &= \beta_0 + \beta_1 \, y_{i1} + \beta_2 \, x_i + \varepsilon_i \\
+               y_{i2} &= \beta_0 + (1 + \beta_1) \, y_{i1} + \beta_2 \, x_i + \varepsilon_i
+    \end{align*}
+  \item For testing the difference of change in the groups ($\beta_2$) it
+    is irrelevant if the dependent variable is the follow-up score or the
+    change score
+  \vfill
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Different slopes for groups}
+\begin{itemize}
+  \item Regression model
+    \[
       y_{i2} = \beta_0 + \beta_1 \, y_{i1} + \beta_2 \, x_i +
                \beta_3 \, (y_{i1} \cdot x_i) + \varepsilon_i
-    \]}
-    mit $\varepsilon_i \sim N(0, \sigma^2)$ unabhängig
+    \]
+    with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
   \item Interpretation
-    \begin{center}
     \begin{tabular}{lp{10cm}}
-    $\beta_0$ & mittlerer Follow-Up-Wert der Referenzgruppe für $y_{i1} = 0$\\
-    $\beta_1$ & Effekt des Baseline-Werts\\
-    $\beta_2$ & Differenz zum Follow-Up-Wert in der Treatment-Gruppe\\
-    $\beta_3$ & Differenz zwischen Steigungen in Referenz-/Treatment-Gr.
+    $\beta_0$ & average follow-up score in reference group for $y_{i1} = 0$\\
+    $\beta_1$ & effect of baseline score\\
+    $\beta_2$ & difference to follow-up score in treatment group\\
+    $\beta_3$ & difference between slopes in reference and treatment groups
     \end{tabular}
-    \end{center}
-  \item Hypothese
-    \begin{itemize}
-        \item Hängt der Effekt des Baseline-Werts von der Gruppe ab ($H_0\colon \beta_3 = 0$)?
-    \end{itemize}
-  \item Die Interpretation der adjustierten Mittelwerte unabhängig vom Baseline-Wert setzt $\beta_3 = 0$ voraus
+  \item Hypothesis:\\
+        Does effect of baseline score depend on group ($H_0\colon \beta_3 = 0$)?
+  \item Interpretation of adjusted means idenpendently of baseline score
+    implies $\beta_3 = 0$
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Interaktion zwischen Baseline-Wert und Gruppe}
+\begin{frame}{Interaction between baseline score and group}
 \begin{center}
 \begin{tikzpicture}[>=stealth, y=.6cm, x=.6cm, font=\small]
 \draw[->] (0,0) -- coordinate (x axis mid) (10,0);
@@ -453,37 +529,36 @@ Design
 \end{center}
 \end{frame}
 
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
 
-\begin{frame}{Kovarianzanalyse mit Change-Score}
+\begin{frame}[fragile]{Interaction between baseline score and group}
+\begin{lstlisting}
+# regression model with interaction
+lm6 <- lm(t2 ~ t1*group, sim)
+
+# models are nested
+anova(lm4, lm5, lm6)
+\end{lstlisting}
+\end{frame}
+
+}
+
+
+
+\begin{frame}{Example: Acupuncture for shoulder pain}
 \begin{itemize}
-  \item Regressionsmodell
-    {\color{iwmorange}\begin{align*}
-                  d_i &= \beta_0 + \beta_1 \, y_{i1} + \beta_2 \, x_i + \varepsilon_i \\
-      y_{i2} - y_{i1} &= \beta_0 + \beta_1 \, y_{i1} + \beta_2 \, x_i + \varepsilon_i \\
-               y_{i2} &= \beta_0 + (1 + \beta_1) \, y_{i1} + \beta_2 \, x_i + \varepsilon_i
-    \end{align*}}
-  \item Für den Test des Unterschieds in der Veränderung in den Gruppen ($\beta_2$) spielt es keine Rolle, ob die Zielgröße der ANCOVA der Follow-Up-Wert oder der Change-Score ist
-  \vfill
+  \item \citet{Kleinhenz1999} investigated the effect of acupuncture on
+    the improvement of mobility for 52 patients with shoulder pain
+  \item Patients were randomly assigned to two groups (placebo vs.\
+    acupuncture
+  \item Before and after the treatment a mobility score was measured
+  \item \citet{VickersAltman2001} show advantages of an analysis of
+    covariance compared to other methods based on these data
 \end{itemize}
 \end{frame}
 
 
-\section{Beispiel: Akupunktur}
-
-
-\begin{frame}{Beispiel}
-Akupunktur bei Schulterschmerzen
-\begin{itemize}
-  \item Kleinhenz et al.\ (1999) untersuchten die Wirkung von Akupunktur auf die Verbesserung der Beweglichkeit bei 52 Patienten mit Schulterschmerzen
-  \item Die Patienten wurden zufällig zwei Gruppen (Placebo und Akupunktur) zugewiesen
-  \item Jeweils vor und am Ende der Behandlung wurde ein Beweglichkeitsscore erhoben
-  \item Vickers und Altman (2001) zeigen am Beispiel dieser Daten die Vorteile der Kovarianzanalyse gegenüber anderen Verfahren
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{Beispiel}
-Akupunktur: Follow-Up-Analyse (Vickers \& Altman, 2001)
+\begin{frame}{Acupuncture: Follow-up analysis}
 \begin{columns}[T]
 \begin{column}{5.5cm}
   \includegraphics[width=5.5cm]{figures/acu-fwup}
@@ -495,21 +570,20 @@ Akupunktur: Follow-Up-Analyse (Vickers \& Altman, 2001)
   \hline
              &  Pla &  Acu & Diff \\ \hline
   Baseline   & 53.9 & 60.4 &  6.5 \\
-  Follow up  & 62.3 & 79.6 & 17.3 \\
+  Follow-up  & 62.3 & 79.6 & 17.3 \\
   Change sc. &  8.4 & 19.2 & 10.8 \\
   ANCOVA     &      &      & 12.7 \\ \hline
   \end{tabular}
 \begin{align*}
          y_{i2} &= \beta_0 + \beta_1 \, x_i + \varepsilon_i \\
-  \hat{\beta}_1 &= 17.3, 0.95\text{ CI: } (7.5, 27.1)
+  \hat{\beta}_1 &= 17.3, 0.95\text{-CI: } (7.5, 27.1)
 \end{align*}
 \end{column}
 \end{columns}
 \end{frame}
 
 
-\begin{frame}{Beispiel}
-Akupunktur: Change-Score-Analyse (Vickers \& Altman, 2001)
+\begin{frame}{Acupuncture: Change score analysis}
 \begin{columns}[T]
 \begin{column}{5.5cm}
   \includegraphics[width=5.5cm]{figures/acu-chng}
@@ -521,7 +595,7 @@ Akupunktur: Change-Score-Analyse (Vickers \& Altman, 2001)
   \hline
              &  Pla &  Acu & Diff \\ \hline
   Baseline   & 53.9 & 60.4 &  6.5 \\
-  Follow up  & 62.3 & 79.6 & 17.3 \\
+  Follow-up  & 62.3 & 79.6 & 17.3 \\
   Change sc. &  8.4 & 19.2 & 10.8 \\
   ANCOVA     &      &      & 12.7 \\ \hline
   \end{tabular}
@@ -534,8 +608,7 @@ Akupunktur: Change-Score-Analyse (Vickers \& Altman, 2001)
 \end{frame}
 
 
-\begin{frame}{Beispiel}
-Akupunktur: ANCOVA (Vickers \& Altman, 2001)
+\begin{frame}{Acupuncture: ANCOVA}
 \begin{columns}[T]
 \begin{column}{5.5cm}
   \includegraphics[width=5.5cm]{figures/acu-anco}
@@ -547,7 +620,7 @@ Akupunktur: ANCOVA (Vickers \& Altman, 2001)
   \hline
              &  Pla &  Acu & Diff \\ \hline
   Baseline   & 53.9 & 60.4 &  6.5 \\
-  Follow up  & 62.3 & 79.6 & 17.3 \\
+  Follow-up  & 62.3 & 79.6 & 17.3 \\
   Change sc. &  8.4 & 19.2 & 10.8 \\
   ANCOVA     &      &      & 12.7 \\ \hline
   \end{tabular}
@@ -560,142 +633,114 @@ Akupunktur: ANCOVA (Vickers \& Altman, 2001)
 \end{columns}
 \end{frame}
 
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
 
-\section{R-Demo}
-
-
-\begin{frame}[fragile]{R-Demo}{}
-%
-Daten einlesen
+\begin{frame}[fragile]{Example: Acupuncture for shoulder pain}
 \begin{lstlisting}
+# read data
 dat <- read.table("kleinhenz.txt", header=TRUE)
 dat$grp <- factor(dat$grp, levels=c("plac", "acu"))
-\end{lstlisting}
-%\vspace*{-0.5em}
 
-%
-Follow-Up-Analyse
-\begin{lstlisting}
+# follow-up analysis
 m1 <- lm(post ~ grp, dat)
 summary(m1)
 confint(m1)
-\end{lstlisting}
-%\vspace*{-0.5em}
 
-%
-Change-Score-Analyse
-\begin{lstlisting}
+# change score analysis
 m2 <- lm(post ~ offset(pre) + grp, dat)
-\end{lstlisting}
-%\vspace*{-0.5em}
 
-Kovarianzanalyse
-\begin{lstlisting}
+# ancova
 m3 <- lm(post ~ pre + grp, dat)
 \end{lstlisting}
-%\vspace*{-0.5em}
-%
-%
 \end{frame}
 
-\begin{frame}[fragile]{R-Demo}{}
-%
-Test auf gleiche Steigungen
-\lstset{texcl=false}
+\begin{frame}[fragile]{Example: Acupuncture for shoulder pain}
 \begin{lstlisting}
+# testing if slopes differ
 m4 <- lm(post ~ pre*grp, dat)
 anova(m3, m4)
-#   Res.Df   RSS Df Sum of Sq    F Pr(>F)
-# 1     49 10998                         
-# 2     48 10942  1     56.57 0.25   0.62
-\end{lstlisting}
-%\vspace*{-0.5em}
 
-%
-Adjustierte Mittelwerte
-\lstset{texcl=false}
-\begin{lstlisting}
+# adjusted means
 predict(m3, data.frame(pre=mean(dat$pre),
         grp=c("plac", "acu")))
-#    1    2 
-# 64.5 77.2 
 \end{lstlisting}
-%\vspace*{-0.5em}
-%
 \end{frame}
 
-\begin{frame}[fragile]{R-Demo}{}
-%
-Grafische Darstellung
-\begin{lstlisting}
-omean <- tapply(dat$post, dat$grp, mean)
-pmean <- predict(m3, data.frame(pre=mean(dat$pre),
-                 grp=c("plac", "acu")))
-par(mai=c(.6, .6, .1, .1), mgp=c(2, .7, 0))
-plot(post ~ pre, dat, type="n", xlim=c(20,100), ylim=c(20,100),
-     xlab="Pre-treatment score", ylab="Post-treatment score")
-abline(h=c(pmean, omean), v=c(mean(dat$pre),
-                 tapply(dat$pre, dat$grp, mean)), col="lightgray")
-xval <- 1:100
-lines(predict(m3, data.frame(pre=xval, grp="plac")) ~ xval, lty=2)
-lines(predict(m3, data.frame(pre=xval, grp="acu" )) ~ xval)
-points(post ~ pre, dat[dat$grp == "plac", ], pch=21, bg="white")
-points(post ~ pre, dat[dat$grp == "acu", ],  pch=8)
-points(omean ~ tapply(pre, grp, mean), dat, pch=16)
-points(pmean ~ rep(mean(pre), 2), dat, pch=24, bg="white")
-legend("bottomright", c("Acupuncture", "Placebo"),
-       pch=c(8, 1), lty=1:2, bty="n")
-\end{lstlisting}
-%\vspace*{-0.5em}
-%
-\end{frame}
+% \begin{frame}[fragile]{R-Demo}{}
+% %
+% Grafische Darstellung
+% \begin{lstlisting}
+% omean <- tapply(dat$post, dat$grp, mean)
+% pmean <- predict(m3, data.frame(pre=mean(dat$pre),
+%                  grp=c("plac", "acu")))
+% par(mai=c(.6, .6, .1, .1), mgp=c(2, .7, 0))
+% plot(post ~ pre, dat, type="n", xlim=c(20,100), ylim=c(20,100),
+%      xlab="Pre-treatment score", ylab="Post-treatment score")
+% abline(h=c(pmean, omean), v=c(mean(dat$pre),
+%                  tapply(dat$pre, dat$grp, mean)), col="lightgray")
+% xval <- 1:100
+% lines(predict(m3, data.frame(pre=xval, grp="plac")) ~ xval, lty=2)
+% lines(predict(m3, data.frame(pre=xval, grp="acu" )) ~ xval)
+% points(post ~ pre, dat[dat$grp == "plac", ], pch=21, bg="white")
+% points(post ~ pre, dat[dat$grp == "acu", ],  pch=8)
+% points(omean ~ tapply(pre, grp, mean), dat, pch=16)
+% points(pmean ~ rep(mean(pre), 2), dat, pch=24, bg="white")
+% legend("bottomright", c("Acupuncture", "Placebo"),
+%        pch=c(8, 1), lty=1:2, bty="n")
+% \end{lstlisting}
+% %\vspace*{-0.5em}
+% %
+% \end{frame}
+
+}
 
 
-\section{Zusammenfassung}
-
-
-\begin{frame}{Zusammenfassung}
+\begin{frame}{Summary}
 \begin{itemize}
-  \item Die einfachste Art von Longitudinaldaten liegt vor, wenn mehrere Gruppen zu zwei Zeitpunkten beobachtet werden (Baseline und Follow-Up)
-  \item Die Analyse solcher Daten bezieht sich dann auf die Differenzen
+  \item We considered the basic case when several groups are observed at
+    two time points (baseline and follow-up)
+  \item Analysis of these kind of data consideres the difference
     \[
         d_i = y_{i2} - y_{i1}
     \]
-    bzw.\ die adjustierten Follow-Up-Werte, die als unabhängig angesehen werden
-  \item Die Kovarianzanalyse
+    or the adjusted follow-up scores which are considered to be independent
+  \item Analysis of covariance
   \begin{itemize}
-    \item hat unter allen Verfahren die größte Teststärke, um Unterschiede in der mittleren Veränderung zu entdecken
-    \item muss bei nicht-randomisierten Gruppen aber vorsichtig interpretiert werden
+    \item has the highest power to detect differences for average change
+      compared to the other methods
+    \item must be cautiously interpreted when groups are not randomly
+      assigned
   \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
-
-\begin{frame}[fragile]{Poisson regression}
-  \begin{lstlisting}
-  ##\end{lstlisting}
-\end{frame}
-
-}
-
-\begin{frame}[fragile]{}
-  \begin{block}{Exercise}
-    \begin{itemize}
-      \item 
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-% \appendix
-% %\begin{frame}[allowframebreaks]{References}
-% \begin{frame}{References}
-% \renewcommand{\bibfont}{\footnotesize}
-% \bibliographystyle{apacite}
-% \bibliography{../../../literature/nu}
-% \vfill
+% {\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
+% 
+% \begin{frame}[fragile]{}
+%   \begin{lstlisting}
+%   ##
+%   \end{lstlisting}
 % \end{frame}
+% 
+% }
+% 
+% \begin{frame}[fragile]{}
+%   \begin{block}{Exercise}
+%     \begin{itemize}
+%       \item 
+%     \end{itemize}
+%   \end{block}
+% \end{frame}
+
+\appendix
+%\begin{frame}[allowframebreaks]{References}
+\begin{frame}{References}
+\renewcommand{\bibfont}{\footnotesize}
+\bibliographystyle{apacite}
+\bibliography{../../../literature/nu}
+\vfill
+\end{frame}
 
 \end{document}
 
