@@ -92,7 +92,7 @@
 % \end{frame}
 
 
-\begin{frame}{Analyis of longitudinal data}
+\begin{frame}{Analysis of longitudinal data}
 Advantages
 
 \begin{itemize}
@@ -253,19 +253,36 @@ Design
 \begin{frame}[fragile]{$t$ test for comparing two time points}
 \begin{lstlisting}
 # simulate two dependent time points
-sim <- MASS::mvrnorm(n=100, mu=c(10,10), 
+cg <- MASS::mvrnorm(n=50, mu=c(10,10), 
                 Sigma=matrix(c(1,.9,.9,1), 2))
-sim <- as.data.frame(sim)
+tg <- MASS::mvrnorm(n=50, mu=c(10,15), 
+                Sigma=matrix(c(1,.9,.9,1), 2))
+sim <- as.data.frame(rbind(cg, tg))
 names(sim) <- c("t1", "t2")
-plot(sim)
 
+# add group variable
+sim$group <- factor(rep(c("CG", "TG"), each=50))
+
+# group means
+aggregate(cbind(t1, t2) ~ group, sim, mean)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{$t$ test for comparing two time points}
+\begin{lstlisting}
 # t test
 t.test(sim$t2, sim$t1, paired=TRUE)
 
 # add change score
 sim$d <- sim$t2 - sim$t1
+
+# linear model
 lm1 <- lm(d ~ 1, sim)
 lm2 <- lm(t2 ~ offset(t1), sim)
+
+# visualization
+plot(t2 ~ t1, sim)
+abline(coef(lm2), 1)
 \end{lstlisting}
 \end{frame}
 
@@ -313,15 +330,15 @@ lm2 <- lm(t2 ~ offset(t1), sim)
 
 \begin{frame}[fragile]{$t$ test of follow-up score of two groups}
 \begin{lstlisting}
-# add group variable
-sim$group <- factor(rep(c("TG", "CG"), each=50))
-
-# group means
-aggregate(t2 ~ group, sim, mean)
-
 # t test
 t.test(t2 ~ group, sim, var.equal=TRUE)
+
+# linear model
 lm3 <- lm(t2 ~ group, sim)
+
+# visualization
+plot(t2 ~ t1, sim)
+abline(h=cumsum(coef(lm3)))
 \end{lstlisting}
 \end{frame}
 
@@ -375,8 +392,9 @@ lm3 <- lm(t2 ~ group, sim)
 lm4 <- lm(t2 ~ offset(t1) + group, sim)
 
 # visualization
-library(lattice)
-xyplot(t2 ~ t1, sim, groups=group, type=c("p", "r"))
+plot(t2 ~ t1, sim)
+abline(coef(lm4)[1], 1)
+abline(coef(lm4)[1] + coef(lm4)[2], 1)
 \end{lstlisting}
 \end{frame}
 
@@ -467,6 +485,10 @@ predict(lm5, newdat=data.frame(t1=mean(sim$t1),
 # ancova with change score
 lm5a <- lm(d ~ t1 + group, sim)
 
+# visualization
+plot(t2 ~ t1, sim)
+abline(coef(lm5)[1], coef(lm5)[2])
+abline(coef(lm5)[1] + coef(lm5)[3], coef(lm5)[2])
 \end{lstlisting}
 \end{frame}
 
@@ -535,6 +557,12 @@ lm5a <- lm(d ~ t1 + group, sim)
 \begin{lstlisting}
 # regression model with interaction
 lm6 <- lm(t2 ~ t1*group, sim)
+
+# visualization
+plot(t2 ~ t1, sim)
+abline(coef(lm6)[1], coef(lm6)[2])
+abline(coef(lm6)[1] + coef(lm6)[3], 
+       coef(lm6)[2] + coef(lm6)[4])
 
 # models are nested
 anova(lm4, lm5, lm6)
@@ -663,6 +691,11 @@ anova(m3, m4)
 # adjusted means
 predict(m3, data.frame(pre=mean(dat$pre),
         grp=c("plac", "acu")))
+
+# visualization
+plot(post ~ pre, dat, xlim=c(20,100), ylim=c(20,100))
+abline(coef(m3)[1], coef(m3)[2])
+abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
 \end{lstlisting}
 \end{frame}
 
@@ -699,7 +732,7 @@ predict(m3, data.frame(pre=mean(dat$pre),
 \begin{itemize}
   \item We considered the basic case when several groups are observed at
     two time points (baseline and follow-up)
-  \item Analysis of these kind of data consideres the difference
+  \item Analysis of these kind of data considers the difference
     \[
         d_i = y_{i2} - y_{i1}
     \]
@@ -736,7 +769,7 @@ predict(m3, data.frame(pre=mean(dat$pre),
 \appendix
 %\begin{frame}[allowframebreaks]{References}
 \begin{frame}{References}
-\renewcommand{\bibfont}{\footnotesize}
+%\renewcommand{\bibfont}{\footnotesize}
 \bibliographystyle{apacite}
 \bibliography{../../../literature/nu}
 \vfill
