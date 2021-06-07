@@ -92,29 +92,34 @@
 
 
 \begin{frame}{Example: Depression and Imipramin}
-  \citet{ReisbyGram77} studied the effect of Imipramin on 66 inpatients
-  treated for depression \\[2ex]
-
-  Depression was measured with the Hamilton depression rating scale
-  (HDRS)\\[2ex]
-
-  Additionally, the concentration of Imipramin and its metabolite
-  Desipramin was measured in their blood plasma\\[2ex]
- 
-  Patients were classified into endogenous and non-endogenous depressed\\[2ex]
-
-  Depression was measured weekly for 6 time points; the effect of the
-  antidepressant was observed starting at week 2 for four weeks
+  \begin{itemize}
+    \item \citet{ReisbyGram77} studied the effect of Imipramin on 66
+      inpatients treated for depression
+    \item Depression was measured with the Hamilton depression rating scale
+      (HDRS)
+    \item Additionally, the concentration of Imipramin and its metabolite
+      Desipramin was measured in their blood plasma
+    \item Patients were classified into endogenous and non-endogenous
+      depressed
+    \item Depression was measured weekly for 6 time points; the effect of
+      the antidepressant was observed starting at week 2 for four weeks
+  \end{itemize}
 \end{frame}
 
+\begin{frame}{Example: Depression and Imipramin}
+  {\citep{ReisbyGram77}}
+\begin{center}
+\includegraphics[scale=.8]{figures/hdrs-means}
+\end{center}
+\end{frame}
 
 \begin{frame}{Excursion: Repeated measures ANOVA}
   {Model with one repeated measurement factor}
-  When subjects are observed for more than two time points, we can model
-  these data using a repeated measures ANOVA; then, the repeated measures
-  factor is time\\[2ex]
-
-  Data layout
+  \begin{itemize}
+    \item When subjects are observed for more than two time points, we can
+      model these data using a repeated measures ANOVA; then, the repeated
+      measures factor is time
+    \item Data layout
 \[ \begin{array}{c|cccccc}
               & \multicolumn{6}{c}{\text{Time point}} \\
 \text{Subject} & 1 & 2 & \cdots & j & \cdots & n \\ \hline
@@ -125,33 +130,60 @@ i      & y_{i1} & y_{i2} & \cdots & y_{ij} & \cdots & y_{in} \\
 \vdots & \vdots &        &        &        &        & \vdots \\
 N      & y_{N1} & y_{N2} & \cdots & y_{Nj} & \cdots & y_{Nn} \\
 \end{array} \]
+  \end{itemize}
 \end{frame}
 
 
 \begin{frame}{Excursion: Repeated measures ANOVA}
   {Statistical model}
-  When we observe $i = 1, \ldots, N$ subjects for $j = 1, \ldots, n$ time
-  points, we get
+  \begin{itemize}
+    \item When we observe $i = 1, \ldots, N$ subjects for $j = 1, \ldots,
+      n$ time points, we get
 \[
-  y_{ij} = \mu_0 + \upsilon_i + \tau_j + \varepsilon_{ij}
+  y_{ij} = \mu_0 + \tau_j + \upsilon_i + \varepsilon_{ij}
 \]
-with $\mu_0 :=$ grand mean, $\tau_j :=$ effect of time point $j$ equal
-  for all subjects, $\upsilon_i := $ effect of subject $i$ constant over
-  time, $\varepsilon_{ij} :=$ error term for subject $i$ at time point
-  $j$\\[2ex]
+with $\mu_0 :=$ grand mean, $\upsilon_i := $ effect of subject $i$ constant over
+  time, $\tau_j :=$ effect of time point $j$ equal
+  for all subjects, $\varepsilon_{ij} :=$ error term for subject $i$ at time point
+  $j$
 
-  It is assumed that $\upsilon_i \sim N(0, \sigma^2_\upsilon)$ i.i.d. with
-  $\sigma^2_\upsilon$ being the variance between subjects,
-  $\varepsilon_{ij} \sim N(0, \sigma^2)$ i.i.d. with $\sigma^2$ being the
-  variance within subjects\\[2ex]
-
-  Additionally, $\upsilon_i$ and $\varepsilon_{ij}$ are independent\\[2ex]
+\item It is assumed that $\upsilon_i \sim N(0, \sigma^2_\upsilon)$ i.i.d.
+  with $\sigma^2_\upsilon$ being the variance between subjects,
+      $\varepsilon_{ij} \sim N(0, \sigma^2)$ i.i.d. with $\sigma^2$ being
+      the variance within subjects
+    \item Additionally, $\upsilon_i$ and $\varepsilon_{ij}$ are independent
+  \end{itemize}
 \end{frame}
 
+\begin{frame}{Excursion: Repeated measures ANOVA}
+  {Statistical model}
+  \[
+  y_{ij} = \mu_0 + \tau_j + \upsilon_i + \varepsilon_{ij}
+  \]
+
+  \begin{tabular}{ccccc}
+    \hline
+    response & grand mean & time effect & subject effect  & residual \\
+    \hline
+    $y_{11}$ & $\mu_0$ & $\tau_1$  & $\upsilon_{1}$ & $\varepsilon_{11}$ \\
+    $y_{12}$ & $\mu_0$ & $\tau_2$  & $\upsilon_{1}$ & $\varepsilon_{12}$ \\
+    $y_{13}$ & $\mu_0$ & $\tau_3$  & $\upsilon_{1}$ & $\varepsilon_{13}$ \\
+    \vdots & \vdots & \vdots   &  \vdots & \vdots \\
+    $y_{21}$ & $\mu_0$ & $\tau_1$  & $\upsilon_{2}$ & $\varepsilon_{21}$ \\
+    $y_{22}$ & $\mu_0$ & $\tau_2$  & $\upsilon_{2}$ & $\varepsilon_{22}$ \\
+    $y_{23}$ & $\mu_0$ & $\tau_3$  & $\upsilon_{2}$ & $\varepsilon_{23}$ \\
+    \vdots & \vdots & \vdots   &  \vdots & \vdots \\
+    $y_{Nn}$ & $\mu_0$ & $\tau_n$  & $\upsilon_{N}$ & $\varepsilon_{Nn}$ \\
+    \hline\\[-2ex]
+    \only<2>{$\sigma_{\upsilon}^2 + \sigma_{\varepsilon}^2$ & & &
+    $\sigma_{\upsilon}^2$ & $\sigma_{\varepsilon}^2$} \\
+  \end{tabular}
+\end{frame}
 
 \begin{frame}{Excursion: Repeated measures ANOVA}
   {Model properties}
-For the model, we have
+  \begin{itemize}
+    \item For the model, we have
 \begin{align*}
   E(y_{ij})   &= \mu_0 + \tau_j \\
   Var(y_{ij}) &= Var(\mu_0 + \upsilon_i + \tau_j + \varepsilon_{ij})
@@ -160,18 +192,21 @@ For the model, we have
   Cov(y_{ij}, y_{ij'}) &= \sigma^2_\upsilon \text{ for observations }
                           j \neq j'
 \end{align*}
-The correlation between observations and subjects is
+      \vspace{-.6cm}
+\item The correlation between observations and subjects is
 \[
   Corr(y_{ij}, y_{ij'}) = \frac{\sigma^2_\upsilon}{\sigma^2_\upsilon +
     \sigma^2}
 \]
 intraclass correlation (ICC)
+  \end{itemize}
 \end{frame}
 
-
-\begin{frame}{Compound Symmetry}
-  Thus, we get for the covariance matrix of the observations for one subject
-  the so-called compound symmetry structure
+\begin{frame}{Excursion: Repeated measures ANOVA}
+{Compound Symmetry}
+  \begin{itemize}
+    \item Thus, we get for the covariance matrix of the observations for
+      one subject the so-called compound symmetry structure
 \[
   \gvect{\Sigma}_{\vect{y}_i} = \sigma^2_\upsilon \vect{1} \vect{1}'
     + \sigma^2 \mat{I}
@@ -186,33 +221,35 @@ intraclass correlation (ICC)
       \cdots & \sigma^2_\upsilon + \sigma^2 \\
   \end{pmatrix}
 \]
-The covariance matrix for all observations is consequently block diagonal
-\[
-  Cov(\vect{y}) =
-  \begin{pmatrix}
-  \gvect{\Sigma}_{\vect{y}_1} & 0 & 0 & \cdots & 0 \\
-  0  & \gvect{\Sigma}_{\vect{y}_2} & 0 & \cdots & 0 \\
-  \vdots &  & \ddots &  & \vdots \\
-  0 & 0 & 0 & \cdots & \gvect{\Sigma}_{\vect{y}_N} \\
-  \end{pmatrix}
-\]
-and, therefore, $Cov(\vect{y}) = \sigma^2 \mat{I}$ does not apply as in the
-  regular linear model
+% \item The covariance matrix for all observations is consequently block diagonal
+% \[
+%   Cov(\vect{y}) =
+%   \begin{pmatrix}
+%   \gvect{\Sigma}_{\vect{y}_1} & 0 & 0 & \cdots & 0 \\
+%   0  & \gvect{\Sigma}_{\vect{y}_2} & 0 & \cdots & 0 \\
+%   \vdots &  & \ddots &  & \vdots \\
+%   0 & 0 & 0 & \cdots & \gvect{\Sigma}_{\vect{y}_N} \\
+%   \end{pmatrix}
+% \]
+% and, therefore, $Cov(\vect{y}) = \sigma^2 \mat{I}$ does not apply as in the
+%   regular linear model
+  \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Compound Symmetry}
-  The assumption of a compound symmetry structure for the covariance matrix
-  for longitudinal data is usually unrealistic\\[2ex]
-
-  In general, successive observations are more strongly correlated than
-  observations being farther apart (covariance is not constant); variance
-  increases with time, e.\,g., when some subjects are more responsive to a
-  certain treatment than others\\[2ex]
-
-  In order to test for compound symmetry or the weaker sphericity, tests
-  have been proposed (e.\,g.\ Mauchly test) but these tests do not possess
-  good statistical qualities
+\begin{frame}{Excursion: Repeated measures ANOVA}
+{Compound Symmetry}
+  \begin{itemize}
+    \item The assumption of a compound symmetry structure for the
+      covariance matrix for longitudinal data is usually unrealistic
+    \item In general, successive observations are more strongly correlated
+      than observations being farther apart (covariance is not constant);
+      variance increases with time, e.\,g., when some subjects are more
+      responsive to a certain treatment than others
+    \item In order to test for compound symmetry or the weaker sphericity,
+      tests have been proposed (e.\,g., Mauchly test) but these tests do
+      not possess good statistical qualities
+  \end{itemize}
 \end{frame}
 
 
@@ -252,6 +289,133 @@ Empirical correlation matrix of HDRS score
 \end{columns}
 \end{frame}
 
+\begin{frame}{Depression and Imipramin: Descriptive statistics}
+  {\citep{ReisbyGram77}}
+\begin{center}
+\includegraphics[scale=.8]{figures/hdrs-means-se}
+\end{center}
+\end{frame}
+
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
+
+\begin{frame}[fragile]{Depression and Imipramin}
+  \begin{lstlisting}
+dat      <- read.table("reisby.dat", header=TRUE)
+dat$id   <- factor(dat$id)
+dat$diag <- factor(dat$diag, 
+                   levels=c("nonen", "endog"))
+dat      <- na.omit(dat)     # drop missing values
+
+# Descriptive statistics
+aggregate(hamd ~ week, dat, mean)
+aggregate(hamd ~ week, dat, sd)
+aggregate(hamd ~ week, dat, length)
+
+cor(reshape(dat[, c("hamd", "id", "week")], 
+            direction="wide",
+            timevar="week")[, 2:7],
+    use="pairwise.complete.obs")
+  \end{lstlisting}
+\end{frame}
+
+}
+
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
+
+\begin{frame}[fragile]{Fitting repeated-measures ANOVA}
+  \begin{lstlisting}
+# Week needs to be a factor when computing a ANOVA
+dat$week2 <- factor(dat$week)
+summary(aov(hamd ~ week2*diag + Error(id/week2), dat))
+# --> ?? 
+
+library(ez)   # "SPSS"-style
+ezANOVA(data = dat, dv = hamd, wid = id,
+        within = week2, between = diag, type = 3)
+
+# Check data
+ezDesign(data = dat, x = week, y = id, col = diag)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Fitting repeated-measures ANOVA}
+  \begin{lstlisting}
+# Remove IDs with missing observations
+ids <- names(which( addmargins(
+  xtabs( ~ week + diag + id, dat) )
+  ["Sum", "Sum",] == 6))
+dat_val <- dat[dat$id %in% ids, ]
+
+# Fit ANOVAs again
+aov1 <- aov(hamd ~ week2*diag + Error(id/week2),
+            dat_val)
+summary(aov1)
+
+ez1 <- ezANOVA(data = dat_val, dv = hamd, wid = id,
+               within = week2, between = diag,
+               type = 3)
+ez1$ANOVA
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Fitting repeated-measures ANOVA}
+  \begin{lstlisting}
+# How close can we get with a mixed-effects model?
+library(lme4)
+
+lme1 <- lmer(hamd ~ week2*diag + (1 | id),
+            dat_val)
+anova(lme1)
+
+# Calculate mean sum of squares for id by hand
+sp <- attr(VarCorr(lme1)$id, "stddev")
+se <- attr(VarCorr(lme1), "sc")
+se^2 + 6*sp^2
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Fitting mixed-effects model}
+  \begin{lstlisting}
+# And this works on the complete data set
+lme2 <- lmer(hamd ~ week2*diag + (1 | id), dat)
+anova(lme2)
+
+# Type I sum of squares
+m0 <- lmer(hamd ~ 1 + (1 | id), dat, REML=FALSE)
+m1 <- lmer(hamd ~ week2 + (1 | id), dat, REML=FALSE)
+m2 <- lmer(hamd ~ week2 + diag + (1 | id), dat,
+           REML=FALSE)
+anova(m0, m1, m2, lme2)
+  \end{lstlisting}
+\end{frame}
+
+}
+
+\begin{frame}{Alternative model with a constant time term}
+  \centering
+  \vspace{-1cm}
+  \[
+  y_{ij} = \beta_0 + \beta_1 \cdot time + \upsilon_i + \varepsilon_{ij}
+  \]
+  with $\varepsilon_{ij} \sim N(0, \sigma_{\varepsilon}^2)$ i.i.d.\ and
+  $\upsilon_{0i} \sim N(0, \sigma_{\upsilon})$ i.i.d.\\~\\
+
+  \begin{tabular}{cccccc}
+    \hline
+    response & intercept & time effect & time & subject effect  & residual \\
+    \hline
+    $y_{11}$ & $\beta_0$ & $\beta_1$   & 0    & $\upsilon_{1}$ & $\varepsilon_{11}$ \\
+    $y_{12}$ & $\beta_0$ & $\beta_1$   & 1    & $\upsilon_{1}$ & $\varepsilon_{12}$ \\
+    $y_{13}$ & $\beta_0$ & $\beta_1$   & 2    & $\upsilon_{1}$ & $\varepsilon_{13}$ \\
+    \vdots & \vdots & \vdots   & \vdots & \vdots & \vdots \\
+    $y_{21}$ & $\beta_0$ & $\beta_1$   & 0    & $\upsilon_{2}$ & $\varepsilon_{21}$ \\
+    $y_{22}$ & $\beta_0$ & $\beta_1$   & 1    & $\upsilon_{2}$ & $\varepsilon_{22}$ \\
+    $y_{23}$ & $\beta_0$ & $\beta_1$   & 2    & $\upsilon_{2}$ & $\varepsilon_{23}$ \\
+    \vdots & \vdots & \vdots   & \vdots & \vdots & \vdots \\
+    $y_{Nn}$ & $\beta_0$ & $\beta_1$   & n    & $\upsilon_{N}$ & $\varepsilon_{Nn}$ \\
+    \hline
+  \end{tabular}
+\end{frame}
 
 \begin{frame}{Depression and Imipramin: Individual process}
   {\citep{ReisbyGram77}}
@@ -275,33 +439,29 @@ with $\upsilon_{0i} \sim N(0, \sigma^2_{\upsilon})$ i.i.d.,
 $\varepsilon_{ij} \sim N(0, \sigma^2)$ i.i.d., $\upsilon_{0i}$ and
 $\varepsilon_{ij}$ i.i.d.\\[2ex]
 
-Fitting of the mixed model in R
-\begin{lstlisting}
-library(lme4)
-
-## Random intercept model
+Fitting the mixed-effects model in R
+\begin{lstlisting}[style=plain]
 lme1 <- lmer(hamd ~ week + (1 | id), dat, REML=FALSE)
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[fragile]{ML estimation of parameters}
-\begin{lstlisting}
-Linear mixed model fit by maximum likelihood  ['lmerMod']
-Formula: hamd ~ week + (1 | id)
-   Data: dat
-      AIC       BIC    logLik  deviance  df.resid 
- 2293.189  2308.896 -1142.594  2285.189       371 
-Random effects:
- Groups   Name        Std.Dev.
- id       (Intercept) 4.019   
- Residual             4.363   
-Number of obs: 375, groups:  id, 66
-Fixed Effects:
-(Intercept)         week  
-     23.552       -2.376  
-\end{lstlisting}
-\end{frame}
+% \begin{frame}[fragile]{ML estimation of parameters}
+% \begin{lstlisting}
+% Linear mixed model fit by maximum likelihood  ['lmerMod']
+% Formula: hamd ~ week + (1 | id)
+%    Data: dat
+%       AIC       BIC    logLik  deviance  df.resid 
+%  2293.189  2308.896 -1142.594  2285.189       371 
+% Random effects:
+%  Groups   Name        Std.Dev.
+%  id       (Intercept) 4.019   
+%  Residual             4.363   
+% Number of obs: 375, groups:  id, 66
+% Fixed Effects:
+% (Intercept)         week  
+%      23.552       -2.376  
+% \end{lstlisting}
+% \end{frame}
 
 
 \begin{frame}{Model predictions}
@@ -365,30 +525,29 @@ Individual intercepts and slopes each have a unique variance component and
   \frac{\sigma_{\upsilon_0 \upsilon_1}}{\sigma_{\upsilon_0} \,
   \sigma_{\upsilon_1}}$
 %
-\begin{lstlisting}
+  \begin{lstlisting}[style=plain]
 lme(hamd ~ week + (week | id), dat, REML=FALSE)
 \end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[fragile]{ML estimation of parameters}
-\begin{lstlisting}
-Linear mixed model fit by maximum likelihood  ['lmerMod']
-Formula: hamd ~ week + (week | id)
-   Data: dat
-      AIC       BIC    logLik  deviance  df.resid 
- 2231.037  2254.599 -1109.519  2219.037       369 
-Random effects:
- Groups   Name        Std.Dev. Corr 
- id       (Intercept) 3.554         
-          week        1.442    -0.28
- Residual             3.495         
-Number of obs: 375, groups:  id, 66
-Fixed Effects:
-(Intercept)         week  
-     23.577       -2.377  
-\end{lstlisting}
-\end{frame}
+% \begin{frame}[fragile]{ML estimation of parameters}
+% \begin{lstlisting}
+% Linear mixed model fit by maximum likelihood  ['lmerMod']
+% Formula: hamd ~ week + (week | id)
+%    Data: dat
+%       AIC       BIC    logLik  deviance  df.resid 
+%  2231.037  2254.599 -1109.519  2219.037       369 
+% Random effects:
+%  Groups   Name        Std.Dev. Corr 
+%  id       (Intercept) 3.554         
+%           week        1.442    -0.28
+%  Residual             3.495         
+% Number of obs: 375, groups:  id, 66
+% Fixed Effects:
+% (Intercept)         week  
+%      23.577       -2.377  
+% \end{lstlisting}
+% \end{frame}
 
 
 \begin{frame}{Model predictions}
@@ -447,253 +606,45 @@ hence, a more flexible covariance structure when compared to compound
   symmetry
 \end{frame}
  
-\begin{frame}{Wald test}
-For the fixed effects, based on the covariance matrix
-\[
-  Var(\gvect{\hat\beta}) = \left( \sum_{i = 1}^N
-    \mat{X}'_i \gmat{\Sigma}_i^{-1} \mat{X}_i \right)^{-1}
-\]
-we can construct Wald tests analogously to the regular linear model with
-  approximately normally or $t$ distributed test statistics\\[2ex]
-
-  First, $\gmat{\Sigma}_i$ must be estimated; hence, the quality of the
-  approximation strongly depends on the quality of the estimation of the
-  variance and covariance components\\[2ex]
-
-  Many authors principally discourage using Wald tests for random effects
-  \citep[e.\,g.,][p.~52]{HedekerGibbons06}
-\end{frame}
-
-
-\begin{frame}{Likelihood ratio test}
-  Hypotheses about fixed and random effects can be tested with likelihood
-  ratio tests\\[2ex]
-
-  When $M_0$ is a model that results from a more general model $M_1$ by
-  parameter restrictions, then the test statistic
-\[
-  G^2 = 2\log \frac{L(M_1)}{L(M_0)}
-      = 2\,(\log L(M_1) - \log L(M_0))
-\]
-  is approximately $\chi^2$ distributed with $(\text{Number of parameters
-  in } M_1) - (\text{Number of parameters in } M_0)$ degrees of
-  freedom\\[2ex]
-
-  However, for fixed effects this test can result in progressive test
-  decisions for small samples (H$_0$ is rejected too often)\\[2ex]
-  
-  For random effects and hypotheses of the form H$_0$: $\sigma^2_\upsilon =
-  0$, the test is rather conservative
-  \nocite{BrykRaudenbush2002}
-\end{frame}
-
-
-\begin{frame}{Example: Crossed random effects}
-  This example will show how to include subjects and items as crossed,
-  independent, random effects, as opposed to hierarchical or multilevel
-  models in which random effects are assumed to be nested\\[2ex]
-
-  The data are taken from \citet{Baayen2008}\\[2ex]
-
-  Assume an example data set with three participants s1, s2 and s3 who each saw
-  three items w1, w2, w3 in a priming lexical decision task under both short
-  and long SOA conditions\\[2ex]
-
-  Let's say the data were generated by the following model
-  \[
-    y_{ij} = \beta_0 + \beta_1 SOA + \omega_0 + \upsilon_0 + \upsilon_1 SOA
-    + \varepsilon_{ij} 
-  \]
-\small
-with $\gvect{\upsilon} \sim N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} = 
-    \begin{pmatrix}
-      \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0\upsilon_1} \\
-      \sigma_{\upsilon_0\upsilon_1} & \sigma^2_{\upsilon_1} \\
-    \end{pmatrix}\right)$,
-  $\omega_0 \sim N(0, \sigma_{\omega}^2)$, $\varepsilon_0 \sim N(0,
-  \sigma_{\varepsilon}^2)$ 
-
-\end{frame}
-
-\begin{frame}{Example data set}
-  \scriptsize
-With random intercepts for subject and item, and random slopes for
-  subject\\[1.5ex]
-  \begin{tabular}{llllcrrrcr}
-    \hline
-    Subj & Item & SOA & RT & Fixed && ItemInt & Random && Res \\
-    \cline{5-6}
-    \cline{8-10}
-    & & & & Int & SOA && SubInt & SubSOA & \\
-    \hline
-    s1 & w1 & Long  & 466 & 522.2 & 0     & $-$28.3 & $-$26.2 & 0       & $-$2.0 \\
-    s1 & w2 & Long  & 520 & 522.2 & 0     & 14.2    & $-$26.2 & 0       & 9.8 \\
-    s1 & w3 & Long  & 502 & 522.2 & 0     & 14.1    & $-$26.2 & 0       & $-$8.2 \\
-    s1 & w1 & Short & 475 & 522.2 & $-$19 & $-$28.3 & $-$26.2 & 11      & 15.4 \\
-    s1 & w2 & Short & 494 & 522.2 & $-$19 & 14.2    & $-$26.2 & 11      & $-$8.4 \\
-    s1 & w3 & Short & 490 & 522.2 & $-$19 & 14.1    & $-$26.2 & 11      & $-$11.9 \\
-    s2 & w1 & Long  & 516 & 522.2 & 0     & $-$28.3 & 29.7    & 0       & $-$7.4 \\
-    s2 & w2 & Long  & 566 & 522.2 & 0     & 14.2    & 29.7    & 0       & 0.1 \\
-    s2 & w3 & Long  & 577 & 522.2 & 0     & 14.1    & 29.7    & 0       & 11.5 \\
-    s2 & w1 & Short & 491 & 522.2 & $-$19 & $-$28.3 & 29.7    & $-$12.5 & $-$1.5 \\
-    s2 & w2 & Short & 544 & 522.2 & $-$19 & 14.2    & 29.7    & $-$12.5 & 8.9 \\
-    s2 & w3 & Short & 526 & 522.2 & $-$19 & 14.1    & 29.7    & $-$12.5 & $-$8.2 \\
-    s3 & w1 & Long  & 484 & 522.2 & 0     & $-$28.3 & $-$3.5  & 0       & $-$6.3 \\
-    s3 & w2 & Long  & 529 & 522.2 & 0     & 14.2    & $-$3.5  & 0       & $-$3.5 \\
-    s3 & w3 & Long  & 539 & 522.2 & 0     & 14.1    & $-$3.5  & 0       & 6.0 \\
-    s3 & w1 & Short & 470 & 522.2 & $-$19 & $-$28.3 & $-$3.5  & 1.5     & $-$2.9 \\
-    s3 & w2 & Short & 511 & 522.2 & $-$19 & 14.2    & $-$3.5  & 1.5     & $-$4.6 \\
-    s3 & w3 & Short & 528 & 522.2 & $-$19 & 14.1    & $-$3.5  & 1.5     & 13.2 \\
-    \hline
-  \end{tabular}
-\end{frame}
-
-\begin{frame}{Visualization of data}
-  \centering
-\includegraphics[scale=.8]{figures/baayen_ex_agg}
-\end{frame}
-
-\begin{frame}{Visualization of data}
-\includegraphics[scale=.65]{figures/baayen_ex}
-\end{frame}
-
-\begin{frame}[fragile]{ML estimation of parameters}
-\begin{lstlisting}
-lme1 <- lmer(rt ~ soa + (1 | item) + (soa | subj), dat, REML=F)
-summary(lme1)
-  Linear mixed model fit by maximum likelihood  ['lmerMod']
-  Formula: rt ~ soa + (1 | item) + (soa | subj)
-     Data: dat
-  
-  Random effects:
-   Groups   Name        Variance Std.Dev. Corr 
-   item     (Intercept) 445.20   21.100        
-   subj     (Intercept) 570.71   23.890        
-            soaShort     81.06    9.003   -1.00
-   Residual              98.02    9.901        
-  Number of obs: 18, groups:  item, 3; subj, 3
-  
-  Fixed effects:
-              Estimate Std. Error t value
-  (Intercept)  522.111     18.696  27.927
-  soaShort     -18.889      6.986  -2.704
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}{Comparison of sample and model estimates}
-  For this example, we are able to compare the ``true'' values to the
-  parameter estimates
-  \begin{center}
-  \begin{tabular}{lrrrr}
-    \hline
-    Parameter && Sample && Model \\
-    \hline
-    $\hat\beta_0$ && 522.2 && 522.11\\
-    $\hat\beta_1$ && $-$19.00 && $-$18.89\\
-    $\hat\sigma_{\omega}$ && 20.59 && 21.10\\
-    $\hat\sigma_{\upsilon_0}$ && 23.62 && 23.89\\
-    $\hat\sigma_{\upsilon_1}$ && 9.76 && 9.00\\
-    $\hat\rho_{\upsilon_0\upsilon_1}$ && $-$0.71 && $-$1.00\\
-    $\hat\sigma_{\varepsilon}$ && 8.55 && 9.90\\
-    \hline
-  \end{tabular}
-  \end{center}
-     \[
-    y_{ij} = \beta_0 + \beta_1 SOA + \omega_0 + \upsilon_0 + \upsilon_1 SOA
-    + \varepsilon_{ij} 
-  \]
-\small
-with $\gvect{\upsilon} \sim N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} = 
-    \begin{pmatrix}
-      \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0\upsilon_1} \\
-      \sigma_{\upsilon_0\upsilon_1} & \sigma^2_{\upsilon_1} \\
-    \end{pmatrix}\right)$,
-  $\omega_0 \sim N(0, \sigma_{\omega}^2)$, $\varepsilon_0 \sim N(0,
-  \sigma_{\varepsilon}^2)$ 
-\end{frame}
-
-\begin{frame}[fragile]{Likelihood-ratio tests of random effects}
-\begin{lstlisting}
-anova(lme4, lme3, lme2, lme1)
-
-Data: dat
-Models:
-lme4: rt ~ soa + (1 | subj)
-lme3: rt ~ soa + (1 | item) + (1 | subj)
-lme2: rt ~ soa + (1 | item) + (1 | subj) + (1 | subj:soa)
-lme1: rt ~ soa + (1 | item) + (soa | subj)
-     Df    AIC    BIC  logLik deviance   Chisq Df Pr(>Chisq)    
-lme4  4 178.33 181.89 -85.164   170.33                          
-lme3  5 164.31 168.76 -77.156   154.31 16.0143  1  6.287e-05 ***
-lme2  6 166.26 171.61 -77.132   154.26  0.0489  1    0.82502    
-lme1  7 165.21 171.44 -75.606   151.21  3.0511  1    0.08068 .  
----
-Signif. codes:  0 `***' 0.001 `**' 0.01 `*' 0.05 `.' 0.1 ` ' 1
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{ML estimation of parameters}
-\begin{lstlisting}
-summary(lme3)
-  Linear mixed model fit by maximum likelihood  ['lmerMod']
-  Formula: rt ~ soa + (1 | item) + (1 | subj)
-     Data: dat
-  
-  Random effects:
-   Groups   Name        Variance Std.Dev.
-   item     (Intercept) 473.2    21.75   
-   subj     (Intercept) 401.4    20.04   
-   Residual             127.0    11.27   
-  Number of obs: 18, groups:  item, 3; subj, 3
-  
-  Fixed effects:
-              Estimate Std. Error t value
-  (Intercept)  522.111     17.483  29.864
-  soaShort     -18.889      5.313  -3.555
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Bootstrapped confidence intervals}
-\begin{lstlisting}
-confint(lme3, method="boot")
-
-                   2.5 %     97.5 %
-  .sig01        0.000000  36.131518
-  .sig02        0.000000  31.675971
-  .sigma        6.441857  15.089481
-  (Intercept) 485.879324 556.124094
-  soaShort    -29.309063  -7.748373
-\end{lstlisting}
-For more information on testing the significance of parameters in linear
-  mixed models see \verb+?pvalues+
-\end{frame}
-
-\begin{frame}[fragile]{Model assumptions}
-  \begin{columns}
-    \begin{column}{6cm}
-      \includegraphics[scale=.6]{figures/baayen_assumptions}
-    \end{column}
-    \begin{column}{4cm}
-      \begin{lstlisting}
-        plot(lme3)
-      \end{lstlisting}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Model assumptions}
-  \begin{columns}
-    \begin{column}{6cm}
-      \includegraphics[scale=.6]{figures/baayen_qqnorm}
-    \end{column}
-    \begin{column}{4cm}
-      \begin{lstlisting}
-      qqnorm(resid(lme3))
-      qqline(resid(lme3))
-      \end{lstlisting}
-    \end{column}
-  \end{columns}
-\end{frame}
+% \begin{frame}{Wald test}
+% For the fixed effects, based on the covariance matrix
+% \[
+%   Var(\gvect{\hat\beta}) = \left( \sum_{i = 1}^N
+%     \mat{X}'_i \gmat{\Sigma}_i^{-1} \mat{X}_i \right)^{-1}
+% \]
+% we can construct Wald tests analogously to the regular linear model with
+%   approximately normally or $t$ distributed test statistics\\[2ex]
+% 
+%   First, $\gmat{\Sigma}_i$ must be estimated; hence, the quality of the
+%   approximation strongly depends on the quality of the estimation of the
+%   variance and covariance components\\[2ex]
+% 
+%   Many authors principally discourage using Wald tests for random effects
+%   \citep[e.\,g.,][p.~52]{HedekerGibbons06}
+% \end{frame}
+% 
+% 
+% \begin{frame}{Likelihood ratio test}
+%   Hypotheses about fixed and random effects can be tested with likelihood
+%   ratio tests\\[2ex]
+% 
+%   When $M_0$ is a model that results from a more general model $M_1$ by
+%   parameter restrictions, then the test statistic
+% \[
+%   G^2 = 2\log \frac{L(M_1)}{L(M_0)}
+%       = 2\,(\log L(M_1) - \log L(M_0))
+% \]
+%   is approximately $\chi^2$ distributed with $(\text{Number of parameters
+%   in } M_1) - (\text{Number of parameters in } M_0)$ degrees of
+%   freedom\\[2ex]
+% 
+%   However, for fixed effects this test can result in progressive test
+%   decisions for small samples (H$_0$ is rejected too often)\\[2ex]
+%   
+%   For random effects and hypotheses of the form H$_0$: $\sigma^2_\upsilon =
+%   0$, the test is rather conservative
+%   \nocite{BrykRaudenbush2002}
+% \end{frame}
 
 
 
