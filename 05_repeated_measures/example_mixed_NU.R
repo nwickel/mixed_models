@@ -2,12 +2,13 @@
 #
 # content: (1) Read data
 #          (2) Descriptive statistics
-#          (3) Random intercept model
-#          (4) Random slope model
-#          (5) Include diagnosis
+#          (3) Repeated measures ANOVA
+#          (4) Random intercept model
+#          (5) Random slope model
+#          (6) Include diagnosis
 #
 # input: reisby.txt
-# output: hdrs-ind.pdf, hdrs-lme1.pdf, hdrs-lme2.pdf
+# output: hdrs-ind.pdf, hdrs-means.pdf, hdrs-means-se.pdf, hdrs-lme1.pdf, hdrs-lme2.pdf
 #
 # created: Jul/20/2018, NU
 # last mod: Jun/07/2021, NU
@@ -16,6 +17,7 @@ setwd("C:/Users/numbach/Nextcloud/Documents/teaching/regression/05_repeated_meas
 
 library(lattice)
 library(lme4)
+library(ez)
 
 #--------------- (1) Read data ---------------
 
@@ -52,7 +54,7 @@ legend("bottomleft", c("Endogenous", "Non endogenous"), lty=1:2, pch=c(16,21),
 dev.off()
 
 
-pdf("figures/hdrs-means-sd.pdf", height=3.375, width=3.375, pointsize=10)
+pdf("figures/hdrs-means-se.pdf", height=3.375, width=3.375, pointsize=10)
 
 par(mai=c(.6,.6,.1,.1), mgp=c(2,.7,0))
 plot(hamd ~ I(week-.02), means[means$diag == "nonen",], type="b",
@@ -71,7 +73,88 @@ legend("bottomleft", c("Endogenous", "Non endogenous"), lty=1:2, pch=c(16,21),
 
 dev.off()
 
-#--------------- (3) Random intercept model ---------------
+#--------------- (3) Repeated measures anova ---------------
+
+aggregate(hamd ~ week, dat, mean)
+aggregate(hamd ~ week, dat, sd)
+aggregate(hamd ~ week, dat, length)
+
+cor(reshape(dat[, c("hamd", "id", "week")], 
+            direction="wide",
+            timevar="week")[, 2:7],
+    use="pairwise.complete.obs")
+
+# Week needs to be a factor when computing a ANOVA
+dat$week2 <- factor(dat$week)
+summary(aov(hamd ~ week2 + Error(id/week2), dat))
+
+# "SPSS"-style
+ezANOVA(data = dat, dv = hamd, wid = id,
+        within = week2, type = 3)
+
+# Check data
+ezDesign(data = dat, x = week, y = id, col = diag)
+
+# Remove IDs with missing observations
+ids <- names(which( addmargins(
+  xtabs( ~ week + diag + id, dat) )
+  ["Sum", "Sum",] == 6))
+dat_val <- dat[dat$id %in% ids, ]
+
+# Fit ANOVAs again
+aov1 <- aov(hamd ~ week2 + Error(id/week2), dat_val)
+summary(aov1)
+
+ez1 <- ezANOVA(data = dat_val, dv = hamd, wid = id,
+               within = week2, type = 3)
+ez1$ANOVA
+ 
+# How close can we get with a mixed-effects model?
+lme1 <- lmer(hamd ~ week2 + (1 | id), dat_val)
+anova(lme1)
+summary(lme1)
+
+lme0 <- lmer(hamd ~ 1 + (1 | id), dat_val)
+anova(lme0, lme1)
+ 
+# Calculate mean sum of squares for id by hand
+sp <- attr(VarCorr(lme1)$id, "stddev")
+se <- attr(VarCorr(lme1), "sc")
+se^2 + 6*sp^2
+
+## Now add the group factor back in
+# Fit ANOVAs again
+aov2 <- aov(hamd ~ week2*diag + Error(id/week2),
+            dat_val)
+summary(aov2)
+
+ez2 <- ezANOVA(data = dat_val, dv = hamd, wid = id,
+               within = week2, between = diag,
+               type = 3)
+ez2$ANOVA
+ 
+lme2 <- lmer(hamd ~ week2*diag + (1 | id),
+            dat_val)
+anova(lme2)
+
+# Calculate mean sum of squares for id by hand
+sp <- attr(VarCorr(lme2)$id, "stddev")
+se <- attr(VarCorr(lme2), "sc")
+se^2 + 6*sp^2
+ 
+# And this works on the complete data set
+lme3 <- lmer(hamd ~ week2*diag + (1 | id), dat)
+anova(lme3)
+
+# Type I sum of squares
+m0 <- lmer(hamd ~ 1 + (1 | id), dat, REML=FALSE)
+m1 <- lmer(hamd ~ week2 + (1 | id), dat, REML=FALSE)
+m2 <- lmer(hamd ~ week2 + diag + (1 | id), dat,
+           REML=FALSE)
+anova(m0, m1, m2, lme3)
+ 
+
+#--------------- (4) Random intercept model ---------------
 
 lme1 <- lmer(hamd ~ week + (1|id), dat, REML=FALSE)
 
@@ -96,7 +179,7 @@ text(2, c(9.5, 15.5, 21.5, 29), c("ID 505", "ID 123", "Group trend",
 
 dev.off()
 
-#--------------- (4) Random slope model ---------------
+#--------------- (5) Random slope model ---------------
 
 lme2 <- lmer(hamd ~ week + (week | id), dat, REML=FALSE)
 rfx  <- ranef(lme2)$id
@@ -117,7 +200,7 @@ text(c(3.2, 4.2, 3.2, 3.2), c(7.7, 10, 18.7, 25.5), c("ID 101", "ID 319",
 dev.off()
 
 
-#--------------- (5) Include diagnosis ---------------
+#--------------- (6) Include diagnosis ---------------
 
 lme3 <- lmer(hamd ~ week*diag + (week | id), dat, REML=FALSE)
 anova(lme2, lme3)
