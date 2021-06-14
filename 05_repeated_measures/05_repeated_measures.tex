@@ -159,8 +159,8 @@ with
     \vdots & \vdots & \vdots   &  \vdots & \vdots \\
     $y_{Nn}$ & $\mu_0$ & $\tau_n$  & $\upsilon_{N}$ & $\varepsilon_{Nn}$ \\
     \hline\\[-2ex]
-    \only<2>{$\sigma_{\upsilon}^2 + \sigma_{\varepsilon}^2$ & & &
-    $\sigma_{\upsilon}^2$ & $\sigma_{\varepsilon}^2$} \\
+    \only<2>{$\sigma_{\upsilon}^2 + \sigma^2$ & & &
+    $\sigma_{\upsilon}^2$ & $\sigma^2$} \\
   \end{tabular}
 \end{frame}
 
@@ -313,7 +313,7 @@ cor(reshape(dat[, c("hamd", "id", "week")],
 
 \begin{frame}[fragile]{Fitting repeated-measures ANOVA}
   \begin{lstlisting}
-# Week needs to be a factor when computing a ANOVA
+# Week needs to be a factor when computing an ANOVA
 dat$week2 <- factor(dat$week)
 summary(aov(hamd ~ week2 + Error(id/week2), dat))
 # --> ?? 
@@ -324,15 +324,15 @@ ezANOVA(data = dat, dv = hamd, wid = id,
 
 # Check data
 ezDesign(data = dat, x = week, y = id, col = diag)
+replications(hamd ~ week2 + id, dat)
   \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Fitting repeated-measures ANOVA}
   \begin{lstlisting}
 # Remove IDs with missing observations
-ids <- names(which( addmargins(
-  xtabs( ~ week + diag + id, dat) )
-  ["Sum", "Sum",] == 6))
+ids <- names(which(
+  replications(hamd ~ id, dat)$id == 6))
 dat_val <- dat[dat$id %in% ids, ]
 
 # Fit ANOVAs again
@@ -340,7 +340,7 @@ aov1 <- aov(hamd ~ week2 + Error(id/week2), dat_val)
 summary(aov1)
 
 ez1 <- ezANOVA(data = dat_val, dv = hamd, wid = id,
-               within = week2, type = 3)
+               within = week2)
 ez1$ANOVA
   \end{lstlisting}
 \end{frame}
@@ -553,7 +553,7 @@ summary(aov2)
 # Using ezANOVA()
 ez2 <- ezANOVA(data = dat_val, dv = hamd, wid = id,
                within = week2, between = diag,
-               type = 3)
+               type = 1)
 ez2$ANOVA
   \end{lstlisting}
 \end{frame}
@@ -562,7 +562,7 @@ ez2$ANOVA
   \begin{lstlisting}
 # Mixed-effects model
 lme2 <- lmer(hamd ~ week2*diag + (1 | id),
-            dat_val)
+             dat_val)
 anova(lme2)
 
 # Calculate mean sum of squares for id by hand
@@ -579,6 +579,9 @@ lme3 <- lmer(hamd ~ week2*diag + (1 | id), dat)
 anova(lme3)
 
 # Type I sum of squares
+lmerTest:::anova.lmerModLmerTest(lme3)
+
+# Or via likelihood ratio tests
 m0 <- lmer(hamd ~ 1 + (1 | id), dat, REML=FALSE)
 m1 <- lmer(hamd ~ week2 + (1 | id), dat, REML=FALSE)
 m2 <- lmer(hamd ~ week2 + diag + (1 | id), dat,
@@ -606,7 +609,7 @@ anova(m0, m1, m2, lme3)
     $\beta_0$ & mean baseline value in reference group\\
     $\beta_1$ & time effect (slope) in reference group\\
     $\beta_2$ & effect of treatment group\\
-    $\beta_3$ & effekt on the slope of treatment group
+    $\beta_3$ & effect on the slope of treatment group
     \end{tabular}
     \end{center}
 \end{itemize}
