@@ -140,13 +140,13 @@ str(jsp)
 xtabs( ~ school + class, jsp, sparse=TRUE)
 
 # Investigate nested structure of the data
-class2 <- with(jsp, factor(school:class))
-xtabs( ~ school + class2, jsp, sparse=TRUE)
+xtabs( ~ school + factor(school:school), jsp,
+  sparse=TRUE)
 
 # Several data points per student
-table(jsp$year)
+table(jsp$year, useNA="ifany")
 
-dat <- jsp[jsp$year == 0, ]
+dat <- subset(jsp, year == 0)
   \end{lstlisting}
 \end{frame}
 
