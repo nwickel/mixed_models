@@ -140,7 +140,7 @@ str(jsp)
 xtabs( ~ school + class, jsp, sparse=TRUE)
 
 # Investigate nested structure of the data
-xtabs( ~ school + factor(school:school), jsp,
+xtabs( ~ school + factor(school:class), jsp,
   sparse=TRUE)
 
 # Several data points per student
