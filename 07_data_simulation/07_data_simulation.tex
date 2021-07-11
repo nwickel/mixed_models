@@ -218,7 +218,7 @@ w  <- rep(rnorm(3, mean=0, sd=sw), 6)
 e  <- rnorm(18, mean=0, sd=se)
 # Draw from bivariate normal distribution
 sig <- matrix(c(sy0^2, ry*sy0*sy1, ry*sy0*sy1, sy1^2),
-  2, 2)
+              2, 2)
 y01 <- mvtnorm::rmvnorm(3, mean=c(0, 0), sigma=sig)
 y0 <- rep(y01[,1], each=6)
 y1 <- rep(c(0, y01[1,2],
@@ -387,7 +387,7 @@ dat$rt2 <- X %*% beta + Z %*% theta + e
         30$ subjects instead of only 3.
       \item Download the script \verb+simulation_baayen.R+ and adjust it
         accordingly.
-      \item You can choose, if you want to use model matrices or create
+      \item You can choose if you want to use model matrices or create
         the vectors ``manually''.
     \end{itemize}
   \end{block}
