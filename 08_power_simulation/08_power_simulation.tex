@@ -1,0 +1,383 @@
+\documentclass{beamer}
+% \usepackage{pgfpages}
+% \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
+\usepackage{tikz}
+\usetikzlibrary{arrows, positioning}
+\usepackage{listings}
+\usepackage[utf8,latin1]{inputenc}
+\usepackage[natbibapa]{apacite}
+\usepackage{pgfplots}
+\makeatletter \def\newblock{\beamer@newblock} \makeatother  
+
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{section in toc}[circle]
+%\mode<beamer>{\setbeamercolor{math text displayed}{fg=iwmorange!50!black}}
+\setbeamercolor{block body}{bg=iwmorange!50!white}
+\setbeamercolor{block title}{fg=white, bg=iwmorange}
+
+\definecolor{iwmorange}{RGB}{255,105,0}
+\definecolor{iwmgrau}{RGB}{67,79,79}
+\setbeamercolor{title}{fg=iwmorange}
+\setbeamercolor{frametitle}{fg=iwmorange}
+\setbeamercolor{structure}{fg=iwmorange}
+\setbeamercolor{normal text}{fg=iwmgrau}
+\setbeamercolor{author}{fg=iwmgrau}
+\setbeamercolor{date}{fg=iwmgrau}
+\color{white}
+
+\title{Power simulation for linear mixed-effects models}
+\author{Nora Umbach%\footnote{These slides are a modified version of slides created by \url{https://osf.io/ /}. }
+}
+%\institute{\includegraphics[scale=.15]{figures/ut_logo}}
+\date{July 26, 2021}
+
+\newcommand{\vect}[1]{\mathbf{#1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\gvect}[1]{\boldsymbol{#1}}
+\newcommand{\gmat}[1]{\boldsymbol{#1}}
+
+\lstset{language=R,%
+  literate={Ü}{{\"U}}1
+           {ü}{{\"u}}1,
+  %backgroundcolor=\color{iwmgrau!80!white},
+  basicstyle=\ttfamily\color{iwmorange},
+  frame=single,
+  commentstyle=\slshape\color{black},
+  keywordstyle=\bfseries\color{white},
+  identifierstyle=\color{white},
+  stringstyle=\color{green!85!black},
+  numbers=none,%numberstyle=\tiny,
+  basewidth={.5em, .4em},
+  showstringspaces=false,
+  emphstyle=\color{red!50!white}}
+
+\lstdefinestyle{plain}{language=R,
+  frame=none,
+  basicstyle=\ttfamily\color{iwmorange},
+  commentstyle=\slshape\color{iwmgrau},
+  keywordstyle=\bfseries\color{iwmgrau},
+  identifierstyle=\color{iwmgrau},
+  stringstyle=\color{iwmgrau},
+  numbers=none,
+  basewidth={.5em, .4em},
+  showstringspaces=false}
+
+\pgfmathdeclarefunction{gauss}{2}{%
+  \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
+}
+
+\AtBeginSection[]{
+  \frame{
+    \tableofcontents[sectionstyle=show/hide, subsectionstyle=show/show/hide]}}
+
+\setbeamertemplate{headline}{
+ \begin{beamercolorbox}{section in head}
+   \vskip5pt\insertsectionnavigationhorizontal{\paperwidth}{}{}\vskip2pt
+ \end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}{\vskip-2pt\hfill\insertframenumber$\;$\vskip2pt}
+
+\begin{document}
+
+\begin{frame}
+\thispagestyle{empty}
+\titlepage
+\end{frame}
+
+\begin{frame}{Linear mixed-effects models}
+
+{\tiny
+\[
+  \begin{pmatrix}
+    y_{11}\\
+    \vdots\\
+    y_{ij}\\
+    \vdots\\
+    y_{qn}
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    1 & x_{111} & x_{121} & \dots & x_{1p1}\\
+    1 & x_{112} & x_{122} & \dots & x_{1p2}\\
+    \vdots & \vdots & \vdots && \vdots \\
+    1 & x_{211} & x_{221} & \dots & x_{2p1}\\
+    \vdots & \vdots & \vdots && \vdots \\
+    1 & x_{n1q} & x_{n2q} & \dots & x_{npq}\\
+  \end{pmatrix}
+\times
+  \begin{pmatrix}
+    \beta_0\\
+    \beta_1\\
+    \vdots\\
+    \beta_p
+  \end{pmatrix}
++
+  \begin{pmatrix}
+    1 & 0 & \dots & 0 & 0\\
+    \vdots & \vdots && \vdots & \vdots \\
+    0 & 1 & \dots & 0 & 0\\
+    \vdots & \vdots && \vdots & \vdots \\
+    0 & 0 & \dots & 1 & 0\\
+    \vdots & \vdots && \vdots & \vdots \\
+    0 & 0 & \dots & 0 & 1
+  \end{pmatrix}
+\times
+  \begin{pmatrix}
+    \upsilon_1\\
+    \vdots\\
+    \upsilon_{qn}\\
+  \end{pmatrix}
++
+  \begin{pmatrix}
+    e_{11}\\
+    \vdots\\
+    e_{ij}\\
+    \vdots\\
+    e_{qn}
+  \end{pmatrix}
+\]
+}
+and the corresponding vector equation
+\[
+  \mat{y} = \mat{X} \, \gmat{\beta} + \mat{Z} \,\gmat{\upsilon} + \mat{e}
+\]
+\
+\end{frame}
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Simple regression}
+
+\begin{frame}{Example: \citet{Fox2008}}
+  \begin{itemize}
+    \item Vocabulary Data from the U.S.\ General Social Surveys
+    \item $N = \text{21,638}$
+    \item Outcome:
+      \begin{itemize}
+        \item Vocabulary score
+      \end{itemize}
+    \item Predictor:
+      \begin{itemize}
+        \item Years of education
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Example: \citet{Fox2008}}
+\begin{columns}
+  \column{.6\textwidth}
+  \includegraphics[scale=.8]{figures/voc}
+  \column{.4\textwidth}
+  \begin{align*}
+    y_{i} & = \beta_0 + \beta_1 x_{i} + \varepsilon_i\\
+    \varepsilon_i & \sim N(0, \sigma^2)
+  \end{align*}
+  \begin{tabular}{lr}
+    \hline
+         &  Mean (SD) \\
+    \hline
+    Vocabulary &  6.00 (2.17)\\
+    Education  & 12.80 (3.04)\\
+    \hline
+  \end{tabular}
+\end{columns}
+\end{frame}
+
+\begin{frame}{}
+  \begin{block}{Exercise}
+    \begin{itemize} 
+      \item What are good assumptions about the distributions of
+        \begin{itemize}
+          \item Vocabulary
+          \item Education
+        \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
+
+\begin{frame}[fragile]{Vocabulary data}
+  \begin{lstlisting}
+dat <- read.table("Vocabulary.txt", header=TRUE, 
+                  stringsAsFactors=TRUE)
+
+lm1 <- lm(vocabulary ~ education, dat)
+summary(lm1)
+
+plot(jitter(vocabulary, 2) ~ jitter(education, 2),
+     dat, pch=".", xlab="Years of education",
+     ylab="Vocabulary score", col="darkgrey")
+abline(lm1)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Power simulation}
+  \begin{lstlisting}
+n <- 150
+
+prob <- table(dat$education) / nrow(dat)
+simdat <- data.frame(x1 = sample(0:20, n, TRUE, prob))
+
+pval <- replicate(2000, {
+        y <- 1.5 + 0.2*simdat$x1 + rnorm(n, sd=2.2)
+        m1 <- lm(y ~ 1, simdat)
+        m2 <- lm(y ~ x1, simdat)
+        anova(m1, m2)$"Pr(>F)"[2]
+})
+mean(pval < 0.05)
+  \end{lstlisting}
+\end{frame}
+
+}
+
+\section{Mixed-effects regression}
+
+\begin{frame}{Example: \citet{Bauer2005}}
+  \begin{itemize}
+    \item $N = \text{7,185}$
+    \item 160 schools
+    \item Outcome:
+      \begin{itemize}
+        \item math achievement ($\bar y = 12.75, sd = 6.88$)
+      \end{itemize}
+    \item Predictors:
+      \begin{enumerate}
+        \item child SES (metric, group mean centered with $sd = .66$)
+        \item school sector ($0 = \text{public school}$, $1 = \text{private
+          school}$, 49\,\% of schools were private)
+        % \item disciplinary climate (metric, high values reflect greater
+        %   disciplinary problems, grand mean centered with $sd = .94$)
+      \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Statistical model}
+  \begin{align*}
+    y_{ij} = & \beta_{0} + \beta_{1}cses_{ij} + \beta_{2}meanses_{i} +
+    \beta_{3}sector_{i}\\
+    & + \beta_{4}(cses_{ij} \times meanses_i) +
+    \beta_5(cses_{ij}\times sector_i)\\
+    & + \upsilon_{0i} + \upsilon_{1i}cses_{ij} + \varepsilon_{ij}
+  \end{align*}
+  \[
+    \begin{pmatrix}
+      \upsilon_{0i} \\
+      \upsilon_{1i}
+    \end{pmatrix}
+    \sim N\left(
+    \begin{pmatrix}
+      0 \\
+      0
+    \end{pmatrix},
+    \gmat{\Sigma}_{\upsilon} = 
+    \begin{pmatrix}
+      \sigma_{\upsilon_{0}}^2 & \sigma_{\upsilon_{0}\upsilon_1} \\
+      \sigma_{\upsilon_{0}\upsilon_1} & \sigma_{\upsilon_{1}}^2
+    \end{pmatrix}
+    \right) \text{i.i.d.},~~~\varepsilon_i \sim N(\vect{0}, \sigma^2
+    \mat{I}_{n_i})~\text{i.i.d.}
+  \]
+  \[
+    i = 1,\dots,I, ~~~ j=1,\dots,n_i
+  \]
+
+\end{frame}
+
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
+
+\begin{frame}[fragile]{Highschool and beyond data}
+  \begin{lstlisting}
+library(lme4)
+dat <- read.table("hsbdataset.txt", header=TRUE)
+
+# Look at standard deviations
+sd(dat$ses)
+sd(dat$cses)
+table(dat$sector) / nrow(dat)
+
+lme1 <- lmer(mathach ~ cses*meanses + cses*sector + 
+            (cses | school), dat)
+summary(lme1)
+
+library(lattice)
+xyplot(mathach ~ cses | as.factor(sector), dat, 
+       groups=school, type="r")
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Simulate data frame}
+  \begin{lstlisting}
+nschool <- 150
+nstudent <- 40
+simdat <- data.frame( 
+                  id = seq_len(nstudent),
+                  school = seq_len(nschool),
+                  sector = rep(0:1, each=nschool/2),
+                  ses = rnorm(nschool*nstudent, 0, .8)
+)
+
+# Mean centering ses
+simdat$meanses <- ave(simdat$ses, simdat$school)
+simdat$cses <- simdat$ses - simdat$meanses
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Define parameters}
+  \begin{lstlisting}
+se  <- 6.5
+sp  <- 1.6
+spw <- 0.3
+cov <- 0.4*sp*spw
+
+fix <- c("(Intercept)"=12, meanses=5, cses=2.5, 
+         sector=1, "cses:meanses"=0.7, 
+         "cses:sector"=-0.7)
+
+mat <- matrix(c(sp^2, cov,
+                cov, spw^2), 2, 2)
+ran <- chol(mat) / se
+
+params <- list(theta=t(ran)[lower.tri(t(ran), TRUE)],
+               beta=beta, sigma=se)
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Power simulation}
+  \begin{lstlisting}
+pval <- replicate(200, {
+  mathach <- simulate(~ cses*meanses + cses*sector + 
+                     (cses | school),
+                     newparams=params, newdata=simdat,
+                     family=gaussian)$sim_1
+  m1 <- lmer(mathach ~ meanses + cses + sector
+             + (cses | school), simdat, REML=FALSE)
+  m2 <- lmer(mathach ~ cses*meanses + cses*sector
+             + (cses | school), simdat, REML=FALSE)
+  anova(m1, m2)$"Pr(>Chisq)"[2]
+})
+
+mean(pval < 0.05)
+hist(pval)
+  \end{lstlisting}
+\end{frame}
+
+}
+
+\appendix
+%\begin{frame}[allowframebreaks]{References}
+\begin{frame}{References}
+\renewcommand{\bibfont}{\footnotesize}
+\bibliographystyle{apacite}
+\bibliography{../../../literature/nu}
+\vfill
+\end{frame}
+
+\end{document}
+
