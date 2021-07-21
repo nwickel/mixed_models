@@ -65,7 +65,7 @@ theta <- c(w = unique(w),
           y0 = y01[,1],
           y1 = y01[,2])
 
-dat$rt2 <- X %*% beta + Z %*% theta + e
+datsim$rt2 <- X %*% beta + Z %*% theta + e
 
 #--------------- (5) Visualize simulated data ---------------
 

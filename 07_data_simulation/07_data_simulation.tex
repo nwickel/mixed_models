@@ -125,13 +125,13 @@ with $\gvect{\upsilon} \sim N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} =
     \hline
     Parameter && Model \\
     \hline
-    $\hat\beta_0$                     && 522.11\\
-    $\hat\beta_1$                     && $-$18.89\\
-    $\hat\sigma_{\omega}$             && 21.10\\
-    $\hat\sigma_{\upsilon_0}$         && 23.89\\
-    $\hat\sigma_{\upsilon_1}$         && 9.00\\
-    $\hat\rho_{\upsilon_0\upsilon_1}$ && $-$1.00\\
-    $\hat\sigma_{\varepsilon}$        && 9.90\\
+    $\beta_0$                     && 522.11\\
+    $\beta_1$                     && $-$18.89\\
+    $\sigma_{\omega}$             && 21.10\\
+    $\sigma_{\upsilon_0}$         && 23.89\\
+    $\sigma_{\upsilon_1}$         && 9.00\\
+    $\rho_{\upsilon_0\upsilon_1}$ && $-$1.00\\
+    $\sigma_{\varepsilon}$        && 9.90\\
     \hline
   \end{tabular}
   \end{center}
@@ -374,7 +374,7 @@ theta <- c(w = unique(w),
            y0 = y01[,1],
            y1 = y01[,2])
 
-dat$rt2 <- X %*% beta + Z %*% theta + e
+datsim$rt2 <- X %*% beta + Z %*% theta + e
   \end{lstlisting}
 \end{frame}
 
