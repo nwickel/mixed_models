@@ -344,7 +344,7 @@ mat <- matrix(c(sp^2, cov,
 ran <- chol(mat) / se
 
 params <- list(theta=t(ran)[lower.tri(t(ran), TRUE)],
-               beta=beta, sigma=se)
+               beta=fix, sigma=se)
   \end{lstlisting}
 \end{frame}
 
@@ -370,10 +370,25 @@ hist(pval)
 
 }
 
+\begin{frame}[fragile]{}
+  \begin{block}{Exercise}
+    \begin{itemize} 
+      \item Redo the power analysis from the slides using an approach with
+        \texttt{model.matrix()}
+      \item Download the script \texttt{powersimulation.R} and change it
+        accordingly
+      \item The script from last session \texttt{simulation\_baayen.R}
+        might also be useful
+      \item Hint: You need to specify 
+        \verb+simdat$school <- factor(simdat$school)+
+    \end{itemize}
+  \end{block}
+\end{frame}
+
 \appendix
 %\begin{frame}[allowframebreaks]{References}
 \begin{frame}{References}
-\renewcommand{\bibfont}{\footnotesize}
+%\renewcommand{\bibfont}{\footnotesize}
 \bibliographystyle{apacite}
 \bibliography{../../../literature/nu}
 \vfill
