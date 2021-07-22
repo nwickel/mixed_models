@@ -216,6 +216,23 @@ abline(lm1)
   \end{lstlisting}
 \end{frame}
 
+}
+
+\begin{frame}[fragile]{Estimating power with simulation}
+  {Pseudo code}
+\begin{lstlisting}[style=plain]
+set sample size
+replicate
+{
+  draw sample from model with minimal relevant effect
+  test null hypothesis
+}
+determine proportion of significant results
+\end{lstlisting}
+\end{frame}
+
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
+
 \begin{frame}[fragile]{Power simulation}
   \begin{lstlisting}
 n <- 150
@@ -316,11 +333,11 @@ xyplot(mathach ~ cses | as.factor(sector), dat,
 nschool <- 150
 nstudent <- 40
 simdat <- data.frame( 
-                  id = seq_len(nstudent),
-                  school = seq_len(nschool),
-                  sector = rep(0:1, each=nschool/2),
-                  ses = rnorm(nschool*nstudent, 0, .8)
-)
+              id = seq_len(nstudent),
+              school = seq_len(nschool),
+              sector = rep(0:1, each=nschool/2),
+              ses = rnorm(nschool*nstudent, 0, .8)
+          )
 
 # Mean centering ses
 simdat$meanses <- ave(simdat$ses, simdat$school)
