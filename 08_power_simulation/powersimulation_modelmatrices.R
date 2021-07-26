@@ -1,10 +1,10 @@
-# powersimulation.R
+# powersimulation_modelmatrices.R
 #
 # content: (1) HSB data
 #          (2) Data simulation
 #          (3) Power simulation
 #
-# created: Jul/22/2021
+# last mod: Jul/26/2021
 
 library(lme4)
 library(lattice)
@@ -70,6 +70,8 @@ Z <- model.matrix( ~ 0 + school + school:cses, simdat,
 
 
 pval <- replicate(200, {
+  y01 <- mvtnorm::rmvnorm(nschool, mean=c(0, 0), sigma=sig)
+  theta <- c(y0 = y01[,1], y1 = y01[,2])
   mathach <- X %*% beta + Z %*% theta + rnorm(nschool*nstudent, sd=se)
   m1 <- lmer(mathach ~ meanses + cses + sector
              + (cses | school), simdat, REML=FALSE)
