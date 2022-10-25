@@ -15,7 +15,7 @@
 # Literature
 
 Anscombe, F. J. (1973). Graphs in statistical analysis. The American
-Statistician, 27(1), 17–21.
+Statistician, 27(1), 17--21.
 Gelman, A., Hill, J., & Vehtari, A. (2020). Regression and other stories.
 Cambridge University Press.
 Fox, J. (2016). Applied regression analysis and generalized linear
