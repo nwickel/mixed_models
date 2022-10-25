@@ -7,11 +7,11 @@
 # input: --
 # output: anscombe.pdf
 #
-# last mod: April/15/2021, NU
+# last mod: Oct/24/2022, NU
 
 library(lattice)
 
-setwd("C:/Users/numbach/Nextcloud/Documents/teaching/regression/01_regression/figures/")
+setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/regression/01_regression/figures/")
 
 #--------------- (1) Exercise 1 ---------------
 

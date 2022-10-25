@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 % \usepackage{pgfpages}
 % \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
 \usepackage{tikz}
@@ -25,11 +25,11 @@
 \setbeamercolor{author}{fg=iwmgrau}
 \setbeamercolor{date}{fg=iwmgrau}
 
-\title{Regression analysis}
-\author{Nora Umbach%\footnote{These slides are a modified version of slides created by \url{https://osf.io/ /}. }
+\title{Simple linear regression}
+\author{Nora Wickelmaier%\footnote{These slides are a modified version of slides created by \url{https://osf.io/ /}. }
 }
 %\institute{\includegraphics[scale=.15]{figures/ut_logo}}
-\date{April 19, 2021}
+\date{October 24, 2022}
 %\date{Last modified: \today}
 
 \newcommand{\vect}[1]{\mathbf{#1}}
@@ -38,10 +38,9 @@
 \newcommand{\gmat}[1]{\boldsymbol{#1}}
 
 \lstset{language=R,%
-  literate={Ü}{{\"U}}1
-           {ü}{{\"u}}1,
   %backgroundcolor=\color{iwmgrau!80!white},
   basicstyle=\ttfamily\color{iwmorange},
+  upquote=true,
   frame=single,
   commentstyle=\slshape\color{black},
   keywordstyle=\bfseries\color{white},
@@ -108,7 +107,7 @@
   \end{itemize}
 \end{frame}
 
-\section{Simple regression}
+\section{Basic concepts}
 
 \begin{frame}{Simple linear regression}
   \begin{itemize}
@@ -273,10 +272,12 @@ hist(pars[3, ])
   \end{block}
 \end{frame}
 
+\section{Assumptions}
+
 \begin{frame}{Assumptions}
   \begin{columns}
-    \column{.8\textwidth}
-    \includegraphics[scale=.62]{figures/anscombe} 
+    \column{.6\textwidth}
+    \includegraphics[scale=.61]{figures/anscombe} 
     \column{.4\textwidth}
   \begin{itemize}
     \item Four data sets by \citet{Anscombe1973} with the same traditional
@@ -331,131 +332,6 @@ plot(lm4)
       \upsilon_0 + \upsilon_1 time + \varepsilon$\\
       \dots & \\
   \end{tabular}
-\end{frame}
-
-\section{Multiple regression}
-
-\begin{frame}{Multiple linear regression}
-  \begin{itemize}
-    \item Empirical observations consist of tuples for each observation
-      unit
-\[
-  (y_i, x_{i1}, \ldots, x_{ip}) ~~\text{with}~~ i = 1, \ldots, n
-\]
-and we get the stochastical model
-\begin{align*}
-  y_i & = \beta_0 + \beta_1 \cdot x_{i1} + \ldots + \beta_p \cdot x_{ip} +
-        \varepsilon_i \\
-  \varepsilon_i & \sim N (0, \sigma^2)~\text{i.i.d.}
-\end{align*}
-which transfers to
-\[
-  y_i \sim N (\mu_i, \sigma^2) ~~\text{with}~~
-  \mu_i = \beta_0 + \beta_1 \cdot x_{i1} + \ldots + \beta_p \cdot x_{ip}
-\]\vspace{-.7cm}
-\item The criterion variable $y$ is always a metric variable, whereas the
-  predictor variables $x_1, \ldots, x_p$ can be either metric or
-      categorical variables, or both
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Example: Multiple linear regression}
-  \begin{itemize}
-    \item We are fitting the following model
-\[
-y_{ij} = \beta_0 + \beta_1 \cdot x_i + \beta_2 \cdot z_j + \varepsilon_{ij}
-\]
-with $i = 1 \ldots N$ and $j = 1,2$ for two groups
-\item This means that we have one dummy variable for $z$ which takes the
-  values 0 and 1
-\item Hence, we get the two models
-\begin{align*}
-y_{i1} & = \beta_0 + \beta_1 \cdot x_i + \beta_2\cdot 0 + \varepsilon_{ij}
-= \beta_0 + \beta_1 \cdot x_i + \varepsilon_{ij}\\
-y_{i2} & = \beta_0 + \beta_1 \cdot x_i + \beta_2\cdot 1 + \varepsilon_{ij}
-= (\beta_0 + \beta_2) + \beta_1 \cdot x_i + \varepsilon_{ij}
-\end{align*}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Example: Multiple linear regression}
-\begin{center}
-\includegraphics[scale=.8]{figures/ancova2}
-\end{center}
-\end{frame}
-
-{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
-
-\begin{frame}[fragile]{Example: Multiple linear regression}
-\begin{lstlisting}
-dat <- data.frame(
-  x = c(18,23,25,35,65,54,34,56,72,19,23,42,18,39,37),
-  y = c(213,197,198,191,167,180,185,172,153,199,193,
-        174,198,183,178),
-  z = rep(c("treatment", "control"), c(7, 8))
-)
-
-aggregate(y ~ z, dat, mean)
-\end{lstlisting}
-\end{frame}
-
-}
-
-
-\begin{frame}[fragile]{Example: Multiple linear regression}
-  \begin{itemize}
-    \item We can now use the parameters to calculate adjusted means for the
-      two groups
-    \item The observed means are $\bar x_{treat} = 190.14$ and $\bar
-      x_{contr} = 181.25$
-    \item The adjusted means correspond to
-\begin{align*}
-\bar x_{contr} & = \beta_0\\
-\bar x_{treat} & = \beta_0 + \beta_2
-\end{align*}
-These are the means for a value of $x = 0$ which should have a meaningful
-interpretation
-\item Hence, it might be indicated to center $x$
-  \end{itemize}
-\end{frame}
-
-{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
-
-\begin{frame}[fragile]{Example: Multiple linear regression}
-\begin{lstlisting}
-dat$xc <- dat$x - mean(dat$x)
-
-lm2 <- lm(y ~ xc + z, dat)
-summary(lm2)
-
-# adjusted means
-coef(lm2)[1]
-coef(lm2)[1] + coef(lm2)[3]
-\end{lstlisting}
-\end{frame}
-
-}
-
-\begin{frame}[fragile]{}
-  \begin{block}{Exercise}
-    \begin{itemize}
-      \item The data set \texttt{cars} contains speed and stopping
-        distances of 50 cars
-      \item Estimate the regression model
-\[
-  dist_i = \beta_0 + \beta_1 speed_i + \varepsilon_i
-\]\vspace{-.8cm}
-      \item How much variance of the stopping distances is explained by
-      speed? \item Look at the residuals of the model. Are there any
-        systematic deviances?
-      \item Now estimate the model
-\[
-  dist_i = \beta_0 + \beta_1 speed_i + \beta_2 speed^2_i + \varepsilon_i
-\]
-        Hint: Use \verb+I(speed^2)+ in the model formula in \texttt{R}
-      \item Which model fits the data better?
-    \end{itemize}
-  \end{block}
 \end{frame}
 
 \appendix
