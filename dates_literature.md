@@ -5,16 +5,17 @@
 | 24.10.2022 | Introduction to regression             |
 | 07.11.2022 | Multiple regression and GLM            |
 | 22.11.2022 | Pre-post designs                       |
-| 05.12.2022 | Longitudinal data                      |
-| 19.12.2022 | Repeated measures                      |
-| 09.01.2023 | Hierarchical (multi-level) models      |
-| 23.01.2023 | Power simulations I                    |
-| 06.02.2023 | Power simulations II                   |
+| 05.12.2022 | Repeated measures                      |
+| 19.12.2022 | Longitudinal data                      |
+| 09.01.2023 | Data simulation for LMM                |
+| 23.01.2023 | Introduction to power analysis         |
+| 06.02.2023 | Power simulation (G)LMM                |
 | ---------- | -------------------------------------- |
 
 # Slides
-Here are the slides <https://iwmonline.sharepoint.com/sites/Methodenseminar/Freigegebene%20Dokumente/Forms/AllItems.aspx?csf=1&web=1&e=ZhFtwl&cid=2bad8f95%2D6f2e%2D42c4%2D91ee%2D8923e9c90e0b&RootFolder=%2Fsites%2FMethodenseminar%2FFreigegebene%20Dokumente%2FGeneral%2Fregression&FolderCTID=0x01200008D6CE6B18AC454D80CC419B9EE30663> for the seminar on regression. I will add the new slide
-sets as we go.
+Here are the slides
+<https://iwmonline.sharepoint.com/sites/Methodenseminar/Freigegebene%20Dokumente/Forms/AllItems.aspx?csf=1&web=1&e=ZhFtwl&cid=2bad8f95%2D6f2e%2D42c4%2D91ee%2D8923e9c90e0b&RootFolder=%2Fsites%2FMethodenseminar%2FFreigegebene%20Dokumente%2FGeneral%2Fregression&FolderCTID=0x01200008D6CE6B18AC454D80CC419B9EE30663>
+for the seminar on regression. I will add the new slide sets as we go.
 
 # Literature
 

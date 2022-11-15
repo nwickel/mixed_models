@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 % \usepackage{pgfpages}
 % \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
 \usepackage{tikz}
@@ -26,10 +26,9 @@
 \setbeamercolor{date}{fg=iwmgrau}
 
 \title{Repeated measures}
-\author{Nora Umbach%\footnote{These slides are a modified version of slides created by \url{https://osf.io/ /}. }
-}
+\author{Nora Wickelmaier}
 %\institute{\includegraphics[scale=.15]{figures/ut_logo}}
-\date{June 14, 2021}
+\date{December 5, 2022}
 %\date{Last modified: \today}
 
 \newcommand{\vect}[1]{\mathbf{#1}}
@@ -38,8 +37,6 @@
 \newcommand{\gmat}[1]{\boldsymbol{#1}}
 
 \lstset{language=R,%
-  literate={Ü}{{\"U}}1
-           {ü}{{\"u}}1,
   %backgroundcolor=\color{iwmgrau!80!white},
   basicstyle=\ttfamily\color{iwmorange},
   frame=single,
@@ -86,16 +83,16 @@
 \titlepage
 \end{frame}
 
-% \begin{frame}{Outline}
-% \tableofcontents
-% \end{frame}
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
 
-\begin{frame}{Repeated measures ANOVA}
-  {Model with one repeated measurement factor}
+\section{Repeated measures ANOVA}
+
+\begin{frame}{Model with one repeated measurement factor}
   \begin{itemize}
     \item When subjects are observed for more than two time points, we can
-      model these data using a repeated measures ANOVA; then, the repeated
-      measures factor is time
+      model these data using a repeated measures ANOVA
     \item Data layout
 \[ \begin{array}{c|cccccc}
               & \multicolumn{6}{c}{\text{Time point}} \\
@@ -111,8 +108,7 @@ N      & y_{N1} & y_{N2} & \cdots & y_{Nj} & \cdots & y_{Nn} \\
 \end{frame}
 
 
-\begin{frame}{Repeated measures ANOVA}
-  {Statistical model}
+\begin{frame}{Statistical model}
   \begin{itemize}
     \item When we observe $i = 1, \ldots, N$ subjects for $j = 1, \ldots,
       n$ time points, we get
@@ -139,12 +135,11 @@ with
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Repeated measures ANOVA}
-  {Statistical model}
+\begin{frame}{Statistical model}
   \[
   y_{ij} = \mu_0 + \tau_j + \upsilon_i + \varepsilon_{ij}
   \]
-
+\centering
   \begin{tabular}{ccccc}
     \hline
     response & grand mean & time effect & subject effect  & residual \\
@@ -164,8 +159,7 @@ with
   \end{tabular}
 \end{frame}
 
-\begin{frame}{Repeated measures ANOVA}
-  {Model properties}
+\begin{frame}{Model properties}
   \begin{itemize}
     \item For the model, we have
 \begin{align*}
@@ -186,11 +180,10 @@ known as intraclass correlation (ICC)
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Repeated measures ANOVA}
-{Compound Symmetry}
+\begin{frame}{Compound Symmetry}
   \begin{itemize}
-    \item Thus, we get for the covariance matrix of the observations for
-      one subject the so-called compound symmetry structure
+    \item For the covariance matrix of the observations for
+      one subject we get the so-called compound symmetry structure
 \[
   \gvect{\Sigma}_{\vect{y}_i} = \sigma^2_\upsilon \vect{1} \vect{1}'
     + \sigma^2 \mat{I}
@@ -217,26 +210,18 @@ known as intraclass correlation (ICC)
 % \]
 % and, therefore, $Cov(\vect{y}) = \sigma^2 \mat{I}$ does not apply as in the
 %   regular linear model
-  \end{itemize}
-\end{frame}
-
-
-\begin{frame}{Repeated measures ANOVA}
-{Compound Symmetry}
-  \begin{itemize}
-    \item The assumption of a compound symmetry structure for the
-      covariance matrix for longitudinal data is usually unrealistic
+    \item The assumption of a compound symmetry structure is usually
+      unrealistic for longitudinal data
     \item In general, successive observations are more strongly correlated
-      than observations being farther apart (covariance is not constant);
-      variance increases with time, e.\,g., when some subjects are more
+      than observations being farther apart (covariance is not constant)
+    \item Variance increases with time, e.\,g., when some subjects are more
       responsive to a certain treatment than others
-    \item In order to test for compound symmetry or the weaker sphericity,
-      tests have been proposed (e.\,g., Mauchly test) but these tests do
-      not possess good statistical qualities
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Example: Depression and Imipramin}
+\section{Example: Depression and Imipramin}
+
+\begin{frame}{Depression and Imipramin \citep{ReisbyGram77}}
   \begin{itemize}
     \item \citet{ReisbyGram77} studied the effect of Imipramin on 66
       inpatients treated for depression
@@ -254,8 +239,7 @@ known as intraclass correlation (ICC)
 
 
 
-\begin{frame}{Depression and Imipramin: Descriptive statistics}
-  {\citep{ReisbyGram77}}
+\begin{frame}{Descriptive statistics}
 \begin{columns}
 \begin{column}{12cm}
 HDRS score
@@ -295,9 +279,8 @@ Empirical correlation matrix of HDRS score
   \begin{lstlisting}
 dat      <- read.table("reisby.dat", header=TRUE)
 dat$id   <- factor(dat$id)
-dat$diag <- factor(dat$diag, 
-                   levels=c("nonen", "endog"))
-dat      <- na.omit(dat)     # drop missing values
+dat$diag <- factor(dat$diag, levels=c("nonen", "endog"))
+dat      <- na.omit(dat)     # Drop missing values
 
 # Descriptive statistics
 aggregate(hamd ~ week, dat, mean)
@@ -305,8 +288,7 @@ aggregate(hamd ~ week, dat, sd)
 aggregate(hamd ~ week, dat, length)
 
 cor(reshape(dat[, c("hamd", "id", "week")], 
-            direction="wide",
-            timevar="week")[, 2:7],
+            direction="wide", timevar="week")[, 2:7],
     use="pairwise.complete.obs")
   \end{lstlisting}
 \end{frame}
@@ -319,8 +301,7 @@ summary(aov(hamd ~ week2 + Error(id/week2), dat))
 # --> ?? 
 
 library(ez)   # "SPSS"-style
-ezANOVA(data = dat, dv = hamd, wid = id,
-        within = week2, type = 3)
+ezANOVA(data = dat, dv = hamd, wid = id, within = week2, type = 3)
 
 # Check data
 ezDesign(data = dat, x = week, y = id, col = diag)
@@ -331,16 +312,14 @@ replications(hamd ~ week2 + id, dat)
 \begin{frame}[fragile]{Fitting repeated-measures ANOVA}
   \begin{lstlisting}
 # Remove IDs with missing observations
-ids <- names(which(
-  replications(hamd ~ id, dat)$id == 6))
+ids <- names(which(replications(hamd ~ id, dat)$id == 6))
 dat_val <- dat[dat$id %in% ids, ]
 
 # Fit ANOVAs again
 aov1 <- aov(hamd ~ week2 + Error(id/week2), dat_val)
 summary(aov1)
 
-ez1 <- ezANOVA(data = dat_val, dv = hamd, wid = id,
-               within = week2)
+ez1 <- ezANOVA(data = dat_val, dv = hamd, wid = id, within = week2)
 ez1$ANOVA
   \end{lstlisting}
 \end{frame}
@@ -355,21 +334,19 @@ anova(lme1)
 
 # Calculate mean sum of squares for id by hand
 sp <- attr(VarCorr(lme1)$id, "stddev")
-se <- attr(VarCorr(lme1), "sc")
+se <- sigma(lme1)
 se^2 + 6*sp^2
   \end{lstlisting}
 \end{frame}
 
 }
 
-\begin{frame}{Depression and Imipramin: Individual process}
-  {\citep{ReisbyGram77}}
-\begin{columns}
-\begin{column}{12cm}
-\vspace{-.45cm}
-\includegraphics[width=11cm]{figures/hdrs-ind}
-\end{column}
-\end{columns}
+\section{Mixed-effects regression}
+
+\begin{frame}{Depression and Imipramin -- individual process}
+\begin{center}
+\includegraphics[width=10.5cm]{figures/hdrs-ind}
+\end{center}
 \end{frame}
 
 \begin{frame}{Alternative model with a constant time term}
@@ -409,11 +386,11 @@ with $\upsilon_{0i} \sim N(0, \sigma^2_{\upsilon})$ i.i.d.,
 $\varepsilon_{ij} \sim N(0, \sigma^2)$ i.i.d., $\upsilon_{0i}$ and
 $\varepsilon_{ij}$ i.i.d.\\[2ex]
 \begin{columns}
-\begin{column}{6cm}
-\includegraphics[width=6cm]{figures/hdrs-lme1}
+\begin{column}{.4\textwidth}
+\includegraphics[width=5.5cm]{figures/hdrs-lme1}
 \end{column}
 %
-\begin{column}{5cm}
+\begin{column}{.5\textwidth}
   \begin{itemize}
     \item The estimated mean baseline HDRS score is $\hat{\beta}_0 =
       23.55$
@@ -423,10 +400,6 @@ $\varepsilon_{ij}$ i.i.d.\\[2ex]
   \end{itemize}
 \end{column}
 \end{columns}
-% Fitting the mixed-effects model in R
-% \begin{lstlisting}[style=plain]
-% lme1 <- lmer(hamd ~ week + (1 | id), dat, REML=FALSE)
-% \end{lstlisting}
 \end{frame}
 
 \begin{frame}{Implied marginal covariance matrix}
@@ -450,92 +423,123 @@ $\varepsilon_{ij}$ i.i.d.\\[2ex]
   \end{itemize}
 \end{frame}
 
-% \begin{frame}[fragile]{Random slope model}
-%   \[
-%     y_{ij} = \beta_0 + \beta_1 time + \upsilon_{0i} + \upsilon_{1i} time +
-%     \varepsilon_{ij}
-%   \]
-% with
-% \begin{align*}
-%   \begin{pmatrix} \upsilon_{0i}\\ \upsilon_{1i} \end{pmatrix} &\sim
-%     N \left(\begin{pmatrix} 0\\ 0 \end{pmatrix}, \, \gmat{\Sigma}_\upsilon =
-%       \begin{pmatrix}
-%         \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0 \upsilon_1} \\
-%         \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_1} \\
-%       \end{pmatrix} \right)
-%     \text{ i.i.d.} \\
-%   \gvect{\varepsilon}_i &\sim N(\vect{0}, \, \sigma^2 \mat{I}_{n_i})
-%     \text{ i.i.d.}
-% \end{align*}
-% Individual intercepts and slopes each have a unique variance component and
-%   correlate with $\varrho_{\upsilon_0 \upsilon_1} =
-%   \frac{\sigma_{\upsilon_0 \upsilon_1}}{\sigma_{\upsilon_0} \,
-%   \sigma_{\upsilon_1}}$
-% 
-% % \begin{lstlisting}[style=plain]
-% % lme(hamd ~ week + (week | id), dat, REML=FALSE)
-% % \end{lstlisting}
-% \end{frame}
-% 
-% 
-% \begin{frame}{Model predictions}
-% \begin{columns}
-% \begin{column}{6cm}
-% \includegraphics[width=6cm]{figures/hdrs-lme2}
-% \end{column}
-% %
-% \begin{column}{5cm}
-%   The estimated mean baseline HDRS score is $\hat{\beta}_0 = 23.58$
-% 
-%   The estimated standard deviation between patients is
-%   $\hat{\sigma}_{\upsilon_0} = 3.55$\\[2ex]
-% 
-%   The mean improvement per week is $\hat{\beta}_1 = -2.38$
-% 
-%   The estimated standard deviation between patients is
-%   $\hat{\sigma}_{\upsilon_1} = 1.44$\\[2ex]
-% \end{column}
-% \end{columns}
-% The estimated correlation between individual intercepts and slopes is
-% $\hat{\varrho}_{\upsilon_0 \upsilon_1} = -0.28$
-%   
-%   Patients with higher (that means worse) baseline scores improve more
-%   strongly than patients with smaller baseline scores
-% \end{frame}
-% 
-% \begin{frame}{Implied marginal covariance matrix}
-% For the three time points $t_{ij} = 0, 1, 2$,
-% \[
-%   \mat{Z}_i =
-%     \begin{pmatrix}
-%       1 & 0 \\
-%       1 & 1 \\
-%       1 & 2 \\
-%     \end{pmatrix}
-%   \text{ und }
-%   \gmat{\Sigma}_\upsilon =
-%     \begin{pmatrix}
-%       \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0 \upsilon_1} \\
-%       \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_1}
-%     \end{pmatrix}
-% \]
-% we get
-% \begin{align*}
-%   & Cov(\vect{y}_i) =
-%     \mat{Z}_i \gmat{\Sigma}_\upsilon \mat{Z}'_i + \sigma^2 \mat{I}_{n_i} \\
-%   &= \begin{pmatrix}
-%     \sigma^2_{\upsilon_0}                                    & \sigma^2_{\upsilon_0} + \sigma_{\upsilon_0 \upsilon_1}                             & \sigma^2_{\upsilon_0} + 2 \sigma_{\upsilon_0 \upsilon_1} \\
-%     \sigma^2_{\upsilon_0} + \sigma_{\upsilon_0 \upsilon_1}   & \sigma^2_{\upsilon_0} + 2 \sigma_{\upsilon_0 \upsilon_1} + \sigma^2_{\upsilon_1}   & \sigma^2_{\upsilon_0} + 3 \sigma_{\upsilon_0 \upsilon_1} + 2 \sigma^2_{\upsilon_1} \\
-%     \sigma^2_{\upsilon_0} + 2 \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_0} + 3 \sigma_{\upsilon_0 \upsilon_1} + 2 \sigma^2_{\upsilon_1} & \sigma^2_{\upsilon_0} + 4 \sigma_{\upsilon_0 \upsilon_1} + 4 \sigma^2_{\upsilon_1} \\
-%   \end{pmatrix}
-%    + \sigma^2 \mat{I}_{n_i}
-% \end{align*}
-% hence, a more flexible covariance structure when compared to compound
-%   symmetry
-% \end{frame}
- 
-\begin{frame}{Depression and Imipramin: Descriptive statistics}
-  {\citep{ReisbyGram77}}
+\begin{frame}[fragile]{Random slope model}
+  \[
+    y_{ij} = \beta_0 + \beta_1 time + \upsilon_{0i} + \upsilon_{1i} time +
+    \varepsilon_{ij}
+  \]
+with
+\begin{align*}
+  \begin{pmatrix} \upsilon_{0i}\\ \upsilon_{1i} \end{pmatrix} &\sim
+    N \left(\begin{pmatrix} 0\\ 0 \end{pmatrix}, \, \gmat{\Sigma}_\upsilon =
+      \begin{pmatrix}
+        \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0 \upsilon_1} \\
+        \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_1} \\
+      \end{pmatrix} \right)
+    \text{ i.i.d.} \\
+  \gvect{\varepsilon}_i &\sim N(\vect{0}, \, \sigma^2 \mat{I}_{n_i})
+    \text{ i.i.d.}
+\end{align*}
+  \begin{itemize}
+    \item Individual intercepts and slopes each have a unique variance
+      component and correlate with $\varrho_{\upsilon_0 \upsilon_1} =
+      \frac{\sigma_{\upsilon_0 \upsilon_1}}{\sigma_{\upsilon_0} \,
+      \sigma_{\upsilon_1}}$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Model predictions}
+\begin{columns}
+\begin{column}{.4\textwidth}
+\includegraphics[width=5cm]{figures/hdrs-lme2}
+\end{column}
+%
+\begin{column}{.6\textwidth}
+  \begin{itemize}
+    \item The estimated mean baseline HDRS score is $\hat{\beta}_0 = 23.58$
+    \item The estimated standard deviation between patients is
+      $\hat{\sigma}_{\upsilon_0} = 3.55$
+    \item The mean improvement per week is $\hat{\beta}_1 = -2.38$
+    \item The estimated standard deviation between patients is
+      $\hat{\sigma}_{\upsilon_1} = 1.44$
+  \end{itemize}
+\end{column}
+\end{columns}
+  \begin{itemize}
+    \item The estimated correlation between individual intercepts and
+      slopes is $\hat{\varrho}_{\upsilon_0 \upsilon_1} = -0.28$
+    \item Patients with higher (that means worse) baseline scores improve
+      more strongly than patients with smaller baseline scores
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Implied marginal covariance matrix}
+For the three time points $t_{ij} = 0, 1, 2$,
+\[
+  \mat{Z}_i =
+    \begin{pmatrix}
+      1 & 0 \\
+      1 & 1 \\
+      1 & 2 \\
+    \end{pmatrix}
+  \text{ und }
+  \gmat{\Sigma}_\upsilon =
+    \begin{pmatrix}
+      \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0 \upsilon_1} \\
+      \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_1}
+    \end{pmatrix}
+\]
+we get
+\begin{align*}
+  & Cov(\vect{y}_i) =
+    \mat{Z}_i \gmat{\Sigma}_\upsilon \mat{Z}'_i + \sigma^2 \mat{I}_{n_i} \\
+  &= \begin{pmatrix}
+    \sigma^2_{\upsilon_0}                                    & \sigma^2_{\upsilon_0} + \sigma_{\upsilon_0 \upsilon_1}                             & \sigma^2_{\upsilon_0} + 2 \sigma_{\upsilon_0 \upsilon_1} \\
+    \sigma^2_{\upsilon_0} + \sigma_{\upsilon_0 \upsilon_1}   & \sigma^2_{\upsilon_0} + 2 \sigma_{\upsilon_0 \upsilon_1} + \sigma^2_{\upsilon_1}   & \sigma^2_{\upsilon_0} + 3 \sigma_{\upsilon_0 \upsilon_1} + 2 \sigma^2_{\upsilon_1} \\
+    \sigma^2_{\upsilon_0} + 2 \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_0} + 3 \sigma_{\upsilon_0 \upsilon_1} + 2 \sigma^2_{\upsilon_1} & \sigma^2_{\upsilon_0} + 4 \sigma_{\upsilon_0 \upsilon_1} + 4 \sigma^2_{\upsilon_1} \\
+  \end{pmatrix}
+   + \sigma^2 \mat{I}_{n_i}
+\end{align*}
+hence, a more flexible covariance structure when compared to compound
+  symmetry
+\end{frame}
+
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
+
+\begin{frame}[fragile]{Fitting mixed-effects models}
+\begin{lstlisting}
+# Random intercept model
+lme1 <- lmer(hamd ~ week + (1 | id), dat, REML=FALSE)
+summary(lme1)
+
+# Random slope model
+lme2 <- lmer(hamd ~ week + (week | id), dat, REML=FALSE)
+summary(lme2)
+
+# Model comparison
+anova(lme1, lme2)
+\end{lstlisting}
+\end{frame}
+
+}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item Assumptions of repeated measures ANOVA are often too restrictive
+      for measurements taken over time
+    \item Mixed-effects model allow for a more flexible variance-covariance
+      structure
+    \item (For within designs where assumptions of equal variance are more
+      plausible, repeated measures ANOVA is well suited)
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\appendix
+
+\section{Expanding the model to more than one factor}
+
+\begin{frame}{Two types of depression}
 \begin{center}
 \includegraphics[scale=.8]{figures/hdrs-means-se}
 \end{center}
@@ -546,8 +550,7 @@ $\varepsilon_{ij}$ i.i.d.\\[2ex]
 \begin{frame}[fragile]{Fitting repeated-measures ANOVA}
   \begin{lstlisting}
 # ANOVA with aov()
-aov2 <- aov(hamd ~ week2*diag + Error(id/week2),
-            dat_val)
+aov2 <- aov(hamd ~ week2*diag + Error(id/week2), dat_val)
 summary(aov2)
 
 # Using ezANOVA()
@@ -561,8 +564,7 @@ ez2$ANOVA
 \begin{frame}[fragile]{Fitting repeated-measures ANOVA}
   \begin{lstlisting}
 # Mixed-effects model
-lme2 <- lmer(hamd ~ week2*diag + (1 | id),
-             dat_val)
+lme2 <- lmer(hamd ~ week2*diag + (1 | id), dat_val)
 anova(lme2)
 
 # Calculate mean sum of squares for id by hand
@@ -584,112 +586,9 @@ lmerTest:::anova.lmerModLmerTest(lme3)
 # Or via likelihood ratio tests
 m0 <- lmer(hamd ~ 1 + (1 | id), dat, REML=FALSE)
 m1 <- lmer(hamd ~ week2 + (1 | id), dat, REML=FALSE)
-m2 <- lmer(hamd ~ week2 + diag + (1 | id), dat,
-           REML=FALSE)
+m2 <- lmer(hamd ~ week2 + diag + (1 | id), dat, REML=FALSE)
 anova(m0, m1, m2, lme3)
   \end{lstlisting}
-\end{frame}
-
-}
-
-\begin{frame}{Repeated measures ANOVA}
-  {Two time points}
-\begin{itemize}
-  \item Regression notation with indicator variable for time ($t_{i1} = 0$,
-    $t_{i2} = 1$) and group ($x_i$)
-    \[
-      y_{ij} = \beta_0 + \beta_1 \, t_{ij} + \beta_2 \, x_i +
-               \beta_3 \, (t_{ij} \cdot x_i) + \upsilon_i + \varepsilon_{ij}
-    \]
-    with $\upsilon_i \sim N(0, \sigma^2_\upsilon)$ and $\varepsilon_{ij}
-    \sim N(0, \sigma^2)$
-  \item Interpretation
-    \begin{center}
-    \begin{tabular}{lp{10cm}}
-    $\beta_0$ & mean baseline value in reference group\\
-    $\beta_1$ & time effect (slope) in reference group\\
-    $\beta_2$ & effect of treatment group\\
-    $\beta_3$ & effect on the slope of treatment group
-    \end{tabular}
-    \end{center}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Repeated measures ANOVA}
-  {Two time points}
-\begin{center}
-\begin{tikzpicture}[>=stealth, y=.6cm, x=.6cm, font=\small]
-\draw[->] (0,0) -- coordinate (x axis mid) (10,0);
-\draw[->] (0,0) -- coordinate (y axis mid) (0,10);
-\node[below=0.5cm] at (x axis mid) {Time, $t$};
-\node[rotate=90, above=0.5cm] at (y axis mid) {Response, $y$};
-%
-\draw (3, 4) -- (7, 8) node [above right] {TG};
-\draw (4.5, 5.5) -- (5.5, 5.5) -- (5.5, 6) node [right] {$\beta_1 + \beta_3$} -- (5.5, 6.5);
-\draw[dashed] (0, 4) node [above right] {$\beta_0 + \beta_2$} -- (3, 4);
-%
-\draw (3, 2) -- (7, 4) node [above right] {CG};
-\draw (4.5, 2.75) -- (5.5, 2.75) -- (5.5, 3.0) node [right] {$\beta_1$} -- (5.5, 3.25);
-\draw[dashed] (0, 2) node [above right] {$\beta_0$} -- (3, 2);
-%
-\draw plot[only marks, mark size=1pt, mark=*]
-    coordinates {(3, 4) (7, 8) (3, 2) (7, 4)};
-\draw (3, 0.1) -- (3, 0) node [below] {$0$};
-\draw (7, 0.1) -- (7, 0) node [below] {$1$};
-\end{tikzpicture}
-\end{center}
-\end{frame}
-
-\begin{frame}{Repeated measures ANOVA}
-  {Two time points}
-\begin{itemize}
-  \item Repeated-measures ANOVA for two time points is equivalent to change
-    score analysis
-  \begin{itemize}
-      \item For the two groups with $j = 1, 2$, we get
-        \begin{align*}
-          y_{i1} &= \beta_0 + \beta_2 \, x_i + \upsilon_i + \varepsilon_{i1}\\
-          y_{i2} &= \beta_0 + \beta_1 + \beta_2 \, x_i + \beta_3 \, x_i + \upsilon_i + \varepsilon_{i2}
-        \end{align*}
-      \item For the change score, we then get
-        \[
-          y_{i2} - y_{i1} = \beta_1 + \beta_3 \, x_i + (\varepsilon_{i2} - \varepsilon_{i1})
-        \]
-      \item Since $\varepsilon_{ij}$ are independent, this results in the
-        equation for the change score analysis
-        \[
-            y_{i2} - y_{i1} = \beta_1 + \beta_3 \, x_i + \varepsilon_{i}
-        \]
-        with
-        \[
-            \varepsilon_i = \varepsilon_{i2} - \varepsilon_{i1} \sim N(0, \sigma_d^2 = 2 \sigma^2)
-        \]
-  \end{itemize}
-\end{itemize}
-\end{frame}
-
-{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
-
-
-\begin{frame}[fragile]{Example: Acupuncture for shoulder pain}
-\begin{lstlisting}
-# Read data
-dat <- read.table("kleinhenz.txt", header=TRUE)
-dat$grp <- factor(dat$grp, levels=c("plac", "acu"))
-
-# Change score analysis
-m1 <- lm(post ~ offset(pre) + grp, dat)
-# Repeated-measures ANOVA
-datl <- reshape(dat, direction="long", 
-                varying=list(1:2), v.names="score")
-datl$time <- factor(datl$time, levels=1:2, 
-                    labels=c("pre", "post"))
-m2 <- lmer(score ~ grp*time + (1 | id), datl)
-
-# Compare residual variances
-sigma(m1)^2
-2 * sigma(m2)^2
-\end{lstlisting}
 \end{frame}
 
 }
@@ -712,7 +611,6 @@ sigma(m1)^2
 %   \end{block}
 % \end{frame}
 
-\appendix
 %\begin{frame}[allowframebreaks]{References}
 \begin{frame}{References}
 %\renewcommand{\bibfont}{\footnotesize}

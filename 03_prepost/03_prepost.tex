@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 % \usepackage{pgfpages}
 % \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
 \usepackage{tikz}
@@ -27,10 +27,10 @@
 \color{white}
 
 \title{Pre/post measurements}
-\author{Nora Umbach%\footnote{These slides are a modified version of slides created by \url{https://osf.io/ /}. }
-}
+\author{Nora Wickelmaier}
+
 %\institute{\includegraphics[scale=.15]{figures/ut_logo}}
-\date{May 17, 2021}
+\date{November 21, 2022}
 %\date{Last modified: \today}
 
 \newcommand{\vect}[1]{\mathbf{#1}}
@@ -39,8 +39,6 @@
 \newcommand{\gmat}[1]{\boldsymbol{#1}}
 
 \lstset{language=R,%
-  literate={Ü}{{\"U}}1
-           {ü}{{\"u}}1,
   %backgroundcolor=\color{iwmgrau!80!white},
   basicstyle=\ttfamily\color{iwmorange},
   frame=single,
@@ -87,11 +85,6 @@
 \titlepage
 \end{frame}
 
-% \begin{frame}{Outline}
-% \tableofcontents
-% \end{frame}
-
-
 \begin{frame}{Analysis of longitudinal data}
 Advantages
 
@@ -103,39 +96,11 @@ Advantages
 
 Challenges
 \begin{itemize}
-\item Missing values (completer analysis, last observation carried forward,
-  observed cases)
+\item Missing values
 \item Predictors can change over time
 \item In cross over designs: carry over effects
 \end{itemize}
 \end{frame}
-
-
-% \begin{frame}{Notation}
-% \begin{itemize}
-% \item $i = 1, \dots, N$ persons\\[2ex]
-% 
-% \item $j = 1, \dots, n_i$ time points for person $i$\\[2ex]
-% 
-% \item All observations: $\displaystyle\sum_i^N n_i$\\[2ex]
-% 
-% \item Vector of all observations for person $i$
-% \[
-%   (\vect{y}_i)_{n_i \times 1}
-% \]
-% %
-% \item Vector of covariates for person $i$ at time point $j$
-% \[
-%   (\vect{x}_{ij})_{p \times 1}
-% \]
-% %
-% \item All covariates of person $i$
-% \[
-%   (\vect{X}_i)_{n_i \times p}
-% \]
-% \end{itemize}
-% \end{frame}
-
 
 \begin{frame}{Data schema}
 \vfill
@@ -159,6 +124,12 @@ $N$    & $n_N$     & $y_{Nn_N}$  & $x_{Nn_N1}$ & \dots & $x_{Nn_Np}$\\
 \vfill
 \end{frame}
 
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\section[t test]{$t$ test}
+
 \begin{frame}{$t$ test for dependent samples}
 \begin{itemize}
   \item Straightforward analysis for two time points $n = 2$
@@ -175,9 +146,7 @@ $N$    & $n_N$     & $y_{Nn_N}$  & $x_{Nn_N1}$ & \dots & $x_{Nn_Np}$\\
 \end{itemize}
 \end{frame}
 
-
-\begin{frame}{Two time points}
-Design
+\begin{frame}{Design}
 \begin{itemize}
     \item At least two groups are observed before ($y_{i1}$) and after
       ($y_{i2}$) a treatment
@@ -220,7 +189,7 @@ Design
       y_{i2} &= \beta_0 + y_{i1} + \varepsilon_i
     \end{align*}
     with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
-  \item Interpretation
+  \item Interpretation:
     \begin{center}
     \begin{tabular}{ll}
     $\beta_0$ & average change score
@@ -253,10 +222,9 @@ Design
 \begin{frame}[fragile]{$t$ test for comparing two time points}
 \begin{lstlisting}
 # simulate two dependent time points
-cg <- MASS::mvrnorm(n=50, mu=c(10,10), 
-                Sigma=matrix(c(1,.9,.9,1), 2))
-tg <- MASS::mvrnorm(n=50, mu=c(10,15), 
-                Sigma=matrix(c(1,.9,.9,1), 2))
+cg <- MASS::mvrnorm(n=50, mu=c(10,10), Sigma=matrix(c(1,.9,.9,1), 2))
+tg <- MASS::mvrnorm(n=50, mu=c(10,15), Sigma=matrix(c(1,.9,.9,1), 2))
+
 sim <- as.data.frame(rbind(cg, tg))
 names(sim) <- c("t1", "t2")
 
@@ -297,7 +265,7 @@ abline(coef(lm2), 1)
       y_{i2} = \beta_0 + \beta_1 \, x_i + \varepsilon_i
     \]
     with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
-  \item Interpretation
+  \item Interpretation:
     \begin{center}
     \begin{tabular}{ll}
     $\beta_0$ & average follow-up score of reference group\\
@@ -344,6 +312,8 @@ abline(h=cumsum(coef(lm3)))
 
 }
 
+\section{Change score analysis}
+
 \begin{frame}{Change score analysis}
 \begin{itemize}
   \item Regression model
@@ -353,12 +323,12 @@ abline(h=cumsum(coef(lm3)))
                y_{i2} &= \beta_0 + y_{i1} + \beta_1 \, x_i + \varepsilon_i
     \end{align*}
     with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
-  \item Interpretation
+  \item Interpretation:
     \begin{tabular}{lp{10cm}}
     $\beta_0$ & average change score for reference group\\
     $\beta_1$ & difference to $\beta_0$ in treatment group
     \end{tabular}
-  \item Hypothesis
+  \item Hypothesis:
     \begin{itemize}
         \item Is there change in the reference group ($H_0\colon \beta_0 = 0$)?
         \item Does the change differ between groups ($H_0\colon \beta_1 =0$)?
@@ -413,6 +383,8 @@ abline(coef(lm4)[1] + coef(lm4)[2], 1)
 \end{itemize}
 \end{frame}
 
+\section[ANCOVA]{Analysis of covariance}
+
 \begin{frame}{Analysis of covariance (ANCOVA)}
 \begin{itemize}
   \item Regression model
@@ -420,13 +392,13 @@ abline(coef(lm4)[1] + coef(lm4)[2], 1)
       y_{i2} = \beta_0 + \beta_1 \, y_{i1} + \beta_2 \, x_i + \varepsilon_i
     \]
     with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
-  \item Interpretation
+  \item Interpretation:
     \begin{tabular}{lp{10cm}}
     $\beta_0$ & average follow-up score in the reference group for $y_{i1} = 0$\\
     $\beta_1$ & effect of baseline score\\
     $\beta_2$ & difference to follow-up score in the treatment group
     \end{tabular}
-  \item Hypothesis
+  \item Hypothesis:
     \begin{itemize}
         \item Is there a relationship between baseline and follow-up score ($H_0\colon \beta_1 = 0$)?
         \item Do the follow-up scores in the groups differ for persons with
@@ -479,8 +451,7 @@ abline(coef(lm4)[1] + coef(lm4)[2], 1)
 lm5 <- lm(t2 ~ t1 + group, sim)
 
 # adjusted means
-predict(lm5, newdat=data.frame(t1=mean(sim$t1), 
-                               group=c("CG", "TG")))
+predict(lm5, newdat=data.frame(t1=mean(sim$t1), group=c("CG", "TG")))
 
 # ancova with change score
 lm5a <- lm(d ~ t1 + group, sim)
@@ -517,7 +488,7 @@ abline(coef(lm5)[1] + coef(lm5)[3], coef(lm5)[2])
                \beta_3 \, (y_{i1} \cdot x_i) + \varepsilon_i
     \]
     with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
-  \item Interpretation
+  \item Interpretation:
     \begin{tabular}{lp{10cm}}
     $\beta_0$ & average follow-up score in reference group for $y_{i1} = 0$\\
     $\beta_1$ & effect of baseline score\\
@@ -561,8 +532,7 @@ lm6 <- lm(t2 ~ t1*group, sim)
 # visualization
 plot(t2 ~ t1, sim)
 abline(coef(lm6)[1], coef(lm6)[2])
-abline(coef(lm6)[1] + coef(lm6)[3], 
-       coef(lm6)[2] + coef(lm6)[4])
+abline(coef(lm6)[1] + coef(lm6)[3], coef(lm6)[2] + coef(lm6)[4])
 
 # models are nested
 anova(lm4, lm5, lm6)
@@ -571,14 +541,14 @@ anova(lm4, lm5, lm6)
 
 }
 
-
+\section[Example]{Example: Acupuncture for shoulder pain}
 
 \begin{frame}{Example: Acupuncture for shoulder pain}
 \begin{itemize}
   \item \citet{Kleinhenz1999} investigated the effect of acupuncture on
     the improvement of mobility for 52 patients with shoulder pain
   \item Patients were randomly assigned to two groups (placebo vs.\
-    acupuncture
+    acupuncture)
   \item Before and after the treatment a mobility score was measured
   \item \citet{VickersAltman2001} show advantages of an analysis of
     covariance compared to other methods based on these data
@@ -689,8 +659,7 @@ m4 <- lm(post ~ pre*grp, dat)
 anova(m3, m4)
 
 # adjusted means
-predict(m3, data.frame(pre=mean(dat$pre),
-        grp=c("plac", "acu")))
+predict(m3, data.frame(pre=mean(dat$pre), grp=c("plac", "acu")))
 
 # visualization
 plot(post ~ pre, dat, xlim=c(20,100), ylim=c(20,100))
@@ -747,6 +716,107 @@ abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
 \end{itemize}
 \end{frame}
 
+\appendix
+
+\section{Repeated measures ANOVA}
+
+\begin{frame}{Repeated measures ANOVA}
+\begin{itemize}
+  \item Regression notation with indicator variable for time ($t_{i1} = 0$,
+    $t_{i2} = 1$) and\\ group ($x_i$)
+    \[
+      y_{ij} = \beta_0 + \beta_1 \, t_{ij} + \beta_2 \, x_i +
+               \beta_3 \, (t_{ij} \cdot x_i) + \upsilon_i + \varepsilon_{ij}
+    \]
+    with $\upsilon_i \sim N(0, \sigma^2_\upsilon)$ and $\varepsilon_{ij}
+    \sim N(0, \sigma^2)$
+  \item Interpretation:
+    \begin{center}
+    \begin{tabular}{lp{10cm}}
+    $\beta_0$ & mean baseline value in reference group\\
+    $\beta_1$ & time effect (slope) in reference group\\
+    $\beta_2$ & effect of treatment group\\
+    $\beta_3$ & effect on the slope of treatment group
+    \end{tabular}
+    \end{center}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Repeated measures ANOVA}
+\begin{center}
+\begin{tikzpicture}[>=stealth, y=.6cm, x=.6cm, font=\small]
+\draw[->] (0,0) -- coordinate (x axis mid) (10,0);
+\draw[->] (0,0) -- coordinate (y axis mid) (0,10);
+\node[below=0.5cm] at (x axis mid) {Time, $t$};
+\node[rotate=90, above=0.5cm] at (y axis mid) {Response, $y$};
+%
+\draw (3, 4) -- (7, 8) node [above right] {TG};
+\draw (4.5, 5.5) -- (5.5, 5.5) -- (5.5, 6) node [right] {$\beta_1 + \beta_3$} -- (5.5, 6.5);
+\draw[dashed] (0, 4) node [above right] {$\beta_0 + \beta_2$} -- (3, 4);
+%
+\draw (3, 2) -- (7, 4) node [above right] {CG};
+\draw (4.5, 2.75) -- (5.5, 2.75) -- (5.5, 3.0) node [right] {$\beta_1$} -- (5.5, 3.25);
+\draw[dashed] (0, 2) node [above right] {$\beta_0$} -- (3, 2);
+%
+\draw plot[only marks, mark size=1pt, mark=*]
+    coordinates {(3, 4) (7, 8) (3, 2) (7, 4)};
+\draw (3, 0.1) -- (3, 0) node [below] {$0$};
+\draw (7, 0.1) -- (7, 0) node [below] {$1$};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Repeated measures ANOVA}
+\begin{itemize}
+  \item For the two groups with $j = 1, 2$, we get
+    \begin{align*}
+      y_{i1} &= \beta_0 + \beta_2 \, x_i + \upsilon_i + \varepsilon_{i1}\\
+      y_{i2} &= \beta_0 + \beta_1 + \beta_2 \, x_i + \beta_3 \, x_i + \upsilon_i + \varepsilon_{i2}
+    \end{align*}
+  \vspace{-.4cm}
+  \item For the change score, we then get
+    \[
+      y_{i2} - y_{i1} = \beta_1 + \beta_3 \, x_i + (\varepsilon_{i2} - \varepsilon_{i1})
+    \]
+  \vspace{-.4cm}
+  \item Since $\varepsilon_{ij}$ are independent, this results in the
+    equation for the change score analysis
+    \[
+        y_{i2} - y_{i1} = \beta_1 + \beta_3 \, x_i + \varepsilon_{i}
+    \]
+    with
+    \[
+        \varepsilon_i = \varepsilon_{i2} - \varepsilon_{i1} \sim N(0, \sigma_d^2 = 2 \sigma^2)
+    \]
+\end{itemize}
+  \vspace{-.3cm}
+  $\to$ ANOVA for two time points is equivalent to change score analysis!
+\end{frame}
+
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
+
+
+\begin{frame}[fragile]{Example: Acupuncture for shoulder pain}
+\begin{lstlisting}
+# Read data
+dat <- read.table("kleinhenz.txt", header=TRUE)
+dat$grp <- factor(dat$grp, levels=c("plac", "acu"))
+
+# Change score analysis
+m1 <- lm(post ~ offset(pre) + grp, dat)
+# Repeated-measures ANOVA
+datl <- reshape(dat, direction="long", varying=list(1:2), v.names="score")
+datl$time <- factor(datl$time, levels=1:2, labels=c("pre", "post"))
+m2 <- lmer(score ~ grp*time + (1 | id), datl)
+
+# Compare residual variances
+sigma(m1)^2
+2 * sigma(m2)^2
+\end{lstlisting}
+\end{frame}
+
+}
+
 
 % {\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
 % 
@@ -766,7 +836,6 @@ abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
 %   \end{block}
 % \end{frame}
 
-\appendix
 %\begin{frame}[allowframebreaks]{References}
 \begin{frame}{References}
 %\renewcommand{\bibfont}{\footnotesize}
