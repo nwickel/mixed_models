@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 % \usepackage{pgfpages}
 % \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
 \usepackage{tikz}
@@ -26,11 +26,11 @@
 \setbeamercolor{date}{fg=iwmgrau}
 \color{white}
 
-\title{Generalized linear models (GLM)}
-\author{Nora Umbach%\footnote{These slides are a modified version of slides created by \url{https://osf.io/ /}. }
+\title{Multiple regression and generalized linear models (GLM)}
+\author{Nora Wickelmaier%\footnote{These slides are a modified version of slides created by \url{https://osf.io/ /}. }
 }
 %\institute{\includegraphics[scale=.15]{figures/ut_logo}}
-\date{May 3, 2021}
+\date{November 7, 2022}
 %\date{Last modified: \today}
 
 \newcommand{\vect}[1]{\mathbf{#1}}
@@ -132,6 +132,169 @@
   \end{tabular}
 \end{frame}
 
+\section{Multiple linear regression}
+
+\begin{frame}{Multiple linear regression}
+  \begin{itemize}
+    \item Empirical observations consist of tuples for each observation
+      unit
+\[
+  (y_i, x_{i1}, \ldots, x_{ip}) ~~\text{with}~~ i = 1, \ldots, n
+\]
+and we get the stochastical model
+\begin{align*}
+  y_i & = \beta_0 + \beta_1 \cdot x_{i1} + \ldots + \beta_p \cdot x_{ip} +
+        \varepsilon_i \\
+  \varepsilon_i & \sim N (0, \sigma^2)~\text{i.i.d.}
+\end{align*}
+which transfers to
+\[
+  y_i \sim N (\mu_i, \sigma^2) ~~\text{with}~~
+  \mu_i = \beta_0 + \beta_1 \cdot x_{i1} + \ldots + \beta_p \cdot x_{ip}
+\]\vspace{-.7cm}
+\item The criterion variable $y$ is always a metric variable, whereas the
+  predictor variables $x_1, \ldots, x_p$ can be either metric or
+      categorical variables, or both
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Multiple linear regression}
+  \begin{itemize}
+    \item We are fitting the following model
+\[
+y_{ij} = \beta_0 + \beta_1 \cdot x_i + \beta_2 \cdot z_j + \varepsilon_{ij}
+\]
+with $i = 1 \ldots N$ and $j = 1,2$ for two groups
+\item This means that we have one dummy variable for $z$ which takes the
+  values 0 and 1
+\item Hence, we get the two models
+\begin{align*}
+y_{i1} & = \beta_0 + \beta_1 \cdot x_i + \beta_2\cdot 0 + \varepsilon_{ij}
+= \beta_0 + \beta_1 \cdot x_i + \varepsilon_{ij}\\
+y_{i2} & = \beta_0 + \beta_1 \cdot x_i + \beta_2\cdot 1 + \varepsilon_{ij}
+= (\beta_0 + \beta_2) + \beta_1 \cdot x_i + \varepsilon_{ij}
+\end{align*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example: Multiple linear regression}
+\begin{center}
+\includegraphics[scale=.8]{figures/ancova2}
+\end{center}
+\end{frame}
+
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
+
+\begin{frame}[fragile]{Example: Multiple linear regression}
+\begin{lstlisting}
+dat <- data.frame(
+  x = c(18,23,25,35,65,54,34,56,72,19,23,42,18,39,37),
+  y = c(213,197,198,191,167,180,185,172,153,199,193,
+        174,198,183,178),
+  z = rep(c("treatment", "control"), c(7, 8))
+)
+
+aggregate(y ~ z, dat, mean)
+\end{lstlisting}
+\end{frame}
+
+}
+
+
+\begin{frame}[fragile]{Example: Multiple linear regression}
+  \begin{itemize}
+    \item We can now use the parameters to calculate adjusted means for the
+      two groups
+    \item The observed means are $\bar x_{treat} = 190.14$ and $\bar
+      x_{contr} = 181.25$
+    \item The adjusted means correspond to
+\begin{align*}
+\bar x_{contr} & = \beta_0\\
+\bar x_{treat} & = \beta_0 + \beta_2
+\end{align*}
+These are the means for a value of $x = 0$ which should have a meaningful
+interpretation
+\item Hence, it might be indicated to center $x$
+  \end{itemize}
+\end{frame}
+
+{\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
+
+\begin{frame}[fragile]{Example: Multiple linear regression}
+\begin{lstlisting}
+dat$xc <- dat$x - mean(dat$x)
+
+lm2 <- lm(y ~ xc + z, dat)
+summary(lm2)
+
+# adjusted means
+coef(lm2)[1]
+coef(lm2)[1] + coef(lm2)[3]
+\end{lstlisting}
+\end{frame}
+
+}
+
+\begin{frame}[fragile]{}
+  \begin{block}{Exercise}
+    \begin{itemize}
+      \item The data set \texttt{cars} contains speed and stopping
+        distances of 50 cars
+      \item Estimate the regression model
+\[
+  dist_i = \beta_0 + \beta_1 speed_i + \varepsilon_i
+\]\vspace{-.8cm}
+      \item How much variance of the stopping distances is explained by
+      speed? \item Look at the residuals of the model. Are there any
+        systematic deviances?
+      \item Now estimate the model
+\[
+  dist_i = \beta_0 + \beta_1 speed_i + \beta_2 speed^2_i + \varepsilon_i
+\]
+        Hint: Use \verb+I(speed^2)+ in the model formula in \texttt{R}
+      \item Which model fits the data better?
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{Generalized linear model}
+
+\begin{frame}[allowframebreaks]{Intuition}
+  \begin{itemize}
+    \item In linear regerssion, a constant change in a predictor leads to a
+      constant change in the response variable\\
+        $\to$ implies that response variable can vary indefinitely in both
+          directions (or only varies by a relative small amount)
+    \item Generalized linear models allow for response variables that have
+      \textbf{arbitrary distributions} (rather than simply normal
+      distributions), and for an arbitrary function of the response
+      variable (the link function) to vary linearly with the predictors
+      (rather than assuming that the response itself must vary linearly)
+      \framebreak
+    \item Example 1: Model that predicts probability of making yes/no
+      choice
+      \begin{itemize}
+        \item A model that predicts the likelihood of a given person going
+          to the beach as a function of temperature
+        \item A reasonable model might predict, for example, that a change
+          in 10 degrees makes a person two times more or less likely to go
+          to the beach
+        \item That means th odds are doubling: from 2:1 odds to 4:1 odds
+          and so on
+      \end{itemize}
+    \item Example 2: Model that predicts a certain count
+      \begin{itemize}
+        \item A realistic model would predict a constant rate of
+          increased beach attendance (e.g. an increase of 10 degrees leads
+          to a doubling in beach attendance, and a drop of 10 degrees leads
+          to a halving in attendance
+        \item This prediction would be independent of the size of the beach
+      \end{itemize}
+  \end{itemize}
+  \vspace{.5cm}
+{\footnotesize\url{https://en.wikipedia.org/wiki/Generalized_linear_model}}
+\end{frame}
+
 \begin{frame}[fragile]{Generalized linear models}
   \begin{itemize}
     \item A generalized linear model is defined by
@@ -171,7 +334,7 @@ from the exponential family
   \end{itemize}
 \end{frame}
 
-\section{Logistic regression}
+\subsection{Logistic regression}
 
 \begin{frame}{Binomial regression}
   \begin{itemize}
@@ -220,8 +383,7 @@ exp(coef(glml))
 \begin{frame}[fragile]{Goodness of fit and predictions}
 \begin{lstlisting}
 # Compare to saturated model
-glms <- glm(cbind(y, n - y) ~ factor(x), binomial,
-  dat)
+glms <- glm(cbind(y, n - y) ~ factor(x), binomial, dat)
 
 # Likelihood ratio test
 anova(glml, glms, test="Chisq")
@@ -235,7 +397,48 @@ predict(glml, data.frame(x=newx), type="response")
 
 }
 
-\section{Poisson regression}
+\begin{frame}[fragile]{}
+  \begin{block}{Exercise}
+    \begin{itemize}
+\item In a psychophysical experiment two LEDs are presented to a
+  subject: a standard with 40\,cd/m$^2$ and a comparison with varying
+        intensities
+    \item The subject is supposed to say which stimulus is
+      brighter; each comparison is presented 40 times
+        \vspace{.2cm}
+\begin{center}
+\begin{tabular}{l|rrrrrrr}
+x (cd/m$^2$)  & 37 & 38 & 39 & 40 & 41 & 42 & 43 \\ \hline
+y (positiv)   &  2 &  3 & 10 & 25 & 34 & 36 & 39
+\end{tabular}
+\end{center}
+        \vspace{.2cm}
+\item Estimate parameters $c$ and $a$ of the logistic psychometric function
+\[
+  p_{pos} = \frac{1}{1 +
+    \exp(-\frac{\displaystyle x - c}{\displaystyle a})}
+\]
+using \texttt{glm()} with $logit(p_{pos}) = \beta_0 + \beta_1x$ where 
+        $a = 1/\beta_1$ and $c = -\beta_0/\beta_1$.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%\begin{frame}[fragile]{}
+%  \begin{block}{Homework}
+%    \begin{itemize}
+%      \item Calculate the intensity $x$ for which $p_{pos} = 0.5$ (Point of
+%        Subjective Equality, PSE)
+%      \item Create a plot for the probability to give a positive answer
+%        depending on the intensity of the comparison
+%      \item Use \texttt{predict()} to obtain the predicted values and add
+%        the logistic psychometric function to the plot
+%      \item Use \texttt{abline()} to add parameter $c$ to the plot
+%    \end{itemize}
+%  \end{block}
+%\end{frame}
+
+\subsection{Poisson regression}
 
 \begin{frame}{Poisson distribution}
 \begin{itemize}
@@ -325,8 +528,7 @@ dat$prog <- factor(dat$prog, levels=1:3,
 dat$id <- factor(dat$id)
 
 # Fit poisson regression
-m1 <- glm(num_awards ~ prog + math, family="poisson",
-  data=dat)
+m1 <- glm(num_awards ~ prog + math, family="poisson", data=dat)
 summary(m1)
 
 # Evaluate goodness-of-fit
@@ -433,47 +635,6 @@ summary(m2)
       (see, e.\,g.,
       \url{http://thestatsgeek.com/2014/04/26/deviance-goodness-of-fit-test-for-poisson-regression/})
   \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{}
-  \begin{block}{Exercise}
-    \begin{itemize}
-\item In a psychophysical experiment two LEDs are presented to a
-  subject: a standard with 40\,cd/m$^2$ and a comparison with varying
-        intensities
-    \item The subject is supposed to say which stimulus is
-      brighter; each comparison is presented 40 times
-        \vspace{.2cm}
-\begin{center}
-\begin{tabular}{l|rrrrrrr}
-x (cd/m$^2$)  & 37 & 38 & 39 & 40 & 41 & 42 & 43 \\ \hline
-y (positiv)   &  2 &  3 & 10 & 25 & 34 & 36 & 39
-\end{tabular}
-\end{center}
-        \vspace{.2cm}
-\item Estimate parameters $c$ and $a$ of the logistic psychometric function
-\[
-  p_{pos} = \frac{1}{1 +
-    \exp(-\frac{\displaystyle x - c}{\displaystyle a})}
-\]
-using \texttt{glm()} with $logit(p_{pos}) = \beta_0 + \beta_1x$ where 
-        $a = 1/\beta_1$ and $c = -\beta_0/\beta_1$.
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\begin{frame}[fragile]{}
-  \begin{block}{Homework}
-    \begin{itemize}
-      \item Calculate the intensity $x$ for which $p_{pos} = 0.5$ (Point of
-        Subjective Equality, PSE)
-      \item Create a plot for the probability to give a positive answer
-        depending on the intensity of the comparison
-      \item Use \texttt{predict()} to obtain the predicted values and add
-        the logistic psychometric function to the plot
-      \item Use \texttt{abline()} to add parameter $c$ to the plot
-    \end{itemize}
-  \end{block}
 \end{frame}
 
 % \appendix

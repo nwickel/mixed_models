@@ -2,11 +2,12 @@
 #
 # content: (1) Exercise 1
 #          (2) Exercise 2
+#          (3) Exercise 3
 #
 # input: --
 # output: --
 #
-# last mod: April/29/2021, NU
+# last mod: Nov/02/2022, NU
 
 #--------------- (1) Exercise 1 ---------------
 
@@ -28,6 +29,22 @@ aov1 <- aov(score ~ group, dat)
 )
 
 #--------------- (2) Exercise 2 ---------------
+
+data(cars)
+
+lm1 <- lm(dist ~ speed, cars)
+summary(lm1)
+
+hist(resid(lm1))
+
+par(mfrow=c(2,2))
+plot(lm1)
+
+lm2 <- lm(dist ~ speed + I(speed^2), cars)
+
+anova(lm1, lm2)
+
+#--------------- (3) Exercise 3 ---------------
 
 dat <- data.frame(x = 37:43,
                   y = c(2, 3, 10, 25, 34, 36, 39),
