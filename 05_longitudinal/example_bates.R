@@ -8,9 +8,9 @@
 # output: Plots
 #
 # created: Oct/12/2018, NU
-# last mod: May/25/2021, NU
+# last mod: Dec/07/2022, NU
 
-setwd("C:/Users/numbach/Nextcloud/Documents/teaching/regression/04_longitudinal/figures")
+setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/regression/05_longitudinal/figures")
 
 library(lattice)
 library(lme4)

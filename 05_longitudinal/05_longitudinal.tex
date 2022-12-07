@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 % \usepackage{pgfpages}
 % \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
 \usepackage{tikz}
@@ -26,10 +26,10 @@
 \setbeamercolor{date}{fg=iwmgrau}
 
 \title{Longitudinal data}
-\author{Nora Umbach%\footnote{These slides are a modified version of slides created by \url{https://osf.io/ /}. }
-}
+\author{Nora Wickelmaier}
+
 %\institute{\includegraphics[scale=.15]{figures/ut_logo}}
-\date{May 31, 2021}
+\date{December 19, 2022}
 %\date{Last modified: \today}
 
 \newcommand{\vect}[1]{\mathbf{#1}}
@@ -38,8 +38,6 @@
 \newcommand{\gmat}[1]{\boldsymbol{#1}}
 
 \lstset{language=R,%
-  literate={Ü}{{\"U}}1
-           {ü}{{\"u}}1,
   %backgroundcolor=\color{iwmgrau!80!white},
   basicstyle=\ttfamily\color{iwmorange},
   frame=single,
@@ -245,7 +243,7 @@ $\gvect{\upsilon}_i$, and the design matrices $\mat{X}_i$ and $\mat{Z}_i$
   \end{itemize}
 \end{frame}
 
-\begin{frame}[shrink=25]{Linear mixed-effects model}
+\begin{frame}[shrink=10]{Linear mixed-effects model}
 \vspace{2cm}
 \begin{equation*}
   \begin{pmatrix}
@@ -354,9 +352,10 @@ with
       tests given each day to each subject
   \end{itemize}
 
+  \vfill
   A data frame with 180 observations on the following 3 variables\\~\\
 
-  \begin{tabular}{lp{8cm}}
+  \begin{tabular}{ll}
     \hline
      \texttt{Reaction} & Average reaction time (ms) \\
      \texttt{Days} & Number of days of sleep deprivation \\
@@ -395,7 +394,7 @@ with
 
 \begin{frame}{Visualization of individual data}
   \begin{center}
-      \includegraphics[scale=.4]{figures/sleep_subjects}
+      \includegraphics[scale=.37]{figures/sleep_subjects}
   \end{center}
 \end{frame}
 
@@ -407,7 +406,7 @@ library(lattice)
 
 xyplot(Reaction ~ Days | Subject, sleepstudy,
   type = c("g","b"),
-  index.cond = function(x,y){ coef(lm(y ~ x))[1]},
+  index.cond = function(x,y){ coef(lm(y ~ x))[1] },
   xlab = "Days of sleep deprivation",
   ylab = "Average reaction time (ms)",
   aspect = "xy")
@@ -426,17 +425,18 @@ boxplot(Reaction ~ Days, sleepstudy)
 \text{(2) in (1)} \quad y_{ij} &= \beta_0 + \beta_1\,Days_{ij} +
                                   \upsilon_{0i} + \varepsilon_{ij}
 \end{align*}
+\vfill
 with $\upsilon_{0i} \sim N(0, \sigma^2_{\upsilon})$ i.i.d.,
 $\varepsilon_{ij} \sim N(0, \sigma^2)$ i.i.d., $\upsilon_{0i}$ and
 $\varepsilon_{ij}$ i.i.d.\\[2ex]
+\vfill
 \end{frame}
 
 {\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
 
 \begin{frame}[fragile]{Random intercept model}
 \begin{lstlisting}
-lme0 <- lmer(Reaction ~ Days + (1 | Subject),
-  sleepstudy, REML=FALSE)
+lme0 <- lmer(Reaction ~ Days + (1 | Subject), sleepstudy)
 summary(lme0)
 
 # Model matrices
@@ -454,7 +454,7 @@ ranef(lme0)
 
 \begin{frame}{Visualization of individual data}
   \begin{center}
-      \includegraphics[scale=.4]{figures/sleep_random_intercept}
+      \includegraphics[scale=.37]{figures/sleep_random_intercept}
   \end{center}
 \end{frame}
 
@@ -476,7 +476,7 @@ with
         \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_1} \\
       \end{pmatrix} \right)
     \text{ i.i.d.} \\
-  \gvect{\varepsilon}_i &\sim N(\vect{0}, \, \sigma^2 \mat{I}_{n_i})
+  \varepsilon_{ij} & \sim N(0, \sigma_{\varepsilon}^2)
     \text{ i.i.d.}
 \end{align*}
 \end{frame}
@@ -485,14 +485,12 @@ with
 
 \begin{frame}[fragile]{Random intercept model}
 \begin{lstlisting}
-lme1 <- lmer(Reaction ~ Days + (Days | Subject),
-  sleepstudy, REML=FALSE)
+lme1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 summary(lme1)
 
 # Model matrices
 X <- model.matrix(~ Days, sleepstudy)
-Z <- model.matrix(~ 0 + Subject + Subject:Days,
-  sleepstudy)
+Z <- model.matrix(~ 0 + Subject + Subject:Days, sleepstudy)
 
 # Coefficients
 coef(lme1)
@@ -506,7 +504,7 @@ ranef(lme1)
 
 \begin{frame}{Visualization of individual data}
   \begin{center}
-      \includegraphics[scale=.4]{figures/sleep_random_slope}
+      \includegraphics[scale=.37]{figures/sleep_random_slope}
   \end{center}
 \end{frame}
 
@@ -517,21 +515,24 @@ ranef(lme1)
     y_{ij} = \beta_0 + \beta_1 Days_{ij} + \upsilon_{0i} + \upsilon_{1i} Days_{ij} +
     \varepsilon_{ij}
   \]
-with $\gvect{\upsilon} \sim N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} = 
+with
+\begin{align*}
+  \gvect{\upsilon} & \sim N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} = 
     \begin{pmatrix}
       \sigma^2_{\upsilon_0} & 0 \\
       0 & \sigma^2_{\upsilon_1} \\
-    \end{pmatrix}\right)$,
-  $\varepsilon_{ij} \sim N(0, \sigma_{\varepsilon}^2)$ 
+    \end{pmatrix}\right) 
+    \text{ i.i.d.} \\
+  \varepsilon_{ij} & \sim N(0, \sigma_{\varepsilon}^2)
+    \text{ i.i.d.}
+\end{align*}
 \end{frame}
 
 {\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
 
 \begin{frame}[fragile]{Mixed-effects model with uncorrelated random effects}
   \begin{lstlisting}
-lme2 <- lmer(Reaction ~ Days + (Days || Subject),
-  sleepstudy, REML=FALSE)
-
+lme2 <- lmer(Reaction ~ Days + (Days || Subject), sleepstudy)
 summary(lme2)
 
 # Likelihood-ratio test
@@ -568,8 +569,8 @@ fixef(lme2)
 ranef(lme2)
 
 # Correlational structure for intercepts and slopes
-dotplot(ranef(lme2, condVar=TRUE),
-      scales=list(x=list(relation="free")))[[1]]
+dotplot(ranef(lme2, condVar = TRUE),
+      scales = list(x = list(relation = "free")))[[1]]
 
 # Predictions for all subjects
 predict(lme2)
@@ -586,7 +587,7 @@ predict(lme2)
 
 \begin{frame}{Examining random effects and predictions}
   \begin{center}
-    \includegraphics[scale=.5]{figures/sleep_shrinkfit}
+    \includegraphics[scale=.48]{figures/sleep_shrinkfit}
   \end{center}
 \end{frame}
 
@@ -606,7 +607,7 @@ predict(lme2)
 
 \begin{frame}{Shrinkage}
   \begin{center}
-    \includegraphics[scale=.5]{figures/sleep_shrinkage}
+    \includegraphics[scale=.48]{figures/sleep_shrinkage}
   \end{center}
 \end{frame}
 
