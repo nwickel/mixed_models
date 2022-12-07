@@ -19,12 +19,12 @@ sy1 <- 9
 ry  <- -1
 se  <- 9.9
 
-w <- rnorm(3, mean=0, sd=sw)
-e <- rnorm(n*6, mean=0, sd=se)
+w <- rnorm(3, mean = 0, sd = sw)
+e <- rnorm(n * 6, mean = 0, sd = se)
 
 # Bivariate normal distribution
 sig <- matrix(c(sy0^2, ry*sy0*sy1, ry*sy0*sy1, sy1^2), 2, 2)
-y01 <- mvtnorm::rmvnorm(n, mean=c(0, 0), sigma=sig)
+y01 <- mvtnorm::rmvnorm(n, mean = c(0, 0), sigma = sig)
 
 beta <- c(beta0, beta1)
 # Random effects

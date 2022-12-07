@@ -10,7 +10,7 @@
 # output: --
 #
 # created: Jun/29/2021, NU
-# last mod: Jun/29/2021, NU
+# last mod: Dec/07/2022, NU
 
 library(lattice)
 library(lme4)
@@ -36,18 +36,19 @@ se  <- 9.9
 
 # Fixed effects
 b0 <- rep(beta0, 18)
-b1 <- rep(rep(c(0, beta1), each=3), 3)
+b1 <- rep(rep(c(0, beta1), each = 3), 3)
+
 # Draw random effects
-w <- rep(rnorm(3, mean=0, sd=sw), 6)
-e <- rnorm(18, mean=0, sd=se)
+w <- rep(rnorm(3, mean = 0, sd = sw), 6)
+e <- rnorm(18, mean = 0, sd = se)
 
 # Bivariate normal distribution
 sig <- matrix(c(sy0^2, ry*sy0*sy1, ry*sy0*sy1, sy1^2), 2, 2)
-y01 <- mvtnorm::rmvnorm(3, mean=c(0, 0), sigma=sig)
-y0 <- rep(y01[,1], each=6)
+y01 <- mvtnorm::rmvnorm(3, mean = c(0, 0), sigma = sig)
+y0 <- rep(y01[,1], each = 6)
 y1 <- rep(c(0, y01[1,2],
             0, y01[2,2],
-            0, y01[3,2]), each=3)
+            0, y01[3,2]), each = 3)
 
 datsim$rt <- b0 + b1 + w + y0 + y1 + e
 
@@ -55,8 +56,8 @@ datsim$rt <- b0 + b1 + w + y0 + y1 + e
 
 X <- model.matrix( ~ soa, datsim)
 Z <- model.matrix( ~ 0 + item + subject + subject:soa, datsim,
-                  contrasts.arg=list( subject=contrasts(datsim$subject,
-                                                        contrasts=FALSE)))
+                  contrasts.arg = list(subject = contrasts(datsim$subject,
+                                                        contrasts = FALSE)))
 
 # Fixed effects
 beta <- c(beta0, beta1)
@@ -69,6 +70,6 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
 
 #--------------- (5) Visualize simulated data ---------------
 
-xyplot(rt ~ soa | subject, datsim, group=item, type="b", layout=c(3,1))
+xyplot(rt ~ soa | subject, datsim, group = item, type = "b", layout = c(3,1))
 
 

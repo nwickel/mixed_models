@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 % \usepackage{pgfpages}
 % \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
 \usepackage{tikz}
@@ -26,10 +26,9 @@
 \setbeamercolor{date}{fg=iwmgrau}
 
 \title{Data simulation for linear mixed-effects models}
-\author{Nora Umbach%\footnote{These slides are a modified version of slides created by \url{https://osf.io/ /}. }
-}
+\author{Nora Wickelmaier}
 %\institute{\includegraphics[scale=.15]{figures/ut_logo}}
-\date{July 12, 2021}
+\date{January 9, 2023}
 %\date{Last modified: \today}
 
 \newcommand{\vect}[1]{\mathbf{#1}}
@@ -38,8 +37,6 @@
 \newcommand{\gmat}[1]{\boldsymbol{#1}}
 
 \lstset{language=R,%
-  literate={Ü}{{\"U}}1
-           {ü}{{\"u}}1,
   %backgroundcolor=\color{iwmgrau!80!white},
   basicstyle=\ttfamily\color{iwmorange},
   frame=single,
@@ -149,10 +146,10 @@ with $\gvect{\upsilon} \sim N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} =
   \sigma_{\varepsilon}^2)$ 
 \end{frame}
 
-\begin{frame}{Example data set}
-  \scriptsize
+\begin{frame}[shrink=34]{Example data set}
 With random intercepts for subject and item, and random slopes for
   subject\\[1.5ex]
+  \centering
   \begin{tabular}{llllcrrrcr}
     \hline
     Subj & Item & SOA & RT & Fixed &&  Random &&& Res \\
@@ -189,10 +186,9 @@ With random intercepts for subject and item, and random slopes for
 
 \begin{frame}[fragile]{Fixed effects}
   \begin{lstlisting}
-datsim <- 
-  expand.grid(subject = factor(c("s1", "s2", "s3")),
-              item = factor(c("w1", "w2", "w3")),
-              soa = factor(c("long", "short")))
+datsim <- expand.grid(subject = factor(c("s1", "s2", "s3")),
+                      item = factor(c("w1", "w2", "w3")),
+                      soa = factor(c("long", "short")))
 datsim <- datsim[order(datsim$subject), ]
 
 # Model matrix in dummy coding
@@ -200,10 +196,8 @@ model.matrix(~ soa, datsim)
 
 beta0  <- 522.11
 beta1  <- -18.89
-
 b0 <- rep(beta0, 18)
-b1 <- rep(rep(c(0, beta1), each=3), 3)
-
+b1 <- rep(rep(c(0, beta1), each = 3), 3)
 cbind(b0, b1)
   \end{lstlisting}
 \end{frame}
@@ -211,19 +205,18 @@ cbind(b0, b1)
 \begin{frame}[fragile]{Random effects}
   \begin{lstlisting}
 sw  <- 21.1
-sy0 <- 23.89; sy1 <- 9; ry  <- -1
+sy0 <- 23.89; sy1 <- 9; ry <- -1
 se  <- 9.9
 
-w  <- rep(rnorm(3, mean=0, sd=sw), 6)
-e  <- rnorm(18, mean=0, sd=se)
+w  <- rep(rnorm(3, mean = 0, sd = sw), 6)
+e  <- rnorm(18, mean = 0, sd = se)
 # Draw from bivariate normal distribution
-sig <- matrix(c(sy0^2, ry*sy0*sy1, ry*sy0*sy1, sy1^2),
-              2, 2)
-y01 <- mvtnorm::rmvnorm(3, mean=c(0, 0), sigma=sig)
-y0 <- rep(y01[,1], each=6)
+sig <- matrix(c(sy0^2, ry*sy0*sy1, ry*sy0*sy1, sy1^2), 2, 2)
+y01 <- mvtnorm::rmvnorm(3, mean = c(0, 0), sigma = sig)
+y0 <- rep(y01[,1], each = 6)
 y1 <- rep(c(0, y01[1,2],
             0, y01[2,2],
-            0, y01[3,2]), each=3)
+            0, y01[3,2]), each = 3)
 cbind(w, y0, y1, e)
   \end{lstlisting}
 \end{frame}
@@ -235,8 +228,7 @@ datsim$rt <- b0 + b1 + w + y0 + y1 + e
 # Fit model
 library(lme4)
 
-lme1 <- lmer(rt ~ soa + (1 | item) + (soa | subject),
-  datsim, REML=F)
+lme1 <- lmer(rt ~ soa + (1 | item) + (soa | subject), datsim, REML=F)
 summary(lme1)
 confint(lme1)
 
@@ -309,7 +301,7 @@ $\gvect{\upsilon}_i$, and the design matrices $\mat{X}_i$ and $\mat{Z}_i$
   \end{itemize}
 \end{frame}
 
-\begin{frame}[shrink=25]{Linear mixed-effects model}
+\begin{frame}[shrink=10]{Linear mixed-effects model}
 \vspace{2cm}
 \begin{equation*}
   \begin{pmatrix}
@@ -362,9 +354,9 @@ $\gvect{\upsilon}_i$, and the design matrices $\mat{X}_i$ and $\mat{Z}_i$
 \begin{frame}[fragile]{Simulate data using model matrices}
   \begin{lstlisting}
 X <- model.matrix( ~ soa, datsim)
-Z <- model.matrix( ~ 0 + item + subject + subject:soa,
-  datsim, contrasts.arg=list(
-  subject=contrasts(datsim$subject, contrasts=FALSE)))
+Z <- model.matrix( ~ 0 + item + subject + subject:soa, datsim,
+  contrasts.arg = 
+    list(subject = contrasts(datsim$subject, contrasts = FALSE)))
 
 # Fixed effects
 beta  <- c(beta0, beta1)
@@ -388,7 +380,7 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
       \item Download the script \verb+simulation_baayen.R+ and adjust it
         accordingly.
       \item You can choose if you want to use model matrices or create
-        the vectors ``manually''.
+        the vectors ``manually.''
     \end{itemize}
   \end{block}
 \end{frame}
@@ -418,6 +410,7 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
    (\pi\alpha)_{ik} + (\pi\beta)_{jk} + \varepsilon_{ijk}
  \]
 
+\centering
   \begin{tabular}{crrrrrrrr}
     \hline
     subj & $\mu$ & $\alpha$ & $\beta$ & $(\alpha\beta)$ & $\pi$ & $(\pi\alpha)$ &
@@ -447,6 +440,7 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
         (\pi\alpha)_{ik} + (\pi\beta)_{jk} + \varepsilon_{ijk}
       \]
 
+\centering
   \begin{tabular}{c|l|c}
     \hline
     subj &  & $y_{ijk}$ \\
@@ -467,7 +461,6 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
 
 \begin{frame}{Matrix notation}
 {Effect coding}
-{\tiny
 \[
   \begin{pmatrix}
     y_{111}\\
@@ -524,7 +517,6 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
     e_{22n}
   \end{pmatrix}
 \]
-}
 \end{frame}
 
 {\setbeamercolor{background canvas}{bg=iwmgrau!80!white}
@@ -532,7 +524,7 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
 \begin{frame}[fragile]{From model to data}
   \begin{lstlisting}
 # Set effect coding 
-options(contrasts=c("contr.sum", "contr.poly"))
+options(contrasts = c("contr.sum", "contr.poly"))
 
 n <- 30
 
@@ -541,10 +533,10 @@ dat <- expand.grid(A = factor(c("a1", "a2")),
                    subj = factor(1:n))
 
 # Fixed effects (in ms), effect coding
-beta <- c(mu=500, a1=10, b1=20, ab11=-30)
+beta <- c(mu = 500, a1 = 10, b1 = 20, ab11 = -30)
 
 # Model matrix 
-X <- model.matrix(~ A*B, dat)
+X <- model.matrix(~ A * B, dat)
   \end{lstlisting}
 \end{frame}
 
@@ -557,25 +549,25 @@ spb <-  8
 se  <- 15
 
 # Random effects
-u <- c(p = rnorm(n, sd=sp), 
-       pa = rnorm(2*n, sd=spa), 
-       pb = rnorm(2*n, sd=spb))
+u <- c(p = rnorm(n, sd = sp), 
+       pa = rnorm(2 * n, sd = spa), 
+       pb = rnorm(2 * n, sd = spb))
 
 Z <- model.matrix(~ 0 + subj + subj:A + subj:B, dat, 
-                contrasts.arg=lapply(dat, contrasts,
-                                   contrasts=FALSE))
+  contrasts.arg = lapply(dat, contrasts, contrasts = FALSE))
   \end{lstlisting}
 \end{frame}
 
 
 \begin{frame}[fragile]{From model to data}
-  \begin{lstlisting}
+\begin{lstlisting}
 # Calculate dependent variable
 dat$RT <- X %*% beta + Z %*% u + rnorm(2*2*n, sd=se)
 
-with(dat, interaction.plot(A, B, RT, type="b", 
-  pch=c(21, 16), ylim=c(400, 600)))
-  \end{lstlisting}
+# Look at simulated data
+with(dat, interaction.plot(A, B, RT, type="b", pch = c(21, 16),
+  ylim = c(400, 600)))
+\end{lstlisting}
   \nocite{Wickelmaier2020}
 \end{frame}
 
