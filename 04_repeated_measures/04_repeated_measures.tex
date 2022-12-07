@@ -277,9 +277,9 @@ Empirical correlation matrix of HDRS score
 
 \begin{frame}[fragile]{Depression and Imipramin}
   \begin{lstlisting}
-dat      <- read.table("reisby.dat", header=TRUE)
+dat      <- read.table("reisby.dat", header = TRUE)
 dat$id   <- factor(dat$id)
-dat$diag <- factor(dat$diag, levels=c("nonen", "endog"))
+dat$diag <- factor(dat$diag, levels = c("nonen", "endog"))
 dat      <- na.omit(dat)     # Drop missing values
 
 # Descriptive statistics
@@ -288,8 +288,8 @@ aggregate(hamd ~ week, dat, sd)
 aggregate(hamd ~ week, dat, length)
 
 cor(reshape(dat[, c("hamd", "id", "week")], 
-            direction="wide", timevar="week")[, 2:7],
-    use="pairwise.complete.obs")
+            direction = "wide", timevar = "week")[, 2:7],
+    use = "pairwise.complete.obs")
   \end{lstlisting}
 \end{frame}
 
@@ -335,7 +335,7 @@ anova(lme1)
 # Calculate mean sum of squares for id by hand
 sp <- attr(VarCorr(lme1)$id, "stddev")
 se <- sigma(lme1)
-se^2 + 6*sp^2
+se^2 + 6 * sp^2
   \end{lstlisting}
 \end{frame}
 
@@ -527,7 +527,7 @@ anova(lme1, lme2)
   \begin{itemize}
     \item Assumptions of repeated measures ANOVA are often too restrictive
       for measurements taken over time
-    \item Mixed-effects model allow for a more flexible variance-covariance
+    \item Mixed-effects models allow for a more flexible variance-covariance
       structure
     \item (For within designs where assumptions of equal variance are more
       plausible, repeated measures ANOVA is well suited)
@@ -550,7 +550,7 @@ anova(lme1, lme2)
 \begin{frame}[fragile]{Fitting repeated-measures ANOVA}
   \begin{lstlisting}
 # ANOVA with aov()
-aov2 <- aov(hamd ~ week2*diag + Error(id/week2), dat_val)
+aov2 <- aov(hamd ~ week2 * diag + Error(id/week2), dat_val)
 summary(aov2)
 
 # Using ezANOVA()
@@ -564,20 +564,20 @@ ez2$ANOVA
 \begin{frame}[fragile]{Fitting repeated-measures ANOVA}
   \begin{lstlisting}
 # Mixed-effects model
-lme2 <- lmer(hamd ~ week2*diag + (1 | id), dat_val)
+lme2 <- lmer(hamd ~ week2 * diag + (1 | id), dat_val)
 anova(lme2)
 
 # Calculate mean sum of squares for id by hand
 sp <- attr(VarCorr(lme2)$id, "stddev")
 se <- attr(VarCorr(lme2), "sc")
-se^2 + 6*sp^2
+se^2 + 6 * sp^2
   \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Fitting mixed-effects model}
   \begin{lstlisting}
 # And this works on the complete data set
-lme3 <- lmer(hamd ~ week2*diag + (1 | id), dat)
+lme3 <- lmer(hamd ~ week2 * diag + (1 | id), dat)
 anova(lme3)
 
 # Type I sum of squares
