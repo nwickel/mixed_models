@@ -13,7 +13,7 @@
 # created: Jul/20/2018, NU
 # last mod: Jun/07/2021, NU
 
-setwd("C:/Users/numbach/Nextcloud/Documents/teaching/regression/05_repeated_measures/")
+# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/regression/04_repeated_measures/")
 
 library(lattice)
 library(lme4)
@@ -133,8 +133,7 @@ ez2 <- ezANOVA(data = dat_val, dv = hamd, wid = id,
                type = 3)
 ez2$ANOVA
  
-lme2 <- lmer(hamd ~ week2*diag + (1 | id),
-            dat_val)
+lme2 <- lmer(hamd ~ week2*diag + (1 | id), dat_val)
 anova(lme2)
 
 # Calculate mean sum of squares for id by hand
