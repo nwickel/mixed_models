@@ -411,6 +411,7 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
  \]
 
 \centering
+  {\small
   \begin{tabular}{crrrrrrrr}
     \hline
     subj & $\mu$ & $\alpha$ & $\beta$ & $(\alpha\beta)$ & $\pi$ & $(\pi\alpha)$ &
@@ -427,7 +428,7 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
     30 & $500$ & $-10$ & $-20$ & $-30$ & $7.94$ & $4.98$ & $-0.64$ & $28.02$\\
     \hline
   \end{tabular}
-
+  }
   \begin{align*}
     \sigma_{\pi}      & = 10 & \sigma_{\pi\alpha}   & =  7 \\
     \sigma_{\pi\beta} & =  8 & \sigma_{\varepsilon} & = 15
@@ -475,16 +476,16 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
     \vdots & \vdots & \vdots & \vdots \\
     1 & -1 & 1 & -1\\
     \vdots & \vdots & \vdots & \vdots \\
-    1 & 1 & -1 & 1\\
+    1 & 1 & -1 & -1\\
     \vdots & \vdots & \vdots & \vdots \\
-    1 & -1 & -1 & -1
+    1 & -1 & -1 & 1
   \end{pmatrix}
 \times
   \begin{pmatrix}
     \mu\\
-    \alpha_1\\
-    \beta_1\\
-    \alpha\beta_{22}
+    \alpha_2\\
+    \beta_2\\
+    (\alpha\beta)_{22}
   \end{pmatrix}
 +
   \begin{pmatrix}
@@ -533,7 +534,7 @@ dat <- expand.grid(A = factor(c("a1", "a2")),
                    subj = factor(1:n))
 
 # Fixed effects (in ms), effect coding
-beta <- c(mu = 500, a1 = 10, b1 = 20, ab11 = -30)
+beta <- c(mu = 500, a2 = -10, b2 = -20, ab22 = -30)
 
 # Model matrix 
 X <- model.matrix(~ A * B, dat)
@@ -565,10 +566,10 @@ Z <- model.matrix(~ 0 + subj + subj:A + subj:B, dat,
 dat$RT <- X %*% beta + Z %*% u + rnorm(2*2*n, sd=se)
 
 # Look at simulated data
-with(dat, interaction.plot(A, B, RT, type="b", pch = c(21, 16),
+with(dat, interaction.plot(A, B, RT, type = "b", pch = c(21, 16),
   ylim = c(400, 600)))
 \end{lstlisting}
-  \nocite{Wickelmaier2020}
+  \nocite{Wickelmaier2022}
 \end{frame}
 
 }

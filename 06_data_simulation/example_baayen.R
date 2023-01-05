@@ -9,9 +9,9 @@
 # output: 
 #
 # created: Jul/20/2018, NU
-# last mod: Jul/22/2018, NU
+# last mod: Jan/05/2023, NU
 
-setwd("C:/Users/numbach/Work Folders/Documents/Methodenseminar/2018/statistics_seminar/10_mixed_models/")
+#setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/regression/06_data_simulation/")
 
 library(lattice)
 library(lme4)
@@ -106,7 +106,7 @@ anova(lme4, lme3, lme2, lme1)
 confint(lme3, method="boot")
 
 # looking at model assumptions
-pdf("baayen_assumptions.pdf", width=5, height=5, pointsize=10)
+pdf("figures/baayen_assumptions.pdf", width=5, height=5, pointsize=10)
 par(mai=c(.6,.6,.1,.1), mgp=c(2.4, 1, 0))
 #
 plot(lme3)
