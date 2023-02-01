@@ -1,0 +1,6 @@
+Power Analysis and Sample Size Calculation
+
+Florian Wickelmaier
+
+Help, my effect size is too large! Such a complaint is rarely heard in statistical consultancy. Yet, unrealistically large effect estimates are an artifact resulting from a combination of low power and selection by significance. Conversely, high power is a necessary condition for valid inference. In this workshop, I will introduce how to calculate the power of a statistical test by computer simulation, provide R code for power simulations, and present real-world examples and hands-on exercises. Participants should bring their own laptops.
+
