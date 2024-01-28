@@ -1,4 +1,4 @@
-# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/regression/08_power_simulation/")
+# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/iwm/regression/08_power_simulation/")
 
 library(lme4)
 

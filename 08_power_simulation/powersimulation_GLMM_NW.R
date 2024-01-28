@@ -22,7 +22,7 @@
 # created: Jan/20/2023, NW
 # last mod: Feb/02/2023, NW
 
-# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/regression/08_power_simulation/")
+# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/iwm/regression/08_power_simulation/")
 
 library(lme4)
 library(ggplot2)
