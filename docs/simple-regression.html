@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 1 Simple regression | Course on Mixed-effects Models at the IWM</title>
+  <meta name="description" content="Chapter 1 Simple regression | Course on Mixed-effects Models at the IWM" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 1 Simple regression | Course on Mixed-effects Models at the IWM" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta name="github-repo" content="TODO" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 1 Simple regression | Course on Mixed-effects Models at the IWM" />
+  
+  
+  
+
+<meta name="author" content="Nora Wickelmaier" />
+
+
+<meta name="date" content="2024-10-04" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="literature.html"/>
+<link rel="next" href="generalized-linear-models.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/codefolding-lua-1.1/codefolding-lua.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Mixed-effects Models</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview of dates</a></li>
+<li class="chapter" data-level="" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i>Literature</a></li>
+<li class="chapter" data-level="1" data-path="simple-regression.html"><a href="simple-regression.html"><i class="fa fa-check"></i><b>1</b> Simple regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="simple-regression.html"><a href="simple-regression.html#slides"><i class="fa fa-check"></i><b>1.1</b> Slides</a></li>
+<li class="chapter" data-level="1.2" data-path="simple-regression.html"><a href="simple-regression.html#exercises"><i class="fa fa-check"></i><b>1.2</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="" data-path="simple-regression.html"><a href="simple-regression.html#exercise-1"><i class="fa fa-check"></i>Exercise 1</a></li>
+<li class="chapter" data-level="" data-path="simple-regression.html"><a href="simple-regression.html#exercise-2"><i class="fa fa-check"></i>Exercise 2</a></li>
+<li class="chapter" data-level="" data-path="simple-regression.html"><a href="simple-regression.html#example-to-illustrate-assumptions"><i class="fa fa-check"></i>Example to illustrate assumptions</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="generalized-linear-models.html"><a href="generalized-linear-models.html"><i class="fa fa-check"></i><b>2</b> Generalized linear models</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="generalized-linear-models.html"><a href="generalized-linear-models.html#slides-1"><i class="fa fa-check"></i><b>2.1</b> Slides</a></li>
+<li class="chapter" data-level="2.2" data-path="generalized-linear-models.html"><a href="generalized-linear-models.html#exercises-1"><i class="fa fa-check"></i><b>2.2</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="prepost-measurements.html"><a href="prepost-measurements.html"><i class="fa fa-check"></i><b>3</b> Pre/post measurements</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="prepost-measurements.html"><a href="prepost-measurements.html#slides-2"><i class="fa fa-check"></i><b>3.1</b> Slides</a></li>
+<li class="chapter" data-level="3.2" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercises-2"><i class="fa fa-check"></i><b>3.2</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="repeated-measurements.html"><a href="repeated-measurements.html"><i class="fa fa-check"></i><b>4</b> Repeated measurements</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="repeated-measurements.html"><a href="repeated-measurements.html#slides-3"><i class="fa fa-check"></i><b>4.1</b> Slides</a></li>
+<li class="chapter" data-level="4.2" data-path="repeated-measurements.html"><a href="repeated-measurements.html#exercises-3"><i class="fa fa-check"></i><b>4.2</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="longitudinal-data.html"><a href="longitudinal-data.html"><i class="fa fa-check"></i><b>5</b> Longitudinal data</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="longitudinal-data.html"><a href="longitudinal-data.html#slides-4"><i class="fa fa-check"></i><b>5.1</b> Slides</a></li>
+<li class="chapter" data-level="5.2" data-path="longitudinal-data.html"><a href="longitudinal-data.html#exercises-4"><i class="fa fa-check"></i><b>5.2</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="data-simulation-for-linear-mixed-effects-models.html"><a href="data-simulation-for-linear-mixed-effects-models.html"><i class="fa fa-check"></i><b>6</b> Data simulation for linear mixed-effects models</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="data-simulation-for-linear-mixed-effects-models.html"><a href="data-simulation-for-linear-mixed-effects-models.html#slides-5"><i class="fa fa-check"></i><b>6.1</b> Slides</a></li>
+<li class="chapter" data-level="6.2" data-path="data-simulation-for-linear-mixed-effects-models.html"><a href="data-simulation-for-linear-mixed-effects-models.html#exercises-5"><i class="fa fa-check"></i><b>6.2</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="introduction-to-power.html"><a href="introduction-to-power.html"><i class="fa fa-check"></i><b>7</b> Introduction to power</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="introduction-to-power.html"><a href="introduction-to-power.html#slides-6"><i class="fa fa-check"></i><b>7.1</b> Slides</a></li>
+<li class="chapter" data-level="7.2" data-path="introduction-to-power.html"><a href="introduction-to-power.html#exercises-6"><i class="fa fa-check"></i><b>7.2</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="power-simulation-for-glmm.html"><a href="power-simulation-for-glmm.html"><i class="fa fa-check"></i><b>8</b> Power simulation for GLMM</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="power-simulation-for-glmm.html"><a href="power-simulation-for-glmm.html#slides-7"><i class="fa fa-check"></i><b>8.1</b> Slides</a></li>
+<li class="chapter" data-level="8.2" data-path="power-simulation-for-glmm.html"><a href="power-simulation-for-glmm.html#exercises-7"><i class="fa fa-check"></i><b>8.2</b> Exercises</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Course on Mixed-effects Models at the IWM</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="simple-regression" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">Chapter 1</span> Simple regression<a href="simple-regression.html#simple-regression" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This chapter is meant to give a short introduction to simple regression. It is
+mostly meant to reintroduce some basics concepts, introduce notation, and get
+everybody on the same page.</p>
+<div id="slides" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> Slides<a href="simple-regression.html#slides" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<object data="../slides/01_regression/01_regression.pdf" type="application/pdf" width="100%" height="500px">
+  <p>
+    Unable to display PDF file. <a href="../slides/01_regression/01_regression.pdf">Download</a> instead.
+  </p>
+</object>
+</div>
+<div id="exercises" class="section level2 hasAnchor" number="1.2">
+<h2><span class="header-section-number">1.2</span> Exercises<a href="simple-regression.html#exercises" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="exercise-1" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 1<a href="simple-regression.html#exercise-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Simulate a data set based on a simple regression model with</p>
+<p><span class="math display">\[\begin{align*}
+  \beta_0 &amp; = 0.2\\
+  \beta_1 &amp; = 0.3\\
+  \sigma &amp; = 0.5\\
+  x &amp; \in [1, 20]~\text{in steps of 1}
+\end{align*}\]</span></p>
+<p>What functions in R do we need?</p>
+<div id="solution" class="section level4 unnumbered hasAnchor">
+<h4>Solution<a href="simple-regression.html#solution" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb1-1"><a href="simple-regression.html#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span></span>
+<span id="cb1-2"><a href="simple-regression.html#cb1-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(x)</span>
+<span id="cb1-3"><a href="simple-regression.html#cb1-3" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb1-4"><a href="simple-regression.html#cb1-4" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb1-5"><a href="simple-regression.html#cb1-5" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb1-6"><a href="simple-regression.html#cb1-6" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="sc">+</span> <span class="fl">0.3</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>sigma)</span>
+<span id="cb1-7"><a href="simple-regression.html#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="simple-regression.html#cb1-8" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y)</span>
+<span id="cb1-9"><a href="simple-regression.html#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="simple-regression.html#cb1-10" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, dat)</span>
+<span id="cb1-11"><a href="simple-regression.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm1)</span>
+<span id="cb1-12"><a href="simple-regression.html#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="simple-regression.html#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">resid</span>(lm1))</span>
+<span id="cb1-14"><a href="simple-regression.html#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(<span class="fu">resid</span>(lm1))</span>
+<span id="cb1-15"><a href="simple-regression.html#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">resid</span>(lm1), <span class="at">breaks=</span><span class="dv">15</span>)</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.1-1.png" width="672" /></p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb2-1"><a href="simple-regression.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot data</span></span>
+<span id="cb2-2"><a href="simple-regression.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> x, dat)</span>
+<span id="cb2-3"><a href="simple-regression.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lm1)</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.1-2.png" width="672" /></p>
+</div>
+</div>
+<div id="exercise-2" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 2<a href="simple-regression.html#exercise-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><p>Simulate data with the parameters from Exercise 1</p></li>
+<li><p>Do not assume that we have one subject per value for <span class="math inline">\(x\)</span>, but more than one subject</p></li>
+<li><p>Simulate data for <span class="math inline">\(n=40\)</span> and <span class="math inline">\(n=100\)</span></p>
+<p>Hint: Use <code>sample(x, n, replace = TRUE)</code></p></li>
+<li><p>Re-cover your parameters as done on slide 11</p></li>
+<li><p>What happens to your standard errors?</p></li>
+</ul>
+<div id="solution-1" class="section level4 unnumbered hasAnchor">
+<h4>Solution<a href="simple-regression.html#solution-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb3-1"><a href="simple-regression.html#cb3-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="co"># 40</span></span>
+<span id="cb3-2"><a href="simple-regression.html#cb3-2" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span></span>
+<span id="cb3-3"><a href="simple-regression.html#cb3-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">sample</span>(x0, n, <span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb3-4"><a href="simple-regression.html#cb3-4" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fl">0.2</span></span>
+<span id="cb3-5"><a href="simple-regression.html#cb3-5" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fl">0.3</span></span>
+<span id="cb3-6"><a href="simple-regression.html#cb3-6" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb3-7"><a href="simple-regression.html#cb3-7" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="sc">+</span> <span class="fl">0.3</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>sigma)</span>
+<span id="cb3-8"><a href="simple-regression.html#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="simple-regression.html#cb3-9" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(x, y)</span>
+<span id="cb3-10"><a href="simple-regression.html#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="simple-regression.html#cb3-11" aria-hidden="true" tabindex="-1"></a>pars <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">2000</span>, {</span>
+<span id="cb3-12"><a href="simple-regression.html#cb3-12" aria-hidden="true" tabindex="-1"></a>  ysim <span class="ot">&lt;-</span> <span class="fl">0.2</span> <span class="sc">+</span> <span class="fl">0.3</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd=</span>sigma)</span>
+<span id="cb3-13"><a href="simple-regression.html#cb3-13" aria-hidden="true" tabindex="-1"></a>  lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(ysim <span class="sc">~</span> x, dat)</span>
+<span id="cb3-14"><a href="simple-regression.html#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fu">coef</span>(lm1), <span class="fu">sigma</span>(lm1))</span>
+<span id="cb3-15"><a href="simple-regression.html#cb3-15" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-16"><a href="simple-regression.html#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="simple-regression.html#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">rowMeans</span>(pars)</span>
+<span id="cb3-18"><a href="simple-regression.html#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># standard errors</span></span>
+<span id="cb3-19"><a href="simple-regression.html#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(pars, <span class="dv">1</span>, sd)</span>
+<span id="cb3-20"><a href="simple-regression.html#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="simple-regression.html#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pars[<span class="dv">1</span>, ])</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.2-1.png" width="672" /></p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb4-1"><a href="simple-regression.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pars[<span class="dv">2</span>, ])</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.2-2.png" width="672" /></p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb5-1"><a href="simple-regression.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(pars[<span class="dv">3</span>, ])</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.2-3.png" width="672" /></p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb6-1"><a href="simple-regression.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y <span class="sc">~</span> <span class="fu">jitter</span>(x), dat)</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.2-4.png" width="672" /></p>
+</div>
+</div>
+<div id="example-to-illustrate-assumptions" class="section level3 unnumbered hasAnchor">
+<h3>Example to illustrate assumptions<a href="simple-regression.html#example-to-illustrate-assumptions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="simple-regression.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(anscombe)</span>
+<span id="cb7-2"><a href="simple-regression.html#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="simple-regression.html#cb7-3" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y1 <span class="sc">~</span> x1, anscombe)</span>
+<span id="cb7-4"><a href="simple-regression.html#cb7-4" aria-hidden="true" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y2 <span class="sc">~</span> x2, anscombe)</span>
+<span id="cb7-5"><a href="simple-regression.html#cb7-5" aria-hidden="true" tabindex="-1"></a>lm3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y3 <span class="sc">~</span> x3, anscombe)</span>
+<span id="cb7-6"><a href="simple-regression.html#cb7-6" aria-hidden="true" tabindex="-1"></a>lm4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y4 <span class="sc">~</span> x4, anscombe)</span>
+<span id="cb7-7"><a href="simple-regression.html#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="simple-regression.html#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind</span>(<span class="fu">coef</span>(lm1), <span class="fu">coef</span>(lm2), <span class="fu">coef</span>(lm3), <span class="fu">coef</span>(lm4))</span></code></pre></div>
+</details>
+<pre><code>##      (Intercept)        x1
+## [1,]    3.000091 0.5000909
+## [2,]    3.000909 0.5000000
+## [3,]    3.002455 0.4997273
+## [4,]    3.001727 0.4999091</code></pre>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="simple-regression.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb9-2"><a href="simple-regression.html#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y1 <span class="sc">~</span> x1, anscombe, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb9-3"><a href="simple-regression.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lm1, <span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb9-4"><a href="simple-regression.html#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y2 <span class="sc">~</span> x2, anscombe, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb9-5"><a href="simple-regression.html#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lm2, <span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb9-6"><a href="simple-regression.html#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y3 <span class="sc">~</span> x3, anscombe, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb9-7"><a href="simple-regression.html#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lm3, <span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb9-8"><a href="simple-regression.html#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y4 <span class="sc">~</span> x4, anscombe, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb9-9"><a href="simple-regression.html#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lm4, <span class="at">lwd=</span><span class="dv">2</span>)</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.3-1.png" width="672" /></p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="simple-regression.html#cb10-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">reshape</span>(anscombe, <span class="at">direction=</span><span class="st">&quot;long&quot;</span>, <span class="at">varying=</span><span class="fu">list</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">5</span><span class="sc">:</span><span class="dv">8</span>),</span>
+<span id="cb10-2"><a href="simple-regression.html#cb10-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">timevar=</span><span class="st">&quot;reg&quot;</span>, <span class="at">v.names=</span><span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>))[,<span class="sc">-</span><span class="dv">4</span>]</span>
+<span id="cb10-3"><a href="simple-regression.html#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="simple-regression.html#cb10-4" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">xyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> <span class="fu">as.factor</span>(reg), dat, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">type=</span><span class="fu">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;r&quot;</span>))</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.3-2.png" width="672" /></p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="simple-regression.html#cb11-1" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">xyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> <span class="fu">as.factor</span>(reg), dat, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">type=</span><span class="fu">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;smooth&quot;</span>))</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.3-3.png" width="672" /></p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="simple-regression.html#cb12-1" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">xyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> <span class="fu">as.factor</span>(reg), dat, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">type=</span><span class="fu">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;spline&quot;</span>))</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.3-4.png" width="672" /></p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="simple-regression.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb13-2"><a href="simple-regression.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lm1)</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.3-5.png" width="672" /></p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="simple-regression.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lm2)</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.3-6.png" width="672" /></p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="simple-regression.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lm3)</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.3-7.png" width="672" /></p>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="simple-regression.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lm4)</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex01.3-8.png" width="672" /></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="literature.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="generalized-linear-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/01_regression.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["mixed_models.pdf", "mixed_models.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

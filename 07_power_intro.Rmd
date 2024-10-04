@@ -1,0 +1,14 @@
+# Introduction to power
+
+## Slides
+
+```{r slides07}
+# TODO: Add slides
+```
+
+## Exercises
+
+```{r ex07}
+# TODO: Add exercises
+```
+
