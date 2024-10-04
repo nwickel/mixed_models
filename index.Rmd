@@ -16,20 +16,25 @@ github-repo: TODO
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
+# Course information {-}
 
-# Overview of dates {-}
+This is an online book accompanying a course on mixed-effects models taught to
+PhD students at the Leibniz-Institut für Wissensmedien (IWM) in Tübingen. So
+far, this is _work in process_ and very rudimentary!
 
-| Date       | Topic                                    | Resources                         |
-| ---------- | ---------------------------------------- | --------------------------------- |
-| 28.10.2024 | Introduction to regression               |                                   |
-| 11.11.2024 | Multiple regression and GLM              |                                   |
-| 25.11.2024 | Pre-post designs                         |                                   |
-| 09.12.2024 | Repeated measures                        |                                   |
-| 13.01.2025 | Longitudinal data                        | Bates(2010)                       |
-| 27.01.2025 | Data simulation for LMM                  | Baayen, Davidson, & Bates (2008)  |
-| 10.02.2025 | Power simulation (G)LMM                  | Wickelmaier (2022)                |
+## Overview of dates {-}
 
-# Literature {-}
+| Date       | Topic                                    |
+| ---------- | ---------------------------------------- |
+| 28.10.2024 | Introduction to regression               |
+| 11.11.2024 | Multiple regression and GLM              |
+| 25.11.2024 | Pre-post designs                         |
+| 09.12.2024 | Repeated measures                        |
+| 13.01.2025 | Longitudinal data                        |
+| 27.01.2025 | Data simulation for LMM                  |
+| 10.02.2025 | Power simulation (G)LMM                  |
+
+## Literature {-}
 
 This course is mostly built on the following books and papers:
 
@@ -40,24 +45,4 @@ This course is mostly built on the following books and papers:
 * @Baayen2008
 
 * @Wickelmaier2022
-
-<!--
-* Gelman, A., Hill, J., & Vehtari, A. (2020). Regression and other stories.
-  Cambridge University Press.
-  https://users.aalto.fi/~ave/ROS.pdf
-  https://avehtari.github.io/ROS-Examples/index.html 
-* Bates, D., Mächler, M., Bolker, B., & Walker, S. (2015). Fitting Linear
-  Mixed-Effects Models Using lme4. Journal of Statistical Software, 67(1),
-  1–48.
-  https://doi.org/10.18637/jss.v067.i01
-* Baayen, R. H., Davidson, D. J., & Bates, D. M. (2008). Mixed-effects
-  modeling with crossed random effects for subjects and items. Journal of
-  memory and language, 59(4), 390-412.
-  https://pure.mpg.de/rest/items/item_60973/component/file_60974/content
-* Wickelmaier, F. (2021). Simulating the Power of Statistical Tests: A
-  Collection of R Examples. arXiv preprint arXiv:2110.09836.
-  https://arxiv.org/abs/2110.09836
-* Bates, D. M. (2010). lme4: Mixed-effects modeling with R.
-  http://lme4.r-forge.r-project.org/book/front.pdf
--->
 
