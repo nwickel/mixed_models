@@ -2,14 +2,13 @@
 
 | Date       | Topic                                    | Resources                         |
 | ---------- | ---------------------------------------- | --------------------------------- |
-| 24.10.2022 | Introduction to regression               |                                   |
-| 07.11.2022 | Multiple regression and GLM              |                                   |
-| 21.11.2022 | Pre-post designs                         |                                   |
-| 05.12.2022 | Repeated measures                        |                                   |
-| 19.12.2022 | Longitudinal data                        | Bates(2010)                       |
-| 09.01.2023 | Data simulation for LMM                  | Baayen, Davidson, & Bates (2008)  |
-| 23.01.2023 | Power analysis & sample size calculation | Wickelmaier (2022)                |
-| 06.02.2023 | Power simulation (G)LMM                  |                                   |
+| 28.10.2024 | Introduction to regression               |                                   |
+| 11.11.2024 | Multiple regression and GLM              |                                   |
+| 25.11.2024 | Pre-post designs                         |                                   |
+| 09.12.2024 | Repeated measures                        |                                   |
+| 13.01.2025 | Longitudinal data                        | Bates(2010)                       |
+| 27.01.2025 | Data simulation for LMM                  | Baayen, Davidson, & Bates (2008)  |
+| 10.02.2025 | Power simulation (G)LMM                  | Wickelmaier (2022)                |
 | ---------- | ---------------------------------------- | --------------------------------- |
 
 # Slides
