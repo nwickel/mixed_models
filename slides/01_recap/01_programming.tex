@@ -1,0 +1,1020 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage{listings}
+%\usepackage[utf8]{inputenc}
+\usepackage[style = apa, backend = biber, natbib = true]{biblatex}
+\addbibresource{../../literature/lit.bib}
+
+\usepackage{fancyvrb}
+\usepackage{fontawesome5}                % get icons
+\usepackage{multirow}
+\usepackage{color, colortbl}
+
+\usepackage{tikz}
+\usetikzlibrary{fit}
+\usepackage[edges]{forest}
+
+\lstset{language = R,%
+  basicstyle = \ttfamily\color{iwmgray},
+  frame = single,
+  rulecolor = \color{iwmgray},
+  commentstyle = \slshape\color{iwmgreen},
+  keywordstyle = \bfseries\color{iwmgray},
+  identifierstyle = \color{iwmpurple},
+  stringstyle = \color{iwmblue},
+  numbers = none,%left,numberstyle = \tiny,
+  basewidth = {.5em, .4em},
+  showstringspaces = false,
+  emphstyle = \color{red!50!white}}
+
+\makeatletter \def\newblock{\beamer@newblock} \makeatother
+
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{section in toc}[circle]
+\mode<beamer>{\setbeamercolor{math text displayed}{fg=iwmgray}}
+\setbeamercolor{block body}{bg=iwmorange!50!white}
+\setbeamercolor{block title}{fg=white, bg=iwmorange}
+
+% Definitions for biblatex
+\setbeamercolor{bibliography entry note}{fg=iwmgray}
+\setbeamercolor{bibliography entry author}{fg=iwmgray}
+\setbeamertemplate{bibliography item}{}
+
+\definecolor{iwmorange}{RGB}{255,105,0}
+\definecolor{iwmgray}{RGB}{67,79,79}
+\definecolor{iwmblue}{RGB}{60,180,220}
+\definecolor{iwmgreen}{RGB}{145,200,110}
+\definecolor{iwmpurple}{RGB}{120,0,75}
+
+\setbeamercolor{title}{fg=iwmorange}
+\setbeamercolor{frametitle}{fg=iwmorange}
+\setbeamercolor{structure}{fg=iwmorange}
+\setbeamercolor{normal text}{fg=iwmgray}
+\setbeamercolor{author}{fg=iwmgray}
+\setbeamercolor{date}{fg=iwmgray}
+
+\newcommand{\vect}[1]{\mathbf{#1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\gvect}[1]{\boldsymbol{#1}}
+\newcommand{\gmat}[1]{\boldsymbol{#1}}
+
+\AtBeginSection[]{
+  \frame{
+    \tableofcontents[sectionstyle=show/hide, subsectionstyle=show/show/hide]}}
+
+\setbeamertemplate{headline}{
+ \begin{beamercolorbox}{section in head}
+   \vskip5pt\insertsectionnavigationhorizontal{\paperwidth}{}{}\vskip2pt
+ \end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}{\vskip-2pt\hfill\insertframenumber$\;$\vskip2pt}
+
+\title{Programming in R}
+\author{Nora Wickelmaier}
+\date{Last modified: \today}
+
+\begin{document}
+
+\begin{frame}{}
+\thispagestyle{empty}
+\titlepage
+\end{frame}
+
+\begin{frame}[fragile]{Programming resources}
+  \footnotesize
+  \begin{tabular}{ll}
+    Learning statistics with R  & {\url{https://learningstatisticswithr.com/book/}} \\
+    &\\
+    R for Data Science & {\url{https://r4ds.hadley.nz/}} \\
+    &\\
+    Advanced R  & {\url{https://adv-r.hadley.nz/}} \\
+    &\\
+    Happy Git and GitHub for the useR & {\url{https://happygitwithr.com/}} \\
+    &\\
+    R Programming for Research & {\url{https://geanders.github.io/RProgrammingForResearch/}} \\
+    &\\
+    Building reproducible analytical pipelines with R & {\url{https://raps-with-r.dev/}} \\
+    &\\
+    Data Skills for Reproducible Science & {\url{https://psyteachr.github.io/msc-data-skills/}} \\
+  \end{tabular}
+\end{frame}
+
+\section{Style guidelines}
+
+\begin{frame}[<+->]{Style guidelines in R}
+  \begin{itemize}
+    \item R has no mandatory or commonly accepted style guide
+    \item However, Hadley Wickham and Google developed style guides which are
+      now widely accepted
+      \begin{itemize}
+        \item \url{https://google.github.io/styleguide/Rguide.html}
+        \item \url{https://style.tidyverse.org/}
+      \end{itemize}
+    \item It is always a good idea to follow a style guide and not ``create''
+      your own rules (if you deviate, be consistent!)
+    \item A style guide helps with
+      \begin{itemize}
+        \item Keeping code clean which is easier to read and interpret
+        \item Making it easier to catch and fix mistakes
+        \item Making it easier for others to follow and adapt your code
+        \item Preventing possible problems, e.\,g., avoiding dots in function
+          names
+      \end{itemize}
+  \end{itemize}
+  \nocite{Wickham_styleguide, Anderson2023}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{File names}
+  \begin{itemize}
+    \item File names should be meaningful and end in .R
+    \item Avoid using special characters in file names
+    \item Stick with numbers, letters, \verb+-+, and \verb+_+
+  \begin{lstlisting}[identifierstyle = \bfseries\color{iwmgray}]
+# Good
+fit_models.R
+utility_functions.R
+
+# Bad
+fit models.R
+foo.r
+stuff.r
+  \end{lstlisting}
+      \framebreak
+
+    \item If files should be run in a particular order, prefix them with numbers
+    \item If it seems likely you’ll have more than 10 files, left pad with zero
+  \begin{lstlisting}[identifierstyle = \bfseries\color{iwmgray}]
+00_download.R
+01_explore.R
+...
+09_model.R
+10_visualize.R
+  \end{lstlisting}
+    \item If you later realize that you missed some steps, it’s tempting to use
+      02a, 02b, etc.
+    \item However, it is generally better to bite the bullet and rename all
+      files
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Object names}
+  \begin{itemize}
+    \item Variable and function names should use only lowercase letters,
+      numbers, and \verb+_+
+    \item Use underscores (\verb+_+) (so called snake case) to separate words
+      within a name
+  \begin{lstlisting}[identifierstyle = \bfseries\color{iwmgray}]
+# Good
+day_one
+day_1
+
+# Bad
+DayOne
+dayone
+  \end{lstlisting}
+  \framebreak
+
+    \item Generally, variable names should be nouns and function names should be
+      verbs
+    \item Strive for names that are concise and meaningful
+      \begin{lstlisting}[identifierstyle = \bfseries\color{iwmgray}]
+# Good
+day_one
+
+# Bad
+first_day_of_the_month
+djm1
+  \end{lstlisting}
+  \framebreak
+
+    \item Avoid re-using names of common functions and variables
+  \begin{lstlisting}
+# Bad
+T <- FALSE
+c <- 10
+mean <- function(x) sum(x)
+  \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Spacing}
+  \begin{itemize}
+    \item Always put a space after a comma, never before
+  \begin{lstlisting}
+# Good
+x[, 1]
+
+# Bad
+x[,1]
+x[ ,1]
+x[ , 1]
+  \end{lstlisting}
+  \framebreak
+
+  \item Do not put spaces inside or outside parentheses for regular function
+    calls
+  \begin{lstlisting}
+# Good
+mean(x, na.rm = TRUE)
+
+# Bad
+mean (x, na.rm = TRUE)
+mean( x, na.rm = TRUE )
+  \end{lstlisting}
+  \framebreak
+
+\item Place a space before and after \texttt{()} when used with \texttt{if},
+  \texttt{for}, or \texttt{while}
+  \begin{lstlisting}
+# Good
+if (debug) {
+  show(x)
+}
+
+# Bad
+if(debug){
+  show(x)
+}
+  \end{lstlisting}
+  \framebreak
+
+\item Place a space after \texttt{()} used for function arguments
+  \begin{lstlisting}
+# Good
+function(x) {}
+
+# Bad
+function (x) {}
+function(x){}
+  \end{lstlisting}
+  \framebreak
+
+    \item Most infix operators (\verb+==+, \verb|+|, \verb+-+, \verb+<-+, etc.)
+      should always be surrounded by spaces
+  \begin{lstlisting}
+# Good
+height <- (feet * 12) + inches
+mean(x, na.rm = TRUE)
+
+# Bad
+height<-feet*12+inches
+mean(x, na.rm=TRUE)
+  \end{lstlisting}
+  \framebreak
+
+    \item There are a few exceptions, which should never be surrounded by
+      spaces: \verb+::+, \verb+:::+, \verb+$+, \verb+@+, \verb+[+, \verb+[[+,
+      \verb+?+, \verb+^+, and \verb+:+
+      {\small
+  \begin{lstlisting}
+# Good
+sqrt(x^2 + y^2)
+df$z
+x <- 1:10
+package?stats
+?mean
+
+# Bad
+sqrt(x ^ 2 + y ^ 2)
+df $ z
+x <- 1 : 10
+package ? stats
+? mean
+  \end{lstlisting}
+  }
+    \item Adding extra spaces is ok if it improves alignment of \verb+=+ or
+      \verb+<-+
+  \begin{lstlisting}
+# Good
+list(
+  total = a + b + c,
+  mean  = (a + b + c) / n
+)
+
+# Also fine
+list(
+  total = a + b + c,
+  mean = (a + b + c) / n
+)
+  \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+% CITE:
+% https://style.tidyverse.org/index.html
+% R Programming for Reserach: https://geanders.github.io/RProgrammingForResearch/ 
+% Building reproducible analytical pipelines with R: https://raps-with-r.dev/
+
+\section{Script organisation}
+
+\begin{frame}[fragile]{Script header}
+  \begin{itemize}
+    \item It can be very helpful to have some general information right at the
+      top when opening a script
+      \begin{lstlisting}
+# 01_preprocessing.R
+#
+# Cleaning up toy data set (Methods Seminar SS2024)
+#
+# Input:  rawdata/RDM_MS_SS2024_download_2024-06-07.csv
+# Output: processed/data_rdm-ms-ss2024_cleaned.csv
+#         processed/data_rdm-ms-ss2024_cleaned.RData
+#
+# Created: 2024-06-03, NW
+      \end{lstlisting}
+    \item These metadata help you remember faster what you did
+    \item Might not be necessary when using consistent version control (but does
+      not hurt either)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Line length}
+  {}
+  \begin{center}
+    {\Large\bf Keep lines to 80 characters or less!}
+  \end{center}
+  \begin{lstlisting}
+# Good
+my_df <- data.frame(n = 1:3,
+                    letter = c("a", "b", "c"),
+                    cap_letter = c("A", "B", "C"))
+
+# Bad
+my_df <- data.frame(n = 1:3, letter = c("a", "b", "c"), cap_letter = c("A", "B", "C"))
+  \end{lstlisting}
+  \begin{itemize}
+    \item Ensures that your code is formatted in a way that you can see all of
+      the code without scrolling horizontally
+    \item To set your script pane to be limited to 80 characters, go to\\
+      \verb+RStudio -> Preferences -> Code -> Display+\\
+      and set ``Margin Column'' to 80
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{File organisation}
+  \begin{itemize}
+    \item Try to write scripts that are concerned with one (major) task
+    \item If you can find a name, that captures the content, it is usually a
+      good way to start
+    \item Some (random) examples
+\begin{lstlisting}[identifierstyle = \bfseries\color{iwmgray}]
+download-data.R
+data-cleaning.R
+cluster_analysis_exp1.R
+visualization_logistic-model.R
+anova_h1.R
+  \end{lstlisting}
+  \framebreak
+
+    \item Export data sets for new scripts (do not make yourself run all scripts
+      up to script 5 each time, just because you need the data in a certain
+      format)
+      \begin{lstlisting}
+# Interoperable
+write.table(dat,
+            file = "data_exp1_cleaned.csv",
+            sep = ";",
+            quote = FALSE,
+            row.names = FALSE)
+
+# Preserve order of factor levels, date formats, etc.
+save(dat, file = "data_exp1_cleaned.RData")
+      \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Internal structure}
+  \begin{itemize}
+    \item Use commented lines with \texttt{-} or \texttt{=} to break your file
+      up into chunks
+    \item Load additional packages at the beginning of the script
+  \begin{lstlisting}
+library(lme4)
+library(sjPlot)
+
+# Load data ---------------------------
+
+# Plot data ---------------------------
+  \end{lstlisting}
+  \framebreak
+
+    \item If you load several packages, be aware that the order of loading
+      matters!
+    \item If you use only one or two functions from a package, get the function
+      with \verb+::+ instead of loading the whole package
+  \begin{lstlisting}
+library(lme4)
+...
+
+# Fit mixed-effects model to test Hypothesis 1
+lme1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
+summary(lme1)
+sjPlot::tab_model(lme1)
+  \end{lstlisting}
+  \framebreak
+
+    \item Group related pieces of code together
+    \item Separate blocks of code by empty spaces
+  \begin{lstlisting}
+# Load data
+library(faraway)
+data(nepali)
+
+# Relabel sex variable
+nepali$sex <- factor(nepali$sex, 
+                     levels = c(1, 2),
+                     labels = c("Male", "Female"))
+  \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+
+\section[Functions]{Writing functions}
+
+\begin{frame}{Functions and arguments}
+  \begin{itemize}
+    \item Functions in R consist of
+    \begin{itemize}
+    \item a name
+    \item a pair of brackets
+    \item the arguments (none, one, or more)
+    \item a return value (visible, invisible, \texttt{NULL})
+    \end{itemize}
+    \item Arguments are passed
+    \begin{itemize}
+      \item either without name (in the defined order)\\
+        $\to$ positional matching
+      \item or with name (in arbitrary order)\\
+        $\to$ keyword matching
+    \end{itemize}
+    \item Even if no arguments are passed, the brackets need to be written,
+      e.\,g., \texttt{ls()}, \texttt{dir()}, \texttt{getwd()}
+    \item Entering only the name of a function without brackets will
+      display the R code of that function
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Writing functions}
+  \begin{itemize}
+    \item Let us implement a simple function ourselves
+    \item A function that implements a two-sample $t$ test
+      \begin{equation*}
+  T = \frac{\bar{x} - \bar{y}}
+      {\sqrt{\hat{\sigma}^2\, \left(\frac{1}{n} + \frac{1}{m}\right)}}
+    = \frac{\bar{x} - \bar{y}}
+      {\sqrt{\frac{(n-1) \, s_x^2 + (m-1) \, s_y^2}
+          {n+m-2}\cdot \left(\frac{1}{n} + \frac{1}{m}\right)}}
+      \end{equation*}
+      with
+      \begin{equation*}
+        T \sim t(n+m-2)
+      \end{equation*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Writing functions}
+\begin{lstlisting}
+# Example: a handmade t test function
+twosam <- function(y1, y2){              # definition
+  n1  <- length(y1); n2  <- length(y2)   # body
+  yb1 <- mean(y1);   yb2 <- mean(y2)
+  s1  <- var(y1);    s2  <- var(y2)
+  s   <- ((n1 - 1)*s1 + (n2 - 1)*s2)/(n1 + n2 - 2)
+  tst <- (yb1 - yb2)/sqrt(s*(1/n1 + 1/n2))
+  tst             # return value, can also be a list
+}
+
+# Calling the function
+tstat <- twosam(PlantGrowth$weight[PlantGrowth$group == "ctrl"],
+                PlantGrowth$weight[PlantGrowth$group == "trt1"])
+tstat
+\end{lstlisting}
+  \nocite{Venables2022}
+\end{frame}
+
+\begin{frame}[fragile]{Named arguments}
+  \begin{itemize}
+    \item If there is a function \texttt{fun1} defined by
+
+\begin{lstlisting}
+  fun1 <- function(data, data.frame, graph, limit) { 
+  ...
+  }
+\end{lstlisting}
+
+then the function may be invoked in several ways, for example
+
+\begin{lstlisting}
+  fun1(d, df, TRUE, 20)
+  fun1(d, df, graph = TRUE, limit = 20)
+  fun1(data = d, limit = 20, graph = TRUE, data.frame = df)
+\end{lstlisting}
+
+    \item All of them are equivalent (cf.\ positional matching and keyword
+      matching)
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Defaults}
+  \begin{itemize}
+    \item In many cases, arguments can be given commonly appropriate
+      default values, in which case they may be omitted altogether from the
+      call
+
+\begin{lstlisting}
+  fun1 <- function(data, data.frame, graph = TRUE, limit = 20) {
+    ...
+  }
+\end{lstlisting}
+
+    \item It could be called as
+
+\begin{lstlisting}
+  ans <- fun1(d, df)
+\end{lstlisting}
+
+which is now equivalent to the three cases above, or as
+
+\begin{lstlisting}
+  ans <- fun1(d, df, limit = 10)
+\end{lstlisting}
+
+which changes one of the defaults
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{}
+  \begin{block}{Exercise}
+  \begin{itemize}
+    \item Write a function in R that cumulatively sums up the values of
+      vector $\mathbf{x} = (1~2~3~4 \dots 20)'$
+    \item The result should look like: $\mathbf{y} = (1~3~6~10 \dots 210)'$
+  \end{itemize}
+  \end{block}
+\end{frame}
+
+\section[if/else]{Conditional execution}
+
+\begin{frame}[fragile]{Conditional execution}
+  \begin{itemize}
+    \item When programming, a distinction of cases is often necessary for
+      \begin{itemize}
+        \item checking of arguments
+        \item return of error messages
+        \item interrupting a running process
+        \item case distinction, e.\,g., in mathematical expressions
+      \end{itemize}
+
+    \item Conditional execution of code is available in R via
+
+
+\begin{lstlisting}
+if(expr_1) {
+  expr_2
+} else {
+  expr_3
+}
+\end{lstlisting}
+
+where \verb+expr_1+ must evaluate to a single logical value
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Conditional execution}
+\begin{lstlisting}
+x <- 5
+
+# Example 1
+if(!is.na(x)) y <- x^2 else stop("x is missing")
+
+# Example 2
+if(x == 5){   # in case x = 5:
+  x <- x + 1  # add 1 to x and
+  y <- 3      # set y to three
+} else        # else:
+  y <- 7      # set y to seven
+
+# Example 3
+if(x < 99) cat("x is smaller than 99\n")
+\end{lstlisting}
+  \nocite{Ligges2008}
+\end{frame}
+
+\begin{frame}[fragile]{Conditional execution}
+\begin{lstlisting}
+## Vectorized version with ifelse() function
+
+# Example 1
+ifelse(x == c(5, 6), c("A1", "A2"), c("A3", "A4"))
+
+# Example 2
+x <- -2:2
+ifelse(x < 0, -x, x)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{}
+  \begin{block}{Exercise}
+  \begin{itemize}
+ \item Implement the following function in R:
+\[
+f(x) =
+\begin{cases}
+ -1 & \text{if } x < 0,\\
+  0 & \text{if } x = 0,\\
+  1 & \text{if } x > 0.
+\end{cases}
+\]
+  \end{itemize}
+  \end{block}
+\end{frame}
+
+\section[Loops]{Loops}
+
+\begin{frame}{Loops}
+  \begin{itemize}
+    \item Loops are necessary to execute repeating commands
+    \item Especially for simulations, loops are often used
+    \item In this case, the same functions or commands are executed for
+      different random numbers
+    \item There are \texttt{for()} and \texttt{while()} loops for repeated
+      execution
+    \item The most simple ``loop'' is \texttt{replicate()}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Loops}
+\begin{lstlisting}
+## Example for central limit theorem
+
+y <- runif(100)     # Draw random numbers
+hist(y)
+
+x <- replicate(1000, mean(runif(100)))
+hist(x)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Loops}
+\begin{lstlisting}
+i <- 0
+repeat{
+  i <- i + 1          # Add 1 to i
+  if (i == 3) break   # Stop if i = 3
+}
+
+while (i > 1) {
+  i <- i - 1          # As long as i > 1, subtract 1
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Loops}
+\begin{lstlisting}
+x <- c(3, 6, 4, 8, 0)     # Vector of length 5
+for(i in x)
+  print(sqrt(i))
+
+for(i in seq_along(x))    # Same using indices
+  print(sqrt(x[i]))
+
+for(i in seq_along(x)){   # For all i [1,2,3,4,5]'
+  x[i] <- x[i]^2          # square ith element of x
+  print(x[i])             # and show it on monitor
+}
+
+x^2                       # BETTER
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{}
+  \begin{block}{Exercise}
+    \begin{itemize}
+    \item Create a vector $\mathbf{x} = (3~5~7~9~11~13~15~17)'$ with a
+    for-loop\\ Tip: Use the formula $n\cdot2 + 1$
+    \item Implement two different methods:
+    \begin{enumerate}
+    \item Allocate memory: Start with a vector of zeros and the correct
+      length and replace its elements iteratively
+    
+    \item Growing: Start with a \texttt{NULL} object and iteratively add new
+      results
+    \end{enumerate}
+    Tip: The first method is more efficient, especially for long vectors
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\section[apply()]{Avoiding loops}
+
+\begin{frame}{Avoiding loops}
+  \begin{itemize}
+    \item The \texttt{apply()} family of functions may be used in many
+      places where in traditional languages loops are employed
+    \item Using vector based alternatives is usually much faster in R
+   % \item Matrices and arrays: \texttt{apply()}
+   % \item Data frames, lists and vectors: \texttt{lapply()} and
+   %   \texttt{sapply()}
+   % \item Group-wise calculations: \texttt{tapply()}
+  \end{itemize}
+  \vspace{.2cm}
+  \begin{center}
+    \begin{tabular}{ll}
+      \hline
+      Matrices and arrays: & \texttt{apply()} \\
+      Data frames, lists and vectors: & \texttt{lapply()} and
+      \texttt{sapply()} \\
+      Group-wise calculations: & \texttt{tapply()} \\
+      \hline
+    \end{tabular}
+  \end{center}
+\nocite{Ligges2008}
+\end{frame}
+
+
+\begin{frame}{\texttt{apply()}}
+  \begin{itemize}
+    \item \texttt{apply()} is used to work vector-wise on matrices or
+      arrays
+    \item Appropriate functions can be applied to the columns or rows
+      of a matrix or array without explicitly writing code for a loop
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{\texttt{apply()}}
+\begin{lstlisting}
+X <- matrix(c(4, 7, 3, 8, 9, 2, 5, 6, 2, 3, 2, 4), nrow = 3, ncol = 4)
+
+# Calculate row maxima
+res <- numeric(nrow(X))
+for(i in 1:nrow(X)){
+  res[i] <- max(X[i,])
+}
+
+# or:
+apply(X, 1, max)  # Maximum for each row
+apply(X, 2, max)  # Maximum for each column
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{\texttt{lapply()} and \texttt{sapply()}}
+  \begin{itemize}
+    \item[lapply] Using the function \texttt{lapply()} (\texttt{l} because the
+      value returned is a list), another appropriate function can be
+      applied element-wise to other objects, e.\,g., data frames,
+      lists, or simply vectors
+      \begin{itemize}
+        \item[$\to$] The resulting list has as many elements as the original
+          object to which the function is applied
+      \end{itemize}
+      \vspace{.2cm}
+    \item[sapply] Analogously, the function \texttt{sapply()} (\texttt{s} for
+      simplify) works like \texttt{lapply()} with the exception that it
+      tries to simplify the value it returns
+      \begin{itemize}
+        \item[$\to$] It might become a vector or a matrix
+      \end{itemize}
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{lapply()} and \texttt{sapply()}}
+\begin{lstlisting}
+L <- list(x = 1:10, y = 1:5 + 0i)
+lapply(L, mean)       # Keep list with data type
+sapply(L, mean)       # Create vector, same data type
+
+sapply(iris, class)   # Work column wise on data frame
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{\texttt{tapply()}}
+  \begin{itemize}
+    \item \texttt{tapply()} (\texttt{t} for table) may be used to do
+      group-wise calculations on vectors
+    \item Frequently, it is employed to calculate group-wise means
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{tapply()}}
+\begin{lstlisting}
+data(Oats, package = "nlme")
+with(Oats, tapply(yield, list(Block, Variety), mean))
+
+data(warpbreaks)
+tapply(warpbreaks$breaks, warpbreaks$tension, sum)
+tapply(warpbreaks$breaks, warpbreaks[ , -1], mean)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{}
+  \begin{block}{Exercise}
+  \begin{itemize}
+    \item Load the iris data set into R using \texttt{data(iris)}
+    \item Write a for-loop to calculate the means for the dependent
+      variables (columns~1~to~4)
+    \item Think of as many vector based alternatives as possible to avoid
+      this loop and calculate the column means
+  \end{itemize}
+  \end{block}
+\end{frame}
+
+\section[Random numbers]{Random number generation}
+
+\begin{frame}{Random number generation}
+  \begin{itemize}
+    \item Most distributions that R handles have four functions
+    \item There is a root name, e.\,g., the root name for the normal
+      distribution is \texttt{norm} 
+    \item This root is prefixed by one of the letters
+      \texttt{p}, \texttt{q}, \texttt{d}, \texttt{r}
+  \end{itemize}
+
+  \vspace{.2cm}
+  \begin{center}
+{\renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{c|l}
+    \texttt{p} & probability: the cumulative distribution function
+    (CDF)\\
+    \hline
+    \texttt{q} & quantile: the inverse CDF\\
+    \hline
+    \texttt{d} & density: the probability (density) function (PDF)\\
+    \hline
+    \texttt{r} & random: a random variable having the specified
+    distribution\\
+  \end{tabular}
+}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}{Random number generation}
+  \begin{itemize}
+    \item See \texttt{?Distributions} for a list of distributions or the
+      CRAN task view \url{https://cran.r-project.org/view=Distributions}
+    \item The random number generator in R is {\em seeded}: Upon restart
+      of R, new random numbers are generated
+    \item To replicate the results of a simulation, the seed (starting
+      value) can be set explicitly
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Random number generation}
+\begin{lstlisting}
+# Examples
+rnorm(10)     # Draw from standard normal distribution
+rpois(10, 1)  # Draw from Poisson distribution
+
+# Sampling with or without replacement from a vector
+sample(1:5, size = 10, replace = TRUE)
+
+# Set seed
+set.seed(1223)  # On each run, random numbers will be identical
+runif(3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{}
+  \begin{block}{Exercise}
+  \begin{itemize}
+    \item Create a data frame with four variables and 20 observations:
+      \begin{enumerate}
+        \item $X \sim N(\mu=100, \sigma^2=15^2)$
+        \item $Y \sim Bin(n=10, p=0.2)$
+        \item $Z \sim Pois(\lambda=1)$
+        \item $S = X + Y + Z$
+      \end{enumerate}
+  \end{itemize}
+  \end{block}
+\end{frame}
+
+\section[Data frames]{Data frames}
+
+\begin{frame}{The fundamental data structure: data frames}
+  \begin{itemize}
+    \item Data frames are lists that consist of vectors and factors of
+      equal length
+    \item The rows in a data frame refer to one unit (observation or
+      subject)
+    \item For longitudinal data they can be reshaped between the long and
+      the wide data format
+  \end{itemize}
+  \vfill
+\end{frame}
+
+\begin{frame}[fragile]{The fundamental data structure: data frames}
+\begin{lstlisting}
+# Creating a data frame
+id <- factor(paste("s", 1:6, sep = ""))
+weight <- c(60, 72, 57, 90, 95, 72)
+height <- c(1.75, 1.80, 1.65, 1.90, 1.74, 1.91)
+dat <- data.frame(id, weight, height)
+
+# Variables in a data frame are extracted by $
+dat$weight
+\end{lstlisting}
+  \nocite{Venables2022}
+\end{frame}
+
+
+\begin{frame}[fragile]{Working with data frames}
+
+\begin{lstlisting}
+# Frequently used functions (not only) for data frames
+
+dim(dat)      # Show number of rows and columns
+
+names(dat)    # Variable names
+
+View(dat)     # Open data viewer; might be of little 
+              # help for large data sets
+
+plot(dat)     # Pairwise plots
+
+str(dat)      # Show variables of dat
+
+summary(dat)  # Descriptive statistics
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Indexing variables}
+
+\begin{lstlisting}
+weight[4]           # 4th element
+weight[4] <- 92     # Change 4th element
+weight[c(1, 2, 6)]  # Elements 1, 2, 6
+weight[1:5]         # Elements 1 to 5
+weight[-3]          # Without element 3
+# See ?Extract
+
+# Indices may be logical.
+weight[weight > 60]
+weight[weight > 60 & weight < 80]
+height[weight > 60 & weight < 80]
+\end{lstlisting}
+
+Logical expressions may contain AND~\texttt{\&}, OR~\texttt{|},
+  EQUAL~\texttt{==},\\ NOT EQUAL~\texttt{!=}, and \texttt{<}, \texttt{<=},
+  \texttt{>}, \texttt{>=}, \texttt{\%in\%}.
+\end{frame}
+
+
+\begin{frame}[fragile]{Indexing data frames}
+
+\begin{lstlisting}
+dat[3, 2]    # 3rd row, 2nd column
+dat[1:4, ]   # Rows 1 to 4, all columns
+dat[, 3]     # All rows, 3rd column
+
+dat[dat$id == "s2", ]   # All observations of s2
+dat[dat$weight > 60, ]  # All observations above 60kg
+\end{lstlisting}
+\end{frame}
+
+% \begin{frame}[fragile]{Combining data frames}
+% \begin{lstlisting}
+% # Data frames having the same column names
+% dat <- rbind(dat1, dat2, dat3)
+% 
+% # Merge by ID
+% dat <- merge(dat1, dat2, by = "id", all = TRUE)
+% \end{lstlisting}
+% \end{frame}
+
+\begin{frame}{}
+  \begin{block}{Exercise}
+    \begin{itemize} 
+      \item Create a data frame with two independent variables: {\it Hand}
+        with levels ``right'' and ``left'' and {\it Condition} with levels
+        1, 2, 3, 4, and 5
+      \item Simulate reaction times for 50 subjects; assume
+        reaction time is normally distributed with $RT \sim
+        N(\mu=400,\sigma^2=625)$
+      \item There are 10 subjects in each condition
+      \item Use functions \texttt{str()} and \texttt{summary()} on your
+        data frame:\\
+        What does the output tell you?
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\appendix
+
+%\begin{frame}[allowframebreaks]{References}
+\begin{frame}{References}
+%\renewcommand{\bibfont}{\small}
+  \printbibliography
+\vfill
+\end{frame}
+
+\end{document}
+

@@ -2,6 +2,9 @@
 
 ## Slides
 
+TODO
+
+<!--
 ```{=html}
 <object data="slides/06_data_simulation/06_data_simulation.pdf" type="application/pdf" width="100%" height="500px">
   <p>
@@ -9,10 +12,11 @@
   </p>
 </object>
 ```
+-->
 
 ## Exercises
 
-```{r ex06}
+```{r ex07}
 # TODO: Add exercises
 ```
 

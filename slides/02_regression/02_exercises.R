@@ -1,4 +1,4 @@
-# session1.R
+# 01_exercises.R
 #
 # content: (1) Exercise 1
 #          (2) Exercise 2
@@ -7,13 +7,11 @@
 # input: --
 # output: anscombe.pdf
 #
-# last mod: Oct/24/2022, NU
+# last mod: Oct/07/2024, NW
 
 library(lattice)
 
-setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/regression/01_regression/figures/")
-
-#--------------- (1) Exercise 1 ---------------
+#--------------- (1) Exercise 1 -----------------------------------------------
 
 x <- 1:20
 n <- length(x)
@@ -35,7 +33,7 @@ hist(resid(lm1), breaks=15)
 plot(y ~ x, dat)
 abline(lm1)
 
-#--------------- (2) Exercise 2 ---------------
+#--------------- (2) Exercise 2 -----------------------------------------------
 
 n <- 100 # 40
 x0 <- 1:20
@@ -63,7 +61,7 @@ hist(pars[3, ])
 
 plot(y ~ jitter(x), dat)
 
-#--------------- (3) Anscombe ---------------
+#--------------- (3) Anscombe -------------------------------------------------
 
 data(anscombe)
 
@@ -99,4 +97,41 @@ plot(lm1)
 plot(lm2)
 plot(lm3)
 plot(lm4)
+
+# TODO: Exercises for multiple regression!
+
+#--------------- (1) Exercise 1 ---------------
+
+x   <- rnorm(100, mean=1)
+y   <- rnorm(100, mean=2)
+dat <- data.frame(id=1:200, group=rep(c("x","y"), each=100), score=c(x, y))
+
+rm(x,y)
+
+t1   <- t.test(score ~ group, dat, var.equal=TRUE)
+lm1  <- lm(score ~ group, dat)
+aov1 <- aov(score ~ group, dat)
+(stat <- list(
+    coef=matrix(c(t1$estimate, lm1$coef, aov1$coef), 2, 3,
+        dimnames=list(NULL, c("ttest", "lm", "aov"))),
+    statistics=matrix(c(t=t1$statistic^2, Flm=summary(lm1)$fstatistic[1],
+        Faov=unlist(summary(aov1))[7]), 1, 3, dimnames=list(NULL,
+        c("t","Flm","Faov"))))
+)
+
+#--------------- (2) Exercise 2 ---------------
+
+data(cars)
+
+lm1 <- lm(dist ~ speed, cars)
+summary(lm1)
+
+hist(resid(lm1))
+
+par(mfrow=c(2,2))
+plot(lm1)
+
+lm2 <- lm(dist ~ speed + I(speed^2), cars)
+
+anova(lm1, lm2)
 

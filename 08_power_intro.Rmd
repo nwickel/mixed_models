@@ -2,13 +2,11 @@
 
 ## Slides
 
-```{r slides07}
-# TODO: Add slides
-```
+TODO
 
 ## Exercises
 
-```{r ex07}
+```{r ex08}
 # TODO: Add exercises
 ```
 

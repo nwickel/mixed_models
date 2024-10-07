@@ -1,6 +1,5 @@
 \documentclass[aspectratio=169]{beamer}
-% \usepackage{pgfpages}
-% \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
+
 \usepackage{tikz}
 \usetikzlibrary{shapes, backgrounds, arrows, positioning}
 \usepackage{pgfplots}
@@ -25,6 +24,10 @@
 
 \definecolor{iwmorange}{RGB}{255,105,0}
 \definecolor{iwmgray}{RGB}{67,79,79}
+\definecolor{iwmblue}{RGB}{60,180,220}
+\definecolor{iwmgreen}{RGB}{145,200,110}
+\definecolor{iwmpurple}{RGB}{120,0,75}
+
 \setbeamercolor{title}{fg=iwmorange}
 \setbeamercolor{frametitle}{fg=iwmorange}
 \setbeamercolor{structure}{fg=iwmorange}
@@ -35,38 +38,25 @@
 
 \title{Pre/post measurements}
 \author{Nora Wickelmaier}
-
-\date{November 21, 2022}
-%\date{Last modified: \today}
+\date{Last modified: \today}
 
 \newcommand{\vect}[1]{\mathbf{#1}}
 \newcommand{\mat}[1]{\mathbf{#1}}
 \newcommand{\gvect}[1]{\boldsymbol{#1}}
 \newcommand{\gmat}[1]{\boldsymbol{#1}}
 
-\lstset{language=R,%
-  %backgroundcolor=\color{iwmgray!80!white},
-  basicstyle=\ttfamily\color{iwmorange},
-  frame=single,
-  commentstyle=\slshape\color{black},
-  keywordstyle=\bfseries\color{white},
-  identifierstyle=\color{white},
-  stringstyle=\color{green!85!black},
-  numbers=none,%left,numberstyle=\tiny,
-  basewidth={.5em, .4em},
-  showstringspaces=false,
-  emphstyle=\color{red!50!white}}
-
-\lstdefinestyle{plain}{language=R,
-  frame=none,
-  basicstyle=\ttfamily\color{iwmorange},
-  commentstyle=\slshape\color{iwmgray},
-  keywordstyle=\bfseries\color{iwmgray},
-  identifierstyle=\color{iwmgray},
-  stringstyle=\color{iwmgray},
-  numbers=none,
-  basewidth={.5em, .4em},
-  showstringspaces=false}
+\lstset{language = R,%
+  basicstyle = \ttfamily\color{iwmgray},
+  frame = single,
+  rulecolor = \color{iwmgray},
+  commentstyle = \slshape\color{iwmgreen},
+  keywordstyle = \bfseries\color{iwmgray},
+  identifierstyle = \color{iwmpurple},
+  stringstyle = \color{iwmblue},
+  numbers = none,%left,numberstyle = \tiny,
+  basewidth = {.5em, .4em},
+  showstringspaces = false,
+  emphstyle = \color{red!50!white}}
 
 \pgfmathdeclarefunction{gauss}{2}{%
   \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
@@ -223,8 +213,6 @@ $N$    & $n_N$     & $y_{Nn_N}$  & $x_{Nn_N1}$ & \dots & $x_{Nn_Np}$\\
 \end{center}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{$t$ test for comparing two time points}
 \begin{lstlisting}
 # simulate two dependent time points
@@ -259,8 +247,6 @@ plot(t2 ~ t1, sim)
 abline(coef(lm2), 1)
 \end{lstlisting}
 \end{frame}
-
-}
 
 
 \begin{frame}{$t$ test of follow-up score of two groups}
@@ -300,8 +286,6 @@ abline(coef(lm2), 1)
 \end{center}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{$t$ test of follow-up score of two groups}
 \begin{lstlisting}
 # t test
@@ -315,8 +299,6 @@ plot(t2 ~ t1, sim)
 abline(h=cumsum(coef(lm3)))
 \end{lstlisting}
 \end{frame}
-
-}
 
 \section{Change score analysis}
 
@@ -360,8 +342,6 @@ abline(h=cumsum(coef(lm3)))
 \end{center}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Change score analysis}
 \begin{lstlisting}
 # regression model
@@ -373,8 +353,6 @@ abline(coef(lm4)[1], 1)
 abline(coef(lm4)[1] + coef(lm4)[2], 1)
 \end{lstlisting}
 \end{frame}
-
-}
 
 \begin{frame}{Regression to the mean}
 \begin{itemize}
@@ -449,8 +427,6 @@ abline(coef(lm4)[1] + coef(lm4)[2], 1)
 \end{itemize}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Analysis of covariance (ANCOVA)}
 \begin{lstlisting}
 # ancova
@@ -468,8 +444,6 @@ abline(coef(lm5)[1], coef(lm5)[2])
 abline(coef(lm5)[1] + coef(lm5)[3], coef(lm5)[2])
 \end{lstlisting}
 \end{frame}
-
-}
 
 \begin{frame}{Analysis of covariance with change score}
 \begin{itemize}
@@ -528,8 +502,6 @@ abline(coef(lm5)[1] + coef(lm5)[3], coef(lm5)[2])
 \end{center}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Interaction between baseline score and group}
 \begin{lstlisting}
 # regression model with interaction
@@ -544,8 +516,6 @@ abline(coef(lm6)[1] + coef(lm6)[3], coef(lm6)[2] + coef(lm6)[4])
 anova(lm4, lm5, lm6)
 \end{lstlisting}
 \end{frame}
-
-}
 
 \section[Example]{Example: Acupuncture for shoulder pain}
 
@@ -637,8 +607,6 @@ anova(lm4, lm5, lm6)
 \end{columns}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Example: Acupuncture for shoulder pain}
 \begin{lstlisting}
 # read data
@@ -699,8 +667,6 @@ abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
 % %\vspace*{-0.5em}
 % %
 % \end{frame}
-
-}
 
 
 \begin{frame}{Summary}
@@ -799,9 +765,6 @@ abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
   $\to$ ANOVA for two time points is equivalent to change score analysis!
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
-
 \begin{frame}[fragile]{Example: Acupuncture for shoulder pain}
 \begin{lstlisting}
 # Read data
@@ -821,11 +784,7 @@ sigma(m1)^2
 \end{lstlisting}
 \end{frame}
 
-}
 
-
-% {\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-% 
 % \begin{frame}[fragile]{}
 %   \begin{lstlisting}
 %   ##

@@ -7,7 +7,6 @@ I recently changed the structure of the course and created html pages with
 `bookdown` accompanying the course that contain the slides and exercises. This
 is still work in progress and not done, yet!
 
-You can find the rendered version at https://nwickel.github.io/mixed_models/.
 
 # TODOs
 

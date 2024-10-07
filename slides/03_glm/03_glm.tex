@@ -25,6 +25,10 @@
 
 \definecolor{iwmorange}{RGB}{255,105,0}
 \definecolor{iwmgray}{RGB}{67,79,79}
+\definecolor{iwmblue}{RGB}{60,180,220}
+\definecolor{iwmgreen}{RGB}{145,200,110}
+\definecolor{iwmpurple}{RGB}{120,0,75}
+
 \setbeamercolor{title}{fg=iwmorange}
 \setbeamercolor{frametitle}{fg=iwmorange}
 \setbeamercolor{structure}{fg=iwmorange}
@@ -33,42 +37,27 @@
 \setbeamercolor{date}{fg=iwmgray}
 \color{white}
 
-\title{Multiple regression and generalized linear models (GLM)}
-\author{Nora Wickelmaier%\footnote{These slides are a modified version of slides created by \url{https://osf.io/ /}. }
-}
-\date{November 7, 2022}
-%\date{Last modified: \today}
+\title{Generalized linear models (GLM)}
+\author{Nora Wickelmaier}
+\date{Last modified: \today}
 
 \newcommand{\vect}[1]{\mathbf{#1}}
 \newcommand{\mat}[1]{\mathbf{#1}}
 \newcommand{\gvect}[1]{\boldsymbol{#1}}
 \newcommand{\gmat}[1]{\boldsymbol{#1}}
 
-\lstset{language=R,%
-  literate={Ü}{{\"U}}1
-           {ü}{{\"u}}1,
-  %backgroundcolor=\color{iwmgray!80!white},
-  basicstyle=\ttfamily\color{iwmorange},
-  frame=single,
-  commentstyle=\slshape\color{black},
-  keywordstyle=\bfseries\color{white},
-  identifierstyle=\color{white},
-  stringstyle=\color{green!85!black},
-  numbers=none,%left,numberstyle=\tiny,
-  basewidth={.5em, .4em},
-  showstringspaces=false,
-  emphstyle=\color{red!50!white}}
-
-\lstdefinestyle{plain}{language=R,
-  frame=none,
-  basicstyle=\ttfamily\color{iwmorange},
-  commentstyle=\slshape\color{iwmgray},
-  keywordstyle=\bfseries\color{iwmgray},
-  identifierstyle=\color{iwmgray},
-  stringstyle=\color{iwmgray},
-  numbers=none,
-  basewidth={.5em, .4em},
-  showstringspaces=false}
+\lstset{language = R,%
+  basicstyle = \ttfamily\color{iwmgray},
+  frame = single,
+  rulecolor = \color{iwmgray},
+  commentstyle = \slshape\color{iwmgreen},
+  keywordstyle = \bfseries\color{iwmgray},
+  identifierstyle = \color{iwmpurple},
+  stringstyle = \color{iwmblue},
+  numbers = none,%left,numberstyle = \tiny,
+  basewidth = {.5em, .4em},
+  showstringspaces = false,
+  emphstyle = \color{red!50!white}}
 
 \pgfmathdeclarefunction{gauss}{2}{%
   \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
@@ -97,24 +86,6 @@
 \tableofcontents
 \end{frame}
 
-\begin{frame}{}
-  \begin{block}{Exercise}
-    \begin{itemize}
-      \item Create two vectors $x$ and $y$ with 100 observations each and
-        $X \sim N(1,1)$ and $Y \sim N(2,1)$.
-      \item Create a data frame with variables \texttt{id}, \texttt{group}
-        and \texttt{score}. $x$ and $y$ are your score values.
-      \item Conduct a $t$ test assuming that $X$ and $Y$ are independent
-        having the same variances.
-      \item Then use the function \texttt{aov()} to compute an analysis of
-        variance for these data.
-      \item Use then function \texttt{lm()} for a linear regression with
-        predictor \texttt{group} and dependent variable \texttt{score}.
-      \item Compare your results.
-    \end{itemize}
-  \end{block}
-\end{frame}
-
 \begin{frame}{Extending simple linear regression}
   \begin{tabular}{ll}
     Additional predictors &
@@ -136,131 +107,6 @@
       \upsilon_0 + \upsilon_1 time + \varepsilon$\\
       \dots & \\
   \end{tabular}
-\end{frame}
-
-\section{Multiple linear regression}
-
-\begin{frame}{Multiple linear regression}
-  \begin{itemize}
-    \item Empirical observations consist of tuples for each observation
-      unit
-\[
-  (y_i, x_{i1}, \ldots, x_{ip}) ~~\text{with}~~ i = 1, \ldots, n
-\]
-and we get the stochastical model
-\begin{align*}
-  y_i & = \beta_0 + \beta_1 \cdot x_{i1} + \ldots + \beta_p \cdot x_{ip} +
-        \varepsilon_i \\
-  \varepsilon_i & \sim N (0, \sigma^2)~\text{i.i.d.}
-\end{align*}
-which transfers to
-\[
-  y_i \sim N (\mu_i, \sigma^2) ~~\text{with}~~
-  \mu_i = \beta_0 + \beta_1 \cdot x_{i1} + \ldots + \beta_p \cdot x_{ip}
-\]\vspace{-.7cm}
-\item The criterion variable $y$ is always a metric variable, whereas the
-  predictor variables $x_1, \ldots, x_p$ can be either metric or
-      categorical variables, or both
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Example: Multiple linear regression}
-  \begin{itemize}
-    \item We are fitting the following model
-\[
-y_{ij} = \beta_0 + \beta_1 \cdot x_i + \beta_2 \cdot z_j + \varepsilon_{ij}
-\]
-with $i = 1 \ldots N$ and $j = 1,2$ for two groups
-\item This means that we have one dummy variable for $z$ which takes the
-  values 0 and 1
-\item Hence, we get the two models
-\begin{align*}
-y_{i1} & = \beta_0 + \beta_1 \cdot x_i + \beta_2\cdot 0 + \varepsilon_{ij}
-= \beta_0 + \beta_1 \cdot x_i + \varepsilon_{ij}\\
-y_{i2} & = \beta_0 + \beta_1 \cdot x_i + \beta_2\cdot 1 + \varepsilon_{ij}
-= (\beta_0 + \beta_2) + \beta_1 \cdot x_i + \varepsilon_{ij}
-\end{align*}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Example: Multiple linear regression}
-\begin{center}
-\includegraphics[scale=.8]{../figures/ancova2}
-\end{center}
-\end{frame}
-
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
-\begin{frame}[fragile]{Example: Multiple linear regression}
-\begin{lstlisting}
-dat <- data.frame(
-  x = c(18,23,25,35,65,54,34,56,72,19,23,42,18,39,37),
-  y = c(213,197,198,191,167,180,185,172,153,199,193,
-        174,198,183,178),
-  z = rep(c("treatment", "control"), c(7, 8))
-)
-
-aggregate(y ~ z, dat, mean)
-\end{lstlisting}
-\end{frame}
-
-}
-
-
-\begin{frame}[fragile]{Example: Multiple linear regression}
-  \begin{itemize}
-    \item We can now use the parameters to calculate adjusted means for the
-      two groups
-    \item The observed means are $\bar x_{treat} = 190.14$ and $\bar
-      x_{contr} = 181.25$
-    \item The adjusted means correspond to
-\begin{align*}
-\bar x_{contr} & = \beta_0\\
-\bar x_{treat} & = \beta_0 + \beta_2
-\end{align*}
-These are the means for a value of $x = 0$ which should have a meaningful
-interpretation
-\item Hence, it might be indicated to center $x$
-  \end{itemize}
-\end{frame}
-
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
-\begin{frame}[fragile]{Example: Multiple linear regression}
-\begin{lstlisting}
-dat$xc <- dat$x - mean(dat$x)
-
-lm2 <- lm(y ~ xc + z, dat)
-summary(lm2)
-
-# adjusted means
-coef(lm2)[1]
-coef(lm2)[1] + coef(lm2)[3]
-\end{lstlisting}
-\end{frame}
-
-}
-
-\begin{frame}[fragile]{}
-  \begin{block}{Exercise}
-    \begin{itemize}
-      \item The data set \texttt{cars} contains speed and stopping
-        distances of 50 cars
-      \item Estimate the regression model
-\[
-  dist_i = \beta_0 + \beta_1 speed_i + \varepsilon_i
-\]\vspace{-.8cm}
-      \item How much variance of the stopping distances is explained by
-      speed? \item Look at the residuals of the model. Are there any
-        systematic deviances?
-      \item Now estimate the model
-\[
-  dist_i = \beta_0 + \beta_1 speed_i + \beta_2 speed^2_i + \varepsilon_i
-\]
-        Hint: Use \verb+I(speed^2)+ in the model formula in \texttt{R}
-      \item Which model fits the data better?
-    \end{itemize}
-  \end{block}
 \end{frame}
 
 \section{Generalized linear model}
@@ -313,7 +159,7 @@ from the exponential family
 
 \item In R, a GLM is fitted by
 
-  \begin{lstlisting}[style=plain]
+  \begin{lstlisting}
   glm(y ~ x1 + x2 + ... + xk, family(link), data)
 \end{lstlisting}
   \end{itemize}
@@ -324,7 +170,7 @@ from the exponential family
     \item Each response distribution admits a variety of link functions to
       connect the mean with the linear predictor:
 
-  \begin{lstlisting}[style=plain]
+  \begin{lstlisting}
 ## Family name       Link functions
    binomial          logit, probit, log, cloglog
    gaussian          identity, log, inverse
@@ -365,8 +211,6 @@ Probit model
 \end{columns}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Fitting binomial regression models}
 \begin{lstlisting}
 dat <- data.frame(x = c(20,35,45,55,70),
@@ -400,8 +244,6 @@ newx <- 0:100
 predict(glml, data.frame(x=newx), type="response")
 \end{lstlisting}
 \end{frame}
-
-}
 
 \begin{frame}[fragile]{}
   \begin{block}{Exercise}
@@ -466,7 +308,7 @@ the average number of events per interval
   \includegraphics[scale=.7]{../figures/pois_dist}
 \end{column}
 \begin{column}{5cm}
-  \begin{lstlisting}[style=plain]
+  \begin{lstlisting}
 x <- 0:8
 px <- dpois(x, lambda=2.5)
 plot(x, px, type="h")
@@ -521,8 +363,6 @@ Poisson regression is used to model count variables\footnote{Simulated dataset f
 % \end{table}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Poisson regression}
   \begin{lstlisting}
 # Read data
@@ -561,8 +401,6 @@ summary(m1)
 %   col=c("red", "blue", "green"), lty=1, pch=16, bty="n")
 % \end{lstlisting}
 % \end{frame}
-
-}
 
 
 \begin{frame}{Poisson regression}
@@ -611,8 +449,6 @@ summary(m1)
   \end{itemize}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Overdispersion}
 % In R this is done by changing the \texttt{family} argument to
 % \texttt{quasibinomial} or \texttt{quasipoisson}
@@ -627,8 +463,6 @@ summary(m2)
 # higher
 \end{lstlisting}
 \end{frame}
-
-}
 
 \begin{frame}{Some things to consider}
   \begin{itemize}
