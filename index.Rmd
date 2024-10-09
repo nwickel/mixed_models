@@ -40,11 +40,13 @@ far, this is _work in progress_ and very rudimentary!
 
 This course is mostly built on the following books and papers:
 
-* @GelmanHill2020
+* @Baayen2008
 
 * @Bates2015
 
-* @Baayen2008
+* @GelmanHill2020
+
+* @Vasishth2022
 
 * @Wickelmaier2022
 
