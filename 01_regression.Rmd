@@ -7,9 +7,9 @@ everybody on the same page.
 ## Slides
 
 ```{=html}
-<object data="slides/02_regression/02_regression.pdf" type="application/pdf" width="100%" height="500px">
+<object data="slides/01_regression/01_regression.pdf" type="application/pdf" width="100%" height="500px">
   <p>
-    Unable to display PDF file. <a href="slides/02_regression/02_regression.pdf">Download</a> instead.
+    Unable to display PDF file. <a href="slides/01_regression/01_regression.pdf">Download</a> instead.
   </p>
 </object>
 ```
