@@ -1,5 +1,5 @@
 --- 
-title: "Course on Mixed-effects Models at the IWM"
+title: "Course on Mixed-effects Models"
 author: "Nora Wickelmaier"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -19,22 +19,53 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 # Course information {-}
 
 This is an online book accompanying a course on mixed-effects models taught to
-PhD students at the Leibniz-Institut für Wissensmedien (IWM) in Tübingen. So
-far, this is _work in progress_ and very rudimentary!
+PhD students at the Leibniz-Institut für Wissensmedien (IWM) in Tübingen.
+
+So far, this is _work in progress_ and very rudimentary!
+
+## Desirable background knowledge {-}
+
+Alle examples in this course are worked out in [R](https://www.r-project.org/).
+Introductory knowledge in R is therefore a prerequisite. If you want to freshen
+up your R knowledge a bit, you can go through the exercises provided here:
+https://nwickel.github.io/R_intro/. Apart from this, I will assume that you have
+some kind of workflow how to use R with a text editor (e.g.,
+[Vim](https://www.vim.org/)) or an IDE (e.g.,
+[RStudio](https://posit.co/downloads/)).
+
+It is further assumed that you have attended at least one introductory
+statistics course (level "Statisik I" and "Statistik II" usually taught in
+psychology curricula at German universities). That means you should be familiar
+with concepts like random variables, statstical distributions like the normal
+distribution, t distribution, Binomial distribution, etc., and hypothesis
+testing. Some background in regression analysis is helpful, but we will cover
+the basics of this in this course.
+
+If you feel like these concepts could be a bit more "present" in your head, you
+can go through the first Section in the online book by @Vasishth2022. There will
+be time to ask questions about all of these concepts in this session, but we
+will not have time to got through all the concepts together.
+
+Hopefully, these resources will help to get everybody on the same page. If you
+need more support or materials, just let me know.
 
 ## Overview of dates {-}
 
 | Date       | Topic                                    |
 | ---------- | ---------------------------------------- |
-| 28.10.2024 | Recap basic concepts                     |
-| 11.11.2024 | Simple and multiple regression           |
-| 25.11.2024 | Generalized linear models                |
-| 09.12.2024 | Pre-post measurements                    |
+| 28.10.2024 | Simple and multiple regression           |
+| 11.11.2024 | Generalized linear models                |
+| 25.11.2024 | Pre/post measurements                    |
+| 09.12.2024 | Introduction to mixed-effects models     |
 | 13.01.2025 | Longitudinal data I                      |
 | 27.01.2025 | Longitudinal data II                     |
-| 10.02.2025 | Crossed random effects                   |
-|            | Data simulation for LMM                  |
-|            | Power simulation (G)LMM                  |
+| 10.02.2025 | Growth curve models                      |
+|            | Crossed random effects                   |
+|            | Gelman and Brown                         |
+|            | Multilevel models                        |
+|            | Simulation-based power analysis          |
+|            | Power simulation LMM                     |
+|            | Power simulation GLMM                    |
 
 ## Literature {-}
 

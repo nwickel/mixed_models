@@ -1,6 +1,6 @@
 # Simple and multiple regression
 
-This chapter is meant to give a short introduction to simple regression. It is
+This chapter is meant to give a short introduction to regression analysis. It is
 mostly meant to reintroduce some basic concepts, introduce notation, and get
 everybody on the same page.
 
@@ -12,6 +12,50 @@ everybody on the same page.
     Unable to display PDF file. <a href="slides/02_regression/02_regression.pdf">Download</a> instead.
   </p>
 </object>
+```
+
+
+## Example to illustrate assumptions
+
+```{r example}
+
+data(anscombe)
+
+lm1 <- lm(y1 ~ x1, anscombe)
+lm2 <- lm(y2 ~ x2, anscombe)
+lm3 <- lm(y3 ~ x3, anscombe)
+lm4 <- lm(y4 ~ x4, anscombe)
+
+# Compare estimates
+rbind(coef(lm1), coef(lm2), coef(lm3), coef(lm4))
+
+# Plot data
+par(mfrow=c(2,2), mai = c(.6, .6, .1, .1), mgp = c(2.4, 1, 0))
+plot(y1 ~ x1, anscombe, pch = 16, col = "blue")
+abline(lm1, lwd = 2)
+plot(y2 ~ x2, anscombe, pch = 16, col = "blue")
+abline(lm2, lwd = 2)
+plot(y3 ~ x3, anscombe, pch = 16, col = "blue")
+abline(lm3, lwd = 2)
+plot(y4 ~ x4, anscombe, pch = 16, col = "blue")
+abline(lm4, lwd = 2)
+
+# Look at assumption violations
+par(mfrow = c(2,2))
+plot(lm1)
+plot(lm2)
+plot(lm3)
+plot(lm4)
+
+# Reshape data frame to long format
+dat <- reshape(anscombe,
+               direction = "long",
+               varying   = list(paste0("x", 1:4), paste0("y", 1:4)),
+               timevar   = "reg",
+               v.names   = c("x", "y"))[, -4]   # drop id
+
+lattice::xyplot(y ~ x | as.factor(reg), dat, pch=16, type=c("p", "r"))
+lattice::xyplot(y ~ x | as.factor(reg), dat, pch=16, type=c("p", "smooth"))
 ```
 
 ## Exercises
@@ -29,15 +73,13 @@ Simulate a data set based on a simple regression model with
 
 What functions in R do we need?
 
-#### Solution {-}
-
-```{r ex02.1, results = FALSE, class.source = 'fold-hide'}
+```{r ex02.1, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 x <- 1:20
 n <- length(x)
 a <- 0.2
 b <- 0.3
 sigma <- 0.5
-y <- 0.2 + 0.3*x + rnorm(n, sd=sigma)
+y <- 0.2 + 0.3*x + rnorm(n, sd = sigma)
 
 dat <- data.frame(x, y)
 
@@ -46,7 +88,7 @@ summary(lm1)
 
 mean(resid(lm1))
 sd(resid(lm1))
-hist(resid(lm1), breaks=15)
+hist(resid(lm1), breaks = 15)
 
 # plot data
 plot(y ~ x, dat)
@@ -57,9 +99,10 @@ abline(lm1)
 
 * Simulate data with the parameters from Exercise 1
 
-* Do not assume that we have one subject per value for $x$, but more than one subject
+* Do not assume that we have one subject per value for $x$, but more than one
+  subject
 
-* Simulate data for $n=40$ and $n=100$
+* Simulate data for $n = 40$ and $n = 100$
 
   Hint: Use `sample(x, n, replace = TRUE)`
 
@@ -68,22 +111,20 @@ abline(lm1)
 * What happens to your standard errors?
 
 
-#### Solution {-}
-
-```{r ex02.2, results = FALSE, class.source = 'fold-hide'}
+```{r ex02.2, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 n <- 100 # 40
 x0 <- 1:20
-x <- sample(x0, n, replace=TRUE)
+x <- sample(x0, n, replace = TRUE)
 a <- 0.2
 b <- 0.3
 sigma <- 0.5
-y <- 0.2 + 0.3*x + rnorm(n, sd=sigma)
+y <- 0.2 + 0.3*x + rnorm(n, sd = sigma)
 
 dat <- data.frame(x, y)
 
 pars <- replicate(2000, {
-  ysim <- 0.2 + 0.3*x + rnorm(n, sd=sigma)
-  lm1 <- lm(ysim ~ x, dat)
+  ysim <- 0.2 + 0.3 * x + rnorm(n, sd = sigma)
+  lm1 <- lm(ysim ~ x, data = dat)
   c(coef(lm1), sigma(lm1))
 })
 
@@ -98,103 +139,86 @@ hist(pars[3, ])
 plot(y ~ jitter(x), dat)
 ```
 
-### Example to illustrate assumptions {-}
+### Exercise 3 {-}
 
-```{r ex02.3}
+* Create two vectors $x$ and $y$ with 100 observations each and $X \sim N(1,1)$
+  and $Y \sim N(2,1)$.
 
-data(anscombe)
+* Create a data frame with variables \texttt{id}, \texttt{group} and
+  \texttt{score}. $x$ and $y$ are your score values.
 
-lm1 <- lm(y1 ~ x1, anscombe)
-lm2 <- lm(y2 ~ x2, anscombe)
-lm3 <- lm(y3 ~ x3, anscombe)
-lm4 <- lm(y4 ~ x4, anscombe)
+* Conduct a $t$ test assuming that $X$ and $Y$ are independent having the same
+  variances.
 
-rbind(coef(lm1), coef(lm2), coef(lm3), coef(lm4))
+* Then use the function `aov()` to compute an analysis of variance for these
+  data.
 
-par(mfrow=c(2,2))
-plot(y1 ~ x1, anscombe, pch=16, col="blue")
-abline(lm1, lwd=2)
-plot(y2 ~ x2, anscombe, pch=16, col="blue")
-abline(lm2, lwd=2)
-plot(y3 ~ x3, anscombe, pch=16, col="blue")
-abline(lm3, lwd=2)
-plot(y4 ~ x4, anscombe, pch=16, col="blue")
-abline(lm4, lwd=2)
+* Use then function `lm()` for a linear regression with predictor `group` and
+  dependent variable `score`.
 
-dat <- reshape(anscombe, direction="long", varying=list(1:4, 5:8),
-               timevar="reg", v.names=c("x", "y"))[,-4]
+* Compare your results.
 
-lattice::xyplot(y ~ x | as.factor(reg), dat, pch=16, type=c("p", "r"))
-lattice::xyplot(y ~ x | as.factor(reg), dat, pch=16, type=c("p", "smooth"))
-lattice::xyplot(y ~ x | as.factor(reg), dat, pch=16, type=c("p", "spline"))
-
-par(mfrow=c(2,2))
-plot(lm1)
-plot(lm2)
-plot(lm3)
-plot(lm4)
-```
-
-```{r ex02.4}
-#--------------- (1) Exercise 1 ---------------
-
-x   <- rnorm(100, mean=1)
-y   <- rnorm(100, mean=2)
-dat <- data.frame(id=1:200, group=rep(c("x","y"), each=100), score=c(x, y))
+```{r ex02.3, results = "hide", class.source = "fold-hide"}
+x   <- rnorm(100, mean = 1)
+y   <- rnorm(100, mean = 2)
+dat <- data.frame(id    = 1:200,
+                  group = rep(c("x","y"), each = 100),
+                  score = c(x, y))
 
 rm(x,y)
 
-t1   <- t.test(score ~ group, dat, var.equal=TRUE)
-lm1  <- lm(score ~ group, dat)
-aov1 <- aov(score ~ group, dat)
+t1   <- t.test(score ~ group, data = dat, var.equal = TRUE)
+lm1  <- lm(score ~ group, data = dat)
+aov1 <- aov(score ~ group, data = dat)
 (stat <- list(
-    coef=matrix(c(t1$estimate, lm1$coef, aov1$coef), 2, 3,
-        dimnames=list(NULL, c("ttest", "lm", "aov"))),
-    statistics=matrix(c(t=t1$statistic^2, Flm=summary(lm1)$fstatistic[1],
-        Faov=unlist(summary(aov1))[7]), 1, 3, dimnames=list(NULL,
-        c("t","Flm","Faov"))))
+    coef = matrix(c(t1$estimate, lm1$coef, aov1$coef),
+                  nrow = 2,
+                  ncol = 3,
+                  dimnames = list(NULL, c("ttest", "lm", "aov"))),
+    statistics = matrix(c(t = t1$statistic^2,
+                          Flm = summary(lm1)$fstatistic[1],
+                          Faov = unlist(summary(aov1))[7]),
+                        nrow = 1,
+                        ncol = 3,
+                        dimnames = list(NULL, c("t","Flm","Faov"))))
 )
+```
 
-#--------------- (2) Exercise 2 ---------------
+### Exercise 4 {-}
 
+* The data set `cars` contains speed and stopping distances of 50 cars
+
+* Estimate the regression model
+  \[
+    dist_i = \beta_0 + \beta_1 speed_i + \varepsilon_i
+  \]
+
+  - How much variance of the stopping distances is explained by speed?
+
+  - Look at the residuals of the model. Are there any systematic deviances?
+  
+  - Now estimate the model
+  \[
+    dist_i = \beta_0 + \beta_1 speed_i + \beta_2 speed^2_i + \varepsilon_i
+  \]
+
+  Hint: Use `I(speed^2)` in the model formula
+ 
+* Which model fits the data better?
+
+```{r ex02.4, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 data(cars)
 
-lm1 <- lm(dist ~ speed, cars)
+lm1 <- lm(dist ~ speed, data = cars)
 summary(lm1)
 
 hist(resid(lm1))
 
-par(mfrow=c(2,2))
+par(mfrow = c(2,2))
 plot(lm1)
 
-lm2 <- lm(dist ~ speed + I(speed^2), cars)
+lm2 <- lm(dist ~ speed + I(speed^2), data = cars)
 
 anova(lm1, lm2)
-
-#--------------- (3) Exercise 3 ---------------
-
-dat <- data.frame(x = 37:43,
-                  y = c(2, 3, 10, 25, 34, 36, 39),
-                  n = 40)
-
-glm1 <- glm(cbind(y, n-y) ~ x, binomial, dat)
-
-a <- 1 / coef(glm1)[2]
-c <- -coef(glm1)[1]/coef(glm1)[2]
-
-newx <- seq(37, 43, .1)
-pre <- predict(glm1, data.frame(x=newx), type="response")
-
-plot(y/n ~ x, dat, pch=16, ylab="Probability to say brighter")
-lines(pre ~ newx, dat)
-abline(v=c, h=.5, lty=3)
-text(39, .8, paste("PSE =", round(c,2)))
-
-# goodness-of-fit test
-glms <- glm(cbind(y, n-y) ~ factor(x), binomial, dat)
-anova(glm1, glms, test="Chisq")
-
-# overdispersion
-summary(glm(cbind(y, n-y) ~ x, quasibinomial, dat))
 ```
 
