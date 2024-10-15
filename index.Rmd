@@ -6,10 +6,10 @@ site: bookdown::bookdown_site
 output:
   bookdown::gitbook:
     code_folding: show
-documentclass: book
 bibliography: literature/lit.bib
 biblio-style: apalike
 link-citations: yes
+csl: norsk-apa-manual.csl
 github-repo: https://github.com/nwickel/mixed_models/
 ---
 
