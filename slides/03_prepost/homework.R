@@ -66,7 +66,10 @@ summary(m2)
 # The time effect in the treatment 2 group is 0.960 + 0.260 = 1.220
 
 # Adjusted means
-aggregate(predict(m2) ~ condition, dat, mean)
+predict(m2,
+        newdata = data.frame(condition = factor(c("contr", "treat1", "treat2")),
+                             pre = mean(dat$pre)))
+
 
 ## Mixed Model (equivalent to change score model)
 
@@ -93,4 +96,15 @@ summary(m3)
 # Compare parameters of the three models
 
 cbind(coef(m1), coef(m2)[1:3], fixef(m3)[4:6])
+
+## Adjusted "time effects"
+datagg <- aggregate(cbind(pre, post) ~ condition, data = dat, FUN = mean)
+
+# adjust means for post scores
+datagg$post_adj <- predict(m2,
+  newdata = data.frame(condition = factor(c("contr", "treat1", "treat2")),
+                       pre = mean(dat$pre)))
+
+datagg$diff <- datagg$post - datagg$pre
+datagg$diff_adj2 <- datagg$post_adj - mean(datagg$pre)
 

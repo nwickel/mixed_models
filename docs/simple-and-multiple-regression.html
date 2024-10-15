@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2024-10-14" />
+<meta name="date" content="2024-10-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -188,13 +188,16 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="generalized-linear-models.html"><a href="generalized-linear-models.html#exercise-1-1"><i class="fa fa-check"></i>Exercise 1</a></li>
 <li class="chapter" data-level="" data-path="generalized-linear-models.html"><a href="generalized-linear-models.html#exercise-2-1"><i class="fa fa-check"></i>Exercise 2</a></li>
-<li class="chapter" data-level="" data-path="generalized-linear-models.html"><a href="generalized-linear-models.html#exercise-3-1"><i class="fa fa-check"></i>Exercise 3</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="prepost-measurements.html"><a href="prepost-measurements.html"><i class="fa fa-check"></i><b>3</b> Pre/post measurements</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="prepost-measurements.html"><a href="prepost-measurements.html#slides-2"><i class="fa fa-check"></i><b>3.1</b> Slides</a></li>
-<li class="chapter" data-level="3.2" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercises-2"><i class="fa fa-check"></i><b>3.2</b> Exercises</a></li>
+<li class="chapter" data-level="3.2" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercises-2"><i class="fa fa-check"></i><b>3.2</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercise-1-2"><i class="fa fa-check"></i>Exercise 1</a></li>
+<li class="chapter" data-level="" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercise-2-2"><i class="fa fa-check"></i>Exercise 2</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="longitudinal-data.html"><a href="longitudinal-data.html"><i class="fa fa-check"></i><b>4</b> Longitudinal data</a>
 <ul>
@@ -404,8 +407,8 @@ subject</p></li>
 <ul>
 <li><p>Create two vectors <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> with 100 observations each and <span class="math inline">\(X \sim N(1,1)\)</span>
 and <span class="math inline">\(Y \sim N(2,1)\)</span>.</p></li>
-<li><p>Create a data frame with variables , and
-. <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are your score values.</p></li>
+<li><p>Create a data frame with variables <code>id</code>, <code>group</code> and <code>score</code>. <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are
+your score values.</p></li>
 <li><p>Conduct a <span class="math inline">\(t\)</span> test assuming that <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent having the same
 variances.</p></li>
 <li><p>Then use the function <code>aov()</code> to compute an analysis of variance for these
@@ -473,8 +476,7 @@ dist_i = \beta_0 + \beta_1 speed_i + \beta_2 speed^2_i + \varepsilon_i
 </details>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb19-1"><a href="simple-and-multiple-regression.html#cb19-1" aria-hidden="true" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(dist <span class="sc">~</span> speed <span class="sc">+</span> <span class="fu">I</span>(speed<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> cars)</span>
-<span id="cb19-2"><a href="simple-and-multiple-regression.html#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="simple-and-multiple-regression.html#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm1, lm2)</span></code></pre></div>
+<span id="cb19-2"><a href="simple-and-multiple-regression.html#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm1, lm2)</span></code></pre></div>
 </details>
 
 </div>

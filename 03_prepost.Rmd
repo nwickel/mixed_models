@@ -1,5 +1,8 @@
 # Pre/post measurements
 
+In this chapter we start with the simplest form of longitudinal data: pre/post
+measurements.
+
 ## Slides
 
 ```{=html}
@@ -12,7 +15,193 @@
 
 ## Exercises
 
-```{r ex04}
-# TODO: Add exercises
+### Exercise 1 {-}
+
+@Lowry2000[Chap. 17] describes the following example
+
+* Based on values $Y$ of a finals exam, $m = 3$ learning methods introducing
+  basic programming skills will be compared ($i = 1, 2, 3$)
+
+* In each of the chosen schools, 12 students attending grade 5 have been
+  randomly selected ($j = 1, \dots, 12$) for a six week course
+
+* Before the course, familiarity with computers was assessed in a pre test as
+  covariate $X$
+
+```{r ex04.1, echo = FALSE}
+dat <- read.table("slides/03_prepost/ancova-data.txt", header = TRUE)
+dat$method <- factor(dat$method)
+```
+
+Data for method 1:
+```{r ex04.2, echo = FALSE}
+knitr::kable(t(dat[dat$method == 1, c("pre", "post")]), col.names = NULL)
+```
+
+Data for method 2:
+```{r ex04.3, echo = FALSE}
+knitr::kable(t(dat[dat$method == 2, c("pre", "post")]), col.names = NULL)
+```
+
+Data for method 3:
+```{r ex04.4, echo = FALSE}
+knitr::kable(t(dat[dat$method == 3, c("pre", "post")]), col.names = NULL)
+```
+
+```{r ex04.5, echo = FALSE, fig.width = 3.375, fig.height = 3.375, fig.align = "center"}
+par(mai = c(.8, .8, .1, .1), mgp = c(2.4, 1, 0))
+datm <- aggregate(cbind(pre, post) ~ method, data = dat, FUN = mean)
+dotchart(as.matrix(datm[, 2:3]), xlab = "Score", ylab = "Method")
+```
+
+* Fit the following models to data
+
+  \begin{align}
+    y_{ij} &= \beta_0 + \beta_1 \cdot x_{ij} + \varepsilon_{ij}\\
+    y_{ij} &= \beta_0 + \beta_1 \cdot x_{ij} + \beta_2 \cdot z_{i} + \varepsilon_{ij}\\
+    y_{ij} &= \beta_0 + \beta_1 \cdot x_{ij} + \beta_2 \cdot z_{i} +
+              \beta_3 \cdot x_{ij} \cdot z_i + \varepsilon_{ij} 
+  \end{align}
+
+* Plot the data with the predictions for each model
+
+* Compare the models with a likelihood ratio test
+
+* What are the adjusted means for the ANCOVA model?
+
+```{r ex04.6, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+## Fit models
+lm1 <- lm(post ~ pre, data = dat)
+lm2 <- lm(post ~ pre + method, data = dat)
+lm3 <- lm(post ~ pre * method, data = dat)
+
+## LRT
+anova(lm1, lm2, lm3)
+
+colors <- c("#78004B", "#FF6900", "#3CB4DC")
+
+## Plot model predictions
+par(mfrow = c(1, 3))
+
+plot(post ~ pre, data = dat, col = colors[dat$method], pch = 16)
+abline(lm1)
+legend("topleft", paste("Method", 1:3), col = colors, pch = 16, bty = "n")
+
+plot(post ~ pre, data = dat, col = colors[dat$method], pch = 16)
+abline(coef(lm2)[1], coef(lm2)[2], col = colors[1])
+abline(coef(lm2)[1] + coef(lm2)[3], coef(lm2)[2], col = colors[2])
+abline(coef(lm2)[1] + coef(lm2)[4], coef(lm2)[2], col = colors[3])
+legend("topleft", paste("Method", 1:3), col = colors, pch = 16, bty = "n")
+
+plot(post ~ pre, data = dat, col = colors[dat$method], pch = 16)
+abline(coef(lm3)[1], coef(lm3)[2], col = colors[1])
+abline(coef(lm3)[1] + coef(lm3)[3], coef(lm3)[2] + coef(lm3)[5], col = colors[2])
+abline(coef(lm3)[1] + coef(lm3)[4], coef(lm3)[2] + coef(lm3)[6], col = colors[3])
+legend("topleft", paste("Method", 1:3), col = colors, pch = 16, bty = "n")
+
+## Means for pre and post measurements
+datagg <- aggregate(cbind(pre, post) ~ method, data = dat, FUN = mean)
+
+## Adjusted means
+datagg$post_adj <- predict(lm2,
+                           newdata = data.frame(method = factor(1:3),
+                                                pre = mean(dat$pre)))
+
+# Adjusted "time effects"
+datagg$diff <- datagg$post - datagg$pre
+datagg$diff_adj <- datagg$post_adj - mean(datagg$pre)
+```
+
+### Exercise 2 {-}
+
+* Simulate a data set for 75 subjects
+
+* Create a factor factor `condition` indicating a control group and two
+  treatment groups with 25 subjects each
+
+* Simulate pre test data with $N \sim (5, 1)$
+
+* Simulate a post test score assuming a slope of 0.7 between pre and post score
+  and that the first treatment group improves by 0.5 points compared to the
+  control group and the second treatment group by 1 point
+
+* What other assumption needs to be made?
+
+```{r, results = "hide", class.source = "fold-hide"}
+#------ Data simulation ------
+set.seed(1042)      # set seed for reproducibility
+
+n <- 75
+condition <- factor(rep(c("contr", "treat1", "treat2"), each = n / 3))
+eff_cond <- c(1, 0.5, 1)
+
+pre  <- rnorm(n, mean = 5, sd = 1)
+post <- 0.7 * pre + model.matrix( ~ condition) %*% eff_cond + rnorm(n)
+
+dat <- data.frame(id        = factor(1:n),
+                  pre       = pre,
+                  post      = post,
+                  condition = condition
+       )
+rm(pre, post, condition)
+
+lattice::xyplot(post ~ pre, dat, groups = condition,
+                type = c("g", "p", "r"), auto.key = TRUE)
+
+# Observed averaged time effects, pre and post scores
+aggregate(cbind(post - pre, pre, post) ~ condition, dat, mean)
+```
+
+* Fit three different models to the data
+  1. A Change Score model
+  2. An ANCOVA model
+  3. A mixed-effects model with predictors `condition` and `time`
+
+* Compare the results of the three models
+
+```{r, results = "hide", class.source = "fold-hide"}
+#------ Fit models ------
+library(lme4)
+
+## Change Score Model
+
+#m1 <- lm(post - pre ~ condition, dat)
+m1 <- lm(post ~ condition + offset(pre), dat)
+summary(m1)
+
+## ANCOVA Model
+
+m2 <- lm(post ~ condition + pre, dat)
+summary(m2)
+
+# Adjusted means
+predict(m2, newdata = data.frame(condition = c("contr", "treat1", "treat2"),
+                                 pre = mean(dat$pre)))
+
+## Mixed Model (equivalent to change score model)
+
+dat_long <- reshape(dat, direction = "long",
+                    varying = list(c("pre", "post")),
+                    v.names = "resp",
+                    idvar = "id",
+                    timevar = "time",
+                    times = c(0, 1))
+
+m3 <- lmer(resp ~ condition*time + (1 | id), dat_long)
+summary(m3)
+
+## Compare parameters of the three models
+cbind(coef(m1), coef(m2)[1:3], fixef(m3)[4:6])
+
+datagg <- aggregate(cbind(pre, post) ~ condition, data = dat, FUN = mean)
+
+## Adjusted means
+datagg$post_adj <- predict(m2,
+                           newdata = data.frame(condition = factor(c("contr", "treat1", "treat2")),
+                                                pre = mean(dat$pre)))
+
+# Adjusted "time effects"
+datagg$diff <- datagg$post - datagg$pre
+datagg$diff_adj <- datagg$post_adj - mean(datagg$pre)
 ```
 

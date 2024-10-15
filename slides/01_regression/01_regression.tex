@@ -39,11 +39,6 @@
 \author{Nora Wickelmaier}
 \date{Last modified: \today}
 
-\newcommand{\vect}[1]{\mathbf{#1}}
-\newcommand{\mat}[1]{\mathbf{#1}}
-\newcommand{\gvect}[1]{\boldsymbol{#1}}
-\newcommand{\gmat}[1]{\boldsymbol{#1}}
-
 \lstset{language = R,%
   basicstyle = \ttfamily\color{iwmgray},
   frame = single,
@@ -192,7 +187,7 @@ and
 
 \begin{frame}{Determination coefficient}
   \begin{itemize}
-    \item With the assumption made so far, it can be shown that the variance of
+    \item With the assumptions made so far, it can be shown that the variance of
       the residuals
       \[
       \sigma_{\varepsilon}^2 = \frac{1}{n}\sum_{i=1}^n (y_i - \hat y_i)^2
@@ -473,16 +468,16 @@ plot(lm4)
   \begin{block}{Exercise}
     \begin{itemize}
       \item Create two vectors $x$ and $y$ with 100 observations each and
-        $X \sim N(1,1)$ and $Y \sim N(2,1)$.
+        $X \sim N(1,1)$ and $Y \sim N(2,1)$
       \item Create a data frame with variables \texttt{id}, \texttt{group}
-        and \texttt{score}. $x$ and $y$ are your score values.
+        and \texttt{score}. $x$ and $y$ are your score values
       \item Conduct a $t$ test assuming that $X$ and $Y$ are independent
-        having the same variances.
+        having the same variances
       \item Then use the function \texttt{aov()} to compute an analysis of
-        variance for these data.
+        variance for these data
       \item Use then function \texttt{lm()} for a linear regression with
-        predictor \texttt{group} and dependent variable \texttt{score}.
-      \item Compare your results.
+        predictor \texttt{group} and dependent variable \texttt{score}
+      \item Compare your results
     \end{itemize}
   \end{block}
 \end{frame}
@@ -571,15 +566,15 @@ which transfers to
   \]
   \item Test statistic
     \[
-      F = \frac{R^2_1 - R^2_0}{1 - R^2_1} \cdot \frac{N - q_1}{q_1 - q_0}
+      F = \frac{R^2_1 - R^2_0}{1 - R^2_1} \cdot \frac{n - q_1}{q_1 - q_0}
     \]
   \item Distribution of test statistic assuming $H_0$ is true
     \[
-      F \sim F(q_1 - q_0, N - q_1)
+      F \sim F(q_1 - q_0, n - q_1)
     \]
   \item Rejection region
     \[
-      F > F_{1-\alpha} (q_1 - q_0, N - q_1)
+      F > F_{1-\alpha} (q_1 - q_0, n - q_1)
     \]
   \end{itemize}
 \end{frame}
@@ -596,9 +591,9 @@ which transfers to
     \item The models need to be nested
     \item The test statistic $G^2$ is $\chi^2$ distributed
       \[
-        G^2 \sim \chi^2(n_1 - n_0)
+        G^2 \sim \chi^2(q_1 - q_0)
       \]
-      where $n_1$ and $n_0$ are the number of parameters for the bigger and the
+      where $q_1$ and $q_0$ are the number of parameters for the bigger and the
       smaller model, respectively
   \end{itemize}
 \end{frame}

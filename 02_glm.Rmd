@@ -1,5 +1,9 @@
 # Generalized linear models
 
+This chapter gives a hands-on introduction to generalized linear models with a
+focus on logistic regression for binary response data and poisson regression for
+count data.
+
 ## Slides
 
 ```{=html}
@@ -38,19 +42,6 @@
   Equality, PSE)
 
 
-```{r ex03.1, results = "hide", class.source = "fold-hide", fig.show = "hide"}
-dat <- data.frame(x = 37:43,
-                  y = c(2, 3, 10, 25, 34, 36, 39),
-                  n = 40)
-
-glm1 <- glm(cbind(y, n - y) ~ x, family = binomial, data = dat)
-
-a <- 1 / coef(glm1)[2]
-c <- -coef(glm1)[1] / coef(glm1)[2]
-```
-
-### Exercise 2 {-}
-
 * Create a plot for the probability to give a positive answer depending on the
   intensity of the comparison
 
@@ -63,7 +54,16 @@ c <- -coef(glm1)[1] / coef(glm1)[2]
 
 * Is there reason to assume that there is any overdispersion?
 
-```{r ex03.2, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+```{r ex03.1, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+dat <- data.frame(x = 37:43,
+                  y = c(2, 3, 10, 25, 34, 36, 39),
+                  n = 40)
+
+glm1 <- glm(cbind(y, n - y) ~ x, family = binomial, data = dat)
+
+a <- 1 / coef(glm1)[2]
+c <- -coef(glm1)[1] / coef(glm1)[2]
+
 newx <- seq(37, 43, .1)
 pre <- predict(glm1, newdata = data.frame(x = newx), type = "response")
 
@@ -81,7 +81,7 @@ anova(glm1, glms, test = "Chisq")
 summary(glm(cbind(y, n - y) ~ x, family = quasibinomial, data = dat))
 ```
 
-### Exercise 3 {-}
+### Exercise 2 {-}
 
 * Fit a regression model to the `Affairs` data set from the `AER` package in R
 
@@ -101,7 +101,7 @@ summary(glm(cbind(y, n - y) ~ x, family = quasibinomial, data = dat))
 
 * Compare the confidence intervals for the estimated parameters for both models
 
-```{r ex03.3, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+```{r ex03.2, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 # Load data set
 data(Affairs, package = "AER")
 Affairs$rating <- factor(Affairs$rating, levels = 1:5)
@@ -126,7 +126,7 @@ confint(pois2)
 
 #### Visualize model predictions {-}
 
-```{r, class.source = "fold-hide"}
+```{r ex03.3, class.source = "fold-hide"}
 ## Plot predictions for "average" females
 newdat <- expand.grid(yearsmarried = seq(0, 15, 1), rating = factor(1:5))
 newdat$gender        <- "female"

@@ -144,8 +144,8 @@ plot(y ~ jitter(x), dat)
 * Create two vectors $x$ and $y$ with 100 observations each and $X \sim N(1,1)$
   and $Y \sim N(2,1)$.
 
-* Create a data frame with variables \texttt{id}, \texttt{group} and
-  \texttt{score}. $x$ and $y$ are your score values.
+* Create a data frame with variables `id`, `group` and `score`. $x$ and $y$ are
+  your score values.
 
 * Conduct a $t$ test assuming that $X$ and $Y$ are independent having the same
   variances.
@@ -218,7 +218,6 @@ par(mfrow = c(2,2))
 plot(lm1)
 
 lm2 <- lm(dist ~ speed + I(speed^2), data = cars)
-
 anova(lm1, lm2)
 ```
 

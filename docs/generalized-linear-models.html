@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2024-10-14" />
+<meta name="date" content="2024-10-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -188,13 +188,16 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="generalized-linear-models.html"><a href="generalized-linear-models.html#exercise-1-1"><i class="fa fa-check"></i>Exercise 1</a></li>
 <li class="chapter" data-level="" data-path="generalized-linear-models.html"><a href="generalized-linear-models.html#exercise-2-1"><i class="fa fa-check"></i>Exercise 2</a></li>
-<li class="chapter" data-level="" data-path="generalized-linear-models.html"><a href="generalized-linear-models.html#exercise-3-1"><i class="fa fa-check"></i>Exercise 3</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="prepost-measurements.html"><a href="prepost-measurements.html"><i class="fa fa-check"></i><b>3</b> Pre/post measurements</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="prepost-measurements.html"><a href="prepost-measurements.html#slides-2"><i class="fa fa-check"></i><b>3.1</b> Slides</a></li>
-<li class="chapter" data-level="3.2" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercises-2"><i class="fa fa-check"></i><b>3.2</b> Exercises</a></li>
+<li class="chapter" data-level="3.2" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercises-2"><i class="fa fa-check"></i><b>3.2</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercise-1-2"><i class="fa fa-check"></i>Exercise 1</a></li>
+<li class="chapter" data-level="" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercise-2-2"><i class="fa fa-check"></i>Exercise 2</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="longitudinal-data.html"><a href="longitudinal-data.html"><i class="fa fa-check"></i><b>4</b> Longitudinal data</a>
 <ul>
@@ -244,6 +247,9 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="generalized-linear-models" class="section level1 hasAnchor" number="2">
 <h1><span class="header-section-number">Chapter 2</span> Generalized linear models<a href="generalized-linear-models.html#generalized-linear-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This chapter gives a hands-on introduction to generalized linear models with a
+focus on logistic regression for binary response data and poisson regression for
+count data.</p>
 <div id="slides-1" class="section level2 hasAnchor" number="2.1">
 <h2><span class="header-section-number">2.1</span> Slides<a href="generalized-linear-models.html#slides-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <object data="slides/02_glm/02_glm.pdf" type="application/pdf" width="100%" height="500px">
@@ -294,21 +300,6 @@ using `glm()´ with <span class="math inline">\(logit(p_{pos}) = \beta_0 + \beta
 and <span class="math inline">\(c = -\beta_0/\beta_1\)</span>.</p></li>
 <li><p>Calculate the intensity <span class="math inline">\(x\)</span> for which <span class="math inline">\(p_{pos} = 0.5\)</span> (Point of Subjective
 Equality, PSE)</p></li>
-</ul>
-<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb20-1"><a href="generalized-linear-models.html#cb20-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">37</span><span class="sc">:</span><span class="dv">43</span>,</span>
-<span id="cb20-2"><a href="generalized-linear-models.html#cb20-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">34</span>, <span class="dv">36</span>, <span class="dv">39</span>),</span>
-<span id="cb20-3"><a href="generalized-linear-models.html#cb20-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n =</span> <span class="dv">40</span>)</span>
-<span id="cb20-4"><a href="generalized-linear-models.html#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="generalized-linear-models.html#cb20-5" aria-hidden="true" tabindex="-1"></a>glm1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(y, n <span class="sc">-</span> y) <span class="sc">~</span> x, <span class="at">family =</span> binomial, <span class="at">data =</span> dat)</span>
-<span id="cb20-6"><a href="generalized-linear-models.html#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-7"><a href="generalized-linear-models.html#cb20-7" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">coef</span>(glm1)[<span class="dv">2</span>]</span>
-<span id="cb20-8"><a href="generalized-linear-models.html#cb20-8" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">coef</span>(glm1)[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">coef</span>(glm1)[<span class="dv">2</span>]</span></code></pre></div>
-</details>
-</div>
-<div id="exercise-2-1" class="section level3 unnumbered hasAnchor">
-<h3>Exercise 2<a href="generalized-linear-models.html#exercise-2-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<ul>
 <li><p>Create a plot for the probability to give a positive answer depending on the
 intensity of the comparison</p></li>
 <li><p>Use <code>predict()</code> to obtain the predicted values and add the logistic
@@ -318,26 +309,35 @@ psychometric function to the plot</p></li>
 <li><p>Is there reason to assume that there is any overdispersion?</p></li>
 </ul>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb21-1"><a href="generalized-linear-models.html#cb21-1" aria-hidden="true" tabindex="-1"></a>newx <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">37</span>, <span class="dv">43</span>, .<span class="dv">1</span>)</span>
-<span id="cb21-2"><a href="generalized-linear-models.html#cb21-2" aria-hidden="true" tabindex="-1"></a>pre <span class="ot">&lt;-</span> <span class="fu">predict</span>(glm1, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> newx), <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span>
-<span id="cb21-3"><a href="generalized-linear-models.html#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="generalized-linear-models.html#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot predictions with PSE</span></span>
-<span id="cb21-5"><a href="generalized-linear-models.html#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y<span class="sc">/</span>n <span class="sc">~</span> x, <span class="at">data =</span> dat, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">ylab =</span> <span class="st">&quot;Probability to say brighter&quot;</span>)</span>
-<span id="cb21-6"><a href="generalized-linear-models.html#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pre <span class="sc">~</span> newx, <span class="at">data =</span> dat)</span>
-<span id="cb21-7"><a href="generalized-linear-models.html#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> c, <span class="at">h =</span> .<span class="dv">5</span>, <span class="at">lty =</span> <span class="dv">3</span>)</span>
-<span id="cb21-8"><a href="generalized-linear-models.html#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">39</span>, .<span class="dv">8</span>, <span class="fu">paste</span>(<span class="st">&quot;PSE =&quot;</span>, <span class="fu">round</span>(c, <span class="dv">2</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb20-1"><a href="generalized-linear-models.html#cb20-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">37</span><span class="sc">:</span><span class="dv">43</span>,</span>
+<span id="cb20-2"><a href="generalized-linear-models.html#cb20-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">34</span>, <span class="dv">36</span>, <span class="dv">39</span>),</span>
+<span id="cb20-3"><a href="generalized-linear-models.html#cb20-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">n =</span> <span class="dv">40</span>)</span>
+<span id="cb20-4"><a href="generalized-linear-models.html#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="generalized-linear-models.html#cb20-5" aria-hidden="true" tabindex="-1"></a>glm1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(y, n <span class="sc">-</span> y) <span class="sc">~</span> x, <span class="at">family =</span> binomial, <span class="at">data =</span> dat)</span>
+<span id="cb20-6"><a href="generalized-linear-models.html#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="generalized-linear-models.html#cb20-7" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">coef</span>(glm1)[<span class="dv">2</span>]</span>
+<span id="cb20-8"><a href="generalized-linear-models.html#cb20-8" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">coef</span>(glm1)[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">coef</span>(glm1)[<span class="dv">2</span>]</span>
+<span id="cb20-9"><a href="generalized-linear-models.html#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="generalized-linear-models.html#cb20-10" aria-hidden="true" tabindex="-1"></a>newx <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">37</span>, <span class="dv">43</span>, .<span class="dv">1</span>)</span>
+<span id="cb20-11"><a href="generalized-linear-models.html#cb20-11" aria-hidden="true" tabindex="-1"></a>pre <span class="ot">&lt;-</span> <span class="fu">predict</span>(glm1, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> newx), <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span>
+<span id="cb20-12"><a href="generalized-linear-models.html#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="generalized-linear-models.html#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot predictions with PSE</span></span>
+<span id="cb20-14"><a href="generalized-linear-models.html#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y<span class="sc">/</span>n <span class="sc">~</span> x, <span class="at">data =</span> dat, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">ylab =</span> <span class="st">&quot;Probability to say brighter&quot;</span>)</span>
+<span id="cb20-15"><a href="generalized-linear-models.html#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pre <span class="sc">~</span> newx, <span class="at">data =</span> dat)</span>
+<span id="cb20-16"><a href="generalized-linear-models.html#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> c, <span class="at">h =</span> .<span class="dv">5</span>, <span class="at">lty =</span> <span class="dv">3</span>)</span>
+<span id="cb20-17"><a href="generalized-linear-models.html#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="dv">39</span>, .<span class="dv">8</span>, <span class="fu">paste</span>(<span class="st">&quot;PSE =&quot;</span>, <span class="fu">round</span>(c, <span class="dv">2</span>)))</span></code></pre></div>
 </details>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb22-1"><a href="generalized-linear-models.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Goodness-of-fit test</span></span>
-<span id="cb22-2"><a href="generalized-linear-models.html#cb22-2" aria-hidden="true" tabindex="-1"></a>glms <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(y, n<span class="sc">-</span>y) <span class="sc">~</span> <span class="fu">factor</span>(x), <span class="at">family =</span> binomial, <span class="at">data =</span> dat)</span>
-<span id="cb22-3"><a href="generalized-linear-models.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(glm1, glms, <span class="at">test =</span> <span class="st">&quot;Chisq&quot;</span>)</span>
-<span id="cb22-4"><a href="generalized-linear-models.html#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="generalized-linear-models.html#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Overdispersion</span></span>
-<span id="cb22-6"><a href="generalized-linear-models.html#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glm</span>(<span class="fu">cbind</span>(y, n <span class="sc">-</span> y) <span class="sc">~</span> x, <span class="at">family =</span> quasibinomial, <span class="at">data =</span> dat))</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb21-1"><a href="generalized-linear-models.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Goodness-of-fit test</span></span>
+<span id="cb21-2"><a href="generalized-linear-models.html#cb21-2" aria-hidden="true" tabindex="-1"></a>glms <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(y, n<span class="sc">-</span>y) <span class="sc">~</span> <span class="fu">factor</span>(x), <span class="at">family =</span> binomial, <span class="at">data =</span> dat)</span>
+<span id="cb21-3"><a href="generalized-linear-models.html#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(glm1, glms, <span class="at">test =</span> <span class="st">&quot;Chisq&quot;</span>)</span>
+<span id="cb21-4"><a href="generalized-linear-models.html#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="generalized-linear-models.html#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Overdispersion</span></span>
+<span id="cb21-6"><a href="generalized-linear-models.html#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">glm</span>(<span class="fu">cbind</span>(y, n <span class="sc">-</span> y) <span class="sc">~</span> x, <span class="at">family =</span> quasibinomial, <span class="at">data =</span> dat))</span></code></pre></div>
 </details>
 </div>
-<div id="exercise-3-1" class="section level3 unnumbered hasAnchor">
-<h3>Exercise 3<a href="generalized-linear-models.html#exercise-3-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="exercise-2-1" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 2<a href="generalized-linear-models.html#exercise-2-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ul>
 <li><p>Fit a regression model to the <code>Affairs</code> data set from the <code>AER</code> package in R</p></li>
 <li><p>The variable <code>affairs</code> is the number of extramarital affairs in the past year
@@ -352,51 +352,51 @@ might be indicated</p></li>
 <li><p>Compare the confidence intervals for the estimated parameters for both models</p></li>
 </ul>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb23-1"><a href="generalized-linear-models.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data set</span></span>
-<span id="cb23-2"><a href="generalized-linear-models.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Affairs, <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
-<span id="cb23-3"><a href="generalized-linear-models.html#cb23-3" aria-hidden="true" tabindex="-1"></a>Affairs<span class="sc">$</span>rating <span class="ot">&lt;-</span> <span class="fu">factor</span>(Affairs<span class="sc">$</span>rating, <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
-<span id="cb23-4"><a href="generalized-linear-models.html#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="generalized-linear-models.html#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit poisson model</span></span>
-<span id="cb23-6"><a href="generalized-linear-models.html#cb23-6" aria-hidden="true" tabindex="-1"></a>pois1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(affairs <span class="sc">~</span> gender <span class="sc">+</span> age <span class="sc">+</span> yearsmarried <span class="sc">+</span> children <span class="sc">+</span> education <span class="sc">+</span></span>
-<span id="cb23-7"><a href="generalized-linear-models.html#cb23-7" aria-hidden="true" tabindex="-1"></a>             rating, <span class="at">family =</span> poisson, <span class="at">data =</span> Affairs)</span>
-<span id="cb23-8"><a href="generalized-linear-models.html#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pois1)</span>
-<span id="cb23-9"><a href="generalized-linear-models.html#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-10"><a href="generalized-linear-models.html#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Goodness-of-fit</span></span>
-<span id="cb23-11"><a href="generalized-linear-models.html#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(pois1<span class="sc">$</span>deviance, <span class="at">df =</span> pois1<span class="sc">$</span>df.residual)</span>
-<span id="cb23-12"><a href="generalized-linear-models.html#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-13"><a href="generalized-linear-models.html#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Model with dispersion parameter</span></span>
-<span id="cb23-14"><a href="generalized-linear-models.html#cb23-14" aria-hidden="true" tabindex="-1"></a>pois2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(affairs <span class="sc">~</span> gender <span class="sc">+</span> age <span class="sc">+</span> yearsmarried <span class="sc">+</span> children <span class="sc">+</span> education <span class="sc">+</span></span>
-<span id="cb23-15"><a href="generalized-linear-models.html#cb23-15" aria-hidden="true" tabindex="-1"></a>             rating, <span class="at">family =</span> quasipoisson, <span class="at">data =</span> Affairs)</span>
-<span id="cb23-16"><a href="generalized-linear-models.html#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pois2)</span>
-<span id="cb23-17"><a href="generalized-linear-models.html#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-18"><a href="generalized-linear-models.html#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Compare CIs</span></span>
-<span id="cb23-19"><a href="generalized-linear-models.html#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(pois1)</span>
-<span id="cb23-20"><a href="generalized-linear-models.html#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(pois2)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb22-1"><a href="generalized-linear-models.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data set</span></span>
+<span id="cb22-2"><a href="generalized-linear-models.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Affairs, <span class="at">package =</span> <span class="st">&quot;AER&quot;</span>)</span>
+<span id="cb22-3"><a href="generalized-linear-models.html#cb22-3" aria-hidden="true" tabindex="-1"></a>Affairs<span class="sc">$</span>rating <span class="ot">&lt;-</span> <span class="fu">factor</span>(Affairs<span class="sc">$</span>rating, <span class="at">levels =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb22-4"><a href="generalized-linear-models.html#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="generalized-linear-models.html#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Fit poisson model</span></span>
+<span id="cb22-6"><a href="generalized-linear-models.html#cb22-6" aria-hidden="true" tabindex="-1"></a>pois1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(affairs <span class="sc">~</span> gender <span class="sc">+</span> age <span class="sc">+</span> yearsmarried <span class="sc">+</span> children <span class="sc">+</span> education <span class="sc">+</span></span>
+<span id="cb22-7"><a href="generalized-linear-models.html#cb22-7" aria-hidden="true" tabindex="-1"></a>             rating, <span class="at">family =</span> poisson, <span class="at">data =</span> Affairs)</span>
+<span id="cb22-8"><a href="generalized-linear-models.html#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pois1)</span>
+<span id="cb22-9"><a href="generalized-linear-models.html#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="generalized-linear-models.html#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Goodness-of-fit</span></span>
+<span id="cb22-11"><a href="generalized-linear-models.html#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pchisq</span>(pois1<span class="sc">$</span>deviance, <span class="at">df =</span> pois1<span class="sc">$</span>df.residual)</span>
+<span id="cb22-12"><a href="generalized-linear-models.html#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="generalized-linear-models.html#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Model with dispersion parameter</span></span>
+<span id="cb22-14"><a href="generalized-linear-models.html#cb22-14" aria-hidden="true" tabindex="-1"></a>pois2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(affairs <span class="sc">~</span> gender <span class="sc">+</span> age <span class="sc">+</span> yearsmarried <span class="sc">+</span> children <span class="sc">+</span> education <span class="sc">+</span></span>
+<span id="cb22-15"><a href="generalized-linear-models.html#cb22-15" aria-hidden="true" tabindex="-1"></a>             rating, <span class="at">family =</span> quasipoisson, <span class="at">data =</span> Affairs)</span>
+<span id="cb22-16"><a href="generalized-linear-models.html#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pois2)</span>
+<span id="cb22-17"><a href="generalized-linear-models.html#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="generalized-linear-models.html#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Compare CIs</span></span>
+<span id="cb22-19"><a href="generalized-linear-models.html#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(pois1)</span>
+<span id="cb22-20"><a href="generalized-linear-models.html#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(pois2)</span></code></pre></div>
 </details>
 <div id="visualize-model-predictions" class="section level4 unnumbered hasAnchor">
 <h4>Visualize model predictions<a href="generalized-linear-models.html#visualize-model-predictions" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb24-1"><a href="generalized-linear-models.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot predictions for &quot;average&quot; females</span></span>
-<span id="cb24-2"><a href="generalized-linear-models.html#cb24-2" aria-hidden="true" tabindex="-1"></a>newdat <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">yearsmarried =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">1</span>), <span class="at">rating =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span>
-<span id="cb24-3"><a href="generalized-linear-models.html#cb24-3" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>gender        <span class="ot">&lt;-</span> <span class="st">&quot;female&quot;</span></span>
-<span id="cb24-4"><a href="generalized-linear-models.html#cb24-4" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>age           <span class="ot">&lt;-</span> <span class="fu">mean</span>(Affairs<span class="sc">$</span>age)</span>
-<span id="cb24-5"><a href="generalized-linear-models.html#cb24-5" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>children      <span class="ot">&lt;-</span> <span class="st">&quot;yes&quot;</span></span>
-<span id="cb24-6"><a href="generalized-linear-models.html#cb24-6" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>religiousness <span class="ot">&lt;-</span> <span class="fu">mean</span>(Affairs<span class="sc">$</span>religiousness)</span>
-<span id="cb24-7"><a href="generalized-linear-models.html#cb24-7" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>education     <span class="ot">&lt;-</span> <span class="fu">mean</span>(Affairs<span class="sc">$</span>education)</span>
-<span id="cb24-8"><a href="generalized-linear-models.html#cb24-8" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>pre           <span class="ot">&lt;-</span> <span class="fu">predict</span>(pois2, <span class="at">newdata =</span> newdat, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span>
-<span id="cb24-9"><a href="generalized-linear-models.html#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-10"><a href="generalized-linear-models.html#cb24-10" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#78004B&quot;</span>, <span class="st">&quot;#3CB4DC&quot;</span>, <span class="st">&quot;#91C86E&quot;</span>, <span class="st">&quot;#FF6900&quot;</span>, <span class="st">&quot;#434F4F&quot;</span>)</span>
-<span id="cb24-11"><a href="generalized-linear-models.html#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pre <span class="sc">~</span> yearsmarried, newdat, <span class="at">type =</span> <span class="st">&quot;n&quot;</span>, <span class="at">main =</span> <span class="st">&quot;&#39;Average&#39; Females&quot;</span>)</span>
-<span id="cb24-12"><a href="generalized-linear-models.html#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-13"><a href="generalized-linear-models.html#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) {</span>
-<span id="cb24-14"><a href="generalized-linear-models.html#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(pre <span class="sc">~</span> yearsmarried, newdat[newdat<span class="sc">$</span>rating <span class="sc">==</span> i, ], <span class="at">col =</span> colors[i])</span>
-<span id="cb24-15"><a href="generalized-linear-models.html#cb24-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb24-16"><a href="generalized-linear-models.html#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-17"><a href="generalized-linear-models.html#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;very unhappy&quot;</span>, <span class="st">&quot;somewhat unhappy&quot;</span>, <span class="st">&quot;average&quot;</span>,</span>
-<span id="cb24-18"><a href="generalized-linear-models.html#cb24-18" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;happier than average&quot;</span>, <span class="st">&quot;very happy&quot;</span>),</span>
-<span id="cb24-19"><a href="generalized-linear-models.html#cb24-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> colors, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb23-1"><a href="generalized-linear-models.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Plot predictions for &quot;average&quot; females</span></span>
+<span id="cb23-2"><a href="generalized-linear-models.html#cb23-2" aria-hidden="true" tabindex="-1"></a>newdat <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">yearsmarried =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">1</span>), <span class="at">rating =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>))</span>
+<span id="cb23-3"><a href="generalized-linear-models.html#cb23-3" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>gender        <span class="ot">&lt;-</span> <span class="st">&quot;female&quot;</span></span>
+<span id="cb23-4"><a href="generalized-linear-models.html#cb23-4" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>age           <span class="ot">&lt;-</span> <span class="fu">mean</span>(Affairs<span class="sc">$</span>age)</span>
+<span id="cb23-5"><a href="generalized-linear-models.html#cb23-5" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>children      <span class="ot">&lt;-</span> <span class="st">&quot;yes&quot;</span></span>
+<span id="cb23-6"><a href="generalized-linear-models.html#cb23-6" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>religiousness <span class="ot">&lt;-</span> <span class="fu">mean</span>(Affairs<span class="sc">$</span>religiousness)</span>
+<span id="cb23-7"><a href="generalized-linear-models.html#cb23-7" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>education     <span class="ot">&lt;-</span> <span class="fu">mean</span>(Affairs<span class="sc">$</span>education)</span>
+<span id="cb23-8"><a href="generalized-linear-models.html#cb23-8" aria-hidden="true" tabindex="-1"></a>newdat<span class="sc">$</span>pre           <span class="ot">&lt;-</span> <span class="fu">predict</span>(pois2, <span class="at">newdata =</span> newdat, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span>
+<span id="cb23-9"><a href="generalized-linear-models.html#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="generalized-linear-models.html#cb23-10" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#78004B&quot;</span>, <span class="st">&quot;#3CB4DC&quot;</span>, <span class="st">&quot;#91C86E&quot;</span>, <span class="st">&quot;#FF6900&quot;</span>, <span class="st">&quot;#434F4F&quot;</span>)</span>
+<span id="cb23-11"><a href="generalized-linear-models.html#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pre <span class="sc">~</span> yearsmarried, newdat, <span class="at">type =</span> <span class="st">&quot;n&quot;</span>, <span class="at">main =</span> <span class="st">&quot;&#39;Average&#39; Females&quot;</span>)</span>
+<span id="cb23-12"><a href="generalized-linear-models.html#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="generalized-linear-models.html#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) {</span>
+<span id="cb23-14"><a href="generalized-linear-models.html#cb23-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(pre <span class="sc">~</span> yearsmarried, newdat[newdat<span class="sc">$</span>rating <span class="sc">==</span> i, ], <span class="at">col =</span> colors[i])</span>
+<span id="cb23-15"><a href="generalized-linear-models.html#cb23-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-16"><a href="generalized-linear-models.html#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="generalized-linear-models.html#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;very unhappy&quot;</span>, <span class="st">&quot;somewhat unhappy&quot;</span>, <span class="st">&quot;average&quot;</span>,</span>
+<span id="cb23-18"><a href="generalized-linear-models.html#cb23-18" aria-hidden="true" tabindex="-1"></a>                    <span class="st">&quot;happier than average&quot;</span>, <span class="st">&quot;very happy&quot;</span>),</span>
+<span id="cb23-19"><a href="generalized-linear-models.html#cb23-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> colors, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
 </details>
-<p><img src="mixed_models_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="mixed_models_files/figure-html/ex03.3-1.png" width="672" /></p>
 
 </div>
 </div>
