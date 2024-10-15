@@ -36,17 +36,17 @@ some kind of workflow how to use R with a text editor (e.g.,
 It is further assumed that you have attended at least one introductory
 statistics course (level "Statisik I" and "Statistik II" usually taught in
 psychology curricula at German universities). That means you should be familiar
-with concepts like random variables, statstical distributions like the normal
+with concepts like random variables, statistical distributions like the normal
 distribution, t distribution, Binomial distribution, etc., and hypothesis
 testing. Some background in regression analysis is helpful, but we will cover
-the basics of this in this course.
+the basics in this course.
 
 If you feel like these concepts could be a bit more "present" in your head, you
 can go through the [first
 section](https://vasishth.github.io/Freq_CogSci/some-important-facts-about-distributions.html)
 in the online book by @Vasishth2022. There will be time to ask questions about
-the concepts in this session, but we will not have time to got through all the
-concepts together.
+the concepts in the sessions, but we will not have time to got through all of
+the concepts together.
 
 Hopefully, these resources will help to get everybody on the same page. If you
 need more support or materials, just let me know.
