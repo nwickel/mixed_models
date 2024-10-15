@@ -1,6 +1,6 @@
 # Pre/post measurements
 
-In this chapter we start with the simplest form of longitudinal data: pre/post
+In this chapter, we start with the simplest form of longitudinal data: pre/post
 measurements.
 
 ## Slides
@@ -116,7 +116,7 @@ datagg$diff_adj <- datagg$post_adj - mean(datagg$pre)
 
 * Simulate a data set for 75 subjects
 
-* Create a factor factor `condition` indicating a control group and two
+* Create a factor `condition` indicating a control group and two
   treatment groups with 25 subjects each
 
 * Simulate pre test data with $N \sim (5, 1)$
