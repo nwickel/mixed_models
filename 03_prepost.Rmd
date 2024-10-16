@@ -128,7 +128,6 @@ datagg$diff_adj <- datagg$post_adj - mean(datagg$pre)
 * What other assumption needs to be made?
 
 ```{r, results = "hide", class.source = "fold-hide"}
-#------ Data simulation ------
 set.seed(1042)      # set seed for reproducibility
 
 n <- 75
@@ -159,8 +158,9 @@ aggregate(cbind(post - pre, pre, post) ~ condition, dat, mean)
 
 * Compare the results of the three models
 
+* What is the adjusted time effect for each group?
+
 ```{r, results = "hide", class.source = "fold-hide"}
-#------ Fit models ------
 library(lme4)
 
 ## Change Score Model
@@ -203,5 +203,51 @@ datagg$post_adj <- predict(m2,
 # Adjusted "time effects"
 datagg$diff <- datagg$post - datagg$pre
 datagg$diff_adj <- datagg$post_adj - mean(datagg$pre)
+```
+
+### Exercise 3 {-}
+
+@Hedeker2006 report a smoking prevention study with students. The study used a
+$2 \times 2$ factorial design with factor "prevention curriculum" (with vs.
+without) and "TV prevention" (with vs. without). Students were randomly assigned
+to one of the four groups. Students' knowledge about tabacco induced health
+risks before and after the prevention have been measured.
+
+* Read the data set `television.txt` into R. Assign meaningful variable names.
+  (You will find the necessary information at the beginning of the data file!)
+
+* Calculate means and standard deviations for baseline, follow-up and change
+  scores separately for the four groups. How many students are assigned to each
+  group?
+
+* Plot the follow-up means. Put intervention curriculum on the $y$ axis and two
+  seperate lines for each tv condition. Which effects do you expect based on
+  this plot?
+
+* Conduct an analysis for the follow-up scores (ANOVA), the change scores, the
+  adjusted follow-up scores (ANCOVA), and the adjusted change score. Interpret
+  the parameters for these models. How does the knowledge of the students change
+  depending on the two factors?
+
+* Assess how well the assumptions for the ANCOVA model hold using visual
+  methods.
+
+```{r, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+dat <- read.table("data/television.txt", skip = 43)
+names(dat) <- c("school", "class", "curri", "tv", "pre", "post")
+
+aggregate(cbind(pre, post, post - pre) ~ curri + tv, data = dat, FUN = mean)
+aggregate(cbind(pre, post) ~ curri + tv, data = dat, FUN = sd)
+aggregate(pre ~ curri + tv, data = dat, FUN = length)
+
+interaction.plot(dat$curri, dat$tv, dat$post, type = "b", pch = c(1,16),
+  xlab = "Curriculum", ylab = "Mean THKS score", trace.label = "TV")
+
+summary(lm1 <- lm(post ~ curri * tv, data = dat))              # Follow-Up
+summary(lm2 <- lm(post - pre ~ curri * tv, data = dat))        # Change-Score
+summary(lm3 <- lm(post ~ pre + curri * tv, data = dat))        # ANCOVA
+summary(lm4 <- lm(post - pre ~ pre + curri * tv, data = dat))  # Change-Score ANCOVA
+
+plot(lm3)
 ```
 

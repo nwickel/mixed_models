@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2024-10-15" />
+<meta name="date" content="2024-10-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -197,6 +197,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercise-1-2"><i class="fa fa-check"></i>Exercise 1</a></li>
 <li class="chapter" data-level="" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercise-2-2"><i class="fa fa-check"></i>Exercise 2</a></li>
+<li class="chapter" data-level="" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercise-3-1"><i class="fa fa-check"></i>Exercise 3</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="longitudinal-data.html"><a href="longitudinal-data.html"><i class="fa fa-check"></i><b>4</b> Longitudinal data</a>
@@ -445,25 +446,24 @@ control group and the second treatment group by 1 point</p></li>
 <li><p>What other assumption needs to be made?</p></li>
 </ul>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb26-1"><a href="prepost-measurements.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#------ Data simulation ------</span></span>
-<span id="cb26-2"><a href="prepost-measurements.html#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1042</span>)      <span class="co"># set seed for reproducibility</span></span>
-<span id="cb26-3"><a href="prepost-measurements.html#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="prepost-measurements.html#cb26-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">75</span></span>
-<span id="cb26-5"><a href="prepost-measurements.html#cb26-5" aria-hidden="true" tabindex="-1"></a>condition <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;contr&quot;</span>, <span class="st">&quot;treat1&quot;</span>, <span class="st">&quot;treat2&quot;</span>), <span class="at">each =</span> n <span class="sc">/</span> <span class="dv">3</span>))</span>
-<span id="cb26-6"><a href="prepost-measurements.html#cb26-6" aria-hidden="true" tabindex="-1"></a>eff_cond <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="dv">1</span>)</span>
-<span id="cb26-7"><a href="prepost-measurements.html#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-8"><a href="prepost-measurements.html#cb26-8" aria-hidden="true" tabindex="-1"></a>pre  <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
-<span id="cb26-9"><a href="prepost-measurements.html#cb26-9" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fl">0.7</span> <span class="sc">*</span> pre <span class="sc">+</span> <span class="fu">model.matrix</span>( <span class="sc">~</span> condition) <span class="sc">%*%</span> eff_cond <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
-<span id="cb26-10"><a href="prepost-measurements.html#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-11"><a href="prepost-measurements.html#cb26-11" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id        =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>n),</span>
-<span id="cb26-12"><a href="prepost-measurements.html#cb26-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">pre       =</span> pre,</span>
-<span id="cb26-13"><a href="prepost-measurements.html#cb26-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">post      =</span> post,</span>
-<span id="cb26-14"><a href="prepost-measurements.html#cb26-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">condition =</span> condition</span>
-<span id="cb26-15"><a href="prepost-measurements.html#cb26-15" aria-hidden="true" tabindex="-1"></a>       )</span>
-<span id="cb26-16"><a href="prepost-measurements.html#cb26-16" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(pre, post, condition)</span>
-<span id="cb26-17"><a href="prepost-measurements.html#cb26-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-18"><a href="prepost-measurements.html#cb26-18" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">xyplot</span>(post <span class="sc">~</span> pre, dat, <span class="at">groups =</span> condition,</span>
-<span id="cb26-19"><a href="prepost-measurements.html#cb26-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">type =</span> <span class="fu">c</span>(<span class="st">&quot;g&quot;</span>, <span class="st">&quot;p&quot;</span>, <span class="st">&quot;r&quot;</span>), <span class="at">auto.key =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb26-1"><a href="prepost-measurements.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1042</span>)      <span class="co"># set seed for reproducibility</span></span>
+<span id="cb26-2"><a href="prepost-measurements.html#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="prepost-measurements.html#cb26-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">75</span></span>
+<span id="cb26-4"><a href="prepost-measurements.html#cb26-4" aria-hidden="true" tabindex="-1"></a>condition <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;contr&quot;</span>, <span class="st">&quot;treat1&quot;</span>, <span class="st">&quot;treat2&quot;</span>), <span class="at">each =</span> n <span class="sc">/</span> <span class="dv">3</span>))</span>
+<span id="cb26-5"><a href="prepost-measurements.html#cb26-5" aria-hidden="true" tabindex="-1"></a>eff_cond <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="dv">1</span>)</span>
+<span id="cb26-6"><a href="prepost-measurements.html#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="prepost-measurements.html#cb26-7" aria-hidden="true" tabindex="-1"></a>pre  <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">1</span>)</span>
+<span id="cb26-8"><a href="prepost-measurements.html#cb26-8" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fl">0.7</span> <span class="sc">*</span> pre <span class="sc">+</span> <span class="fu">model.matrix</span>( <span class="sc">~</span> condition) <span class="sc">%*%</span> eff_cond <span class="sc">+</span> <span class="fu">rnorm</span>(n)</span>
+<span id="cb26-9"><a href="prepost-measurements.html#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="prepost-measurements.html#cb26-10" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id        =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>n),</span>
+<span id="cb26-11"><a href="prepost-measurements.html#cb26-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">pre       =</span> pre,</span>
+<span id="cb26-12"><a href="prepost-measurements.html#cb26-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">post      =</span> post,</span>
+<span id="cb26-13"><a href="prepost-measurements.html#cb26-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">condition =</span> condition</span>
+<span id="cb26-14"><a href="prepost-measurements.html#cb26-14" aria-hidden="true" tabindex="-1"></a>       )</span>
+<span id="cb26-15"><a href="prepost-measurements.html#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(pre, post, condition)</span>
+<span id="cb26-16"><a href="prepost-measurements.html#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-17"><a href="prepost-measurements.html#cb26-17" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">xyplot</span>(post <span class="sc">~</span> pre, dat, <span class="at">groups =</span> condition,</span>
+<span id="cb26-18"><a href="prepost-measurements.html#cb26-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">type =</span> <span class="fu">c</span>(<span class="st">&quot;g&quot;</span>, <span class="st">&quot;p&quot;</span>, <span class="st">&quot;r&quot;</span>), <span class="at">auto.key =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <p><img src="mixed_models_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
@@ -471,58 +471,101 @@ control group and the second treatment group by 1 point</p></li>
 <span id="cb27-2"><a href="prepost-measurements.html#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(<span class="fu">cbind</span>(post <span class="sc">-</span> pre, pre, post) <span class="sc">~</span> condition, dat, mean)</span></code></pre></div>
 </details>
 <ul>
-<li>Fit three different models to the data
+<li><p>Fit three different models to the data</p>
 <ol style="list-style-type: decimal">
 <li>A Change Score model</li>
 <li>An ANCOVA model</li>
 <li>A mixed-effects model with predictors <code>condition</code> and <code>time</code></li>
 </ol></li>
-<li>Compare the results of the three models</li>
+<li><p>Compare the results of the three models</p></li>
+<li><p>What is the adjusted time effect for each group?</p></li>
 </ul>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb28-1"><a href="prepost-measurements.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#------ Fit models ------</span></span>
-<span id="cb28-2"><a href="prepost-measurements.html#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
-<span id="cb28-3"><a href="prepost-measurements.html#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-4"><a href="prepost-measurements.html#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Change Score Model</span></span>
-<span id="cb28-5"><a href="prepost-measurements.html#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-6"><a href="prepost-measurements.html#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">#m1 &lt;- lm(post - pre ~ condition, dat)</span></span>
-<span id="cb28-7"><a href="prepost-measurements.html#cb28-7" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(post <span class="sc">~</span> condition <span class="sc">+</span> <span class="fu">offset</span>(pre), dat)</span>
-<span id="cb28-8"><a href="prepost-measurements.html#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span>
-<span id="cb28-9"><a href="prepost-measurements.html#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-10"><a href="prepost-measurements.html#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ANCOVA Model</span></span>
-<span id="cb28-11"><a href="prepost-measurements.html#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-12"><a href="prepost-measurements.html#cb28-12" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(post <span class="sc">~</span> condition <span class="sc">+</span> pre, dat)</span>
-<span id="cb28-13"><a href="prepost-measurements.html#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span>
-<span id="cb28-14"><a href="prepost-measurements.html#cb28-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-15"><a href="prepost-measurements.html#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted means</span></span>
-<span id="cb28-16"><a href="prepost-measurements.html#cb28-16" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m2, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">condition =</span> <span class="fu">c</span>(<span class="st">&quot;contr&quot;</span>, <span class="st">&quot;treat1&quot;</span>, <span class="st">&quot;treat2&quot;</span>),</span>
-<span id="cb28-17"><a href="prepost-measurements.html#cb28-17" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">pre =</span> <span class="fu">mean</span>(dat<span class="sc">$</span>pre)))</span>
-<span id="cb28-18"><a href="prepost-measurements.html#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-19"><a href="prepost-measurements.html#cb28-19" aria-hidden="true" tabindex="-1"></a><span class="do">## Mixed Model (equivalent to change score model)</span></span>
-<span id="cb28-20"><a href="prepost-measurements.html#cb28-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-21"><a href="prepost-measurements.html#cb28-21" aria-hidden="true" tabindex="-1"></a>dat_long <span class="ot">&lt;-</span> <span class="fu">reshape</span>(dat, <span class="at">direction =</span> <span class="st">&quot;long&quot;</span>,</span>
-<span id="cb28-22"><a href="prepost-measurements.html#cb28-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">varying =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;pre&quot;</span>, <span class="st">&quot;post&quot;</span>)),</span>
-<span id="cb28-23"><a href="prepost-measurements.html#cb28-23" aria-hidden="true" tabindex="-1"></a>                    <span class="at">v.names =</span> <span class="st">&quot;resp&quot;</span>,</span>
-<span id="cb28-24"><a href="prepost-measurements.html#cb28-24" aria-hidden="true" tabindex="-1"></a>                    <span class="at">idvar =</span> <span class="st">&quot;id&quot;</span>,</span>
-<span id="cb28-25"><a href="prepost-measurements.html#cb28-25" aria-hidden="true" tabindex="-1"></a>                    <span class="at">timevar =</span> <span class="st">&quot;time&quot;</span>,</span>
-<span id="cb28-26"><a href="prepost-measurements.html#cb28-26" aria-hidden="true" tabindex="-1"></a>                    <span class="at">times =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb28-27"><a href="prepost-measurements.html#cb28-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-28"><a href="prepost-measurements.html#cb28-28" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(resp <span class="sc">~</span> condition<span class="sc">*</span>time <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id), dat_long)</span>
-<span id="cb28-29"><a href="prepost-measurements.html#cb28-29" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m3)</span>
-<span id="cb28-30"><a href="prepost-measurements.html#cb28-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-31"><a href="prepost-measurements.html#cb28-31" aria-hidden="true" tabindex="-1"></a><span class="do">## Compare parameters of the three models</span></span>
-<span id="cb28-32"><a href="prepost-measurements.html#cb28-32" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">coef</span>(m1), <span class="fu">coef</span>(m2)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="fu">fixef</span>(m3)[<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>])</span>
-<span id="cb28-33"><a href="prepost-measurements.html#cb28-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-34"><a href="prepost-measurements.html#cb28-34" aria-hidden="true" tabindex="-1"></a>datagg <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(<span class="fu">cbind</span>(pre, post) <span class="sc">~</span> condition, <span class="at">data =</span> dat, <span class="at">FUN =</span> mean)</span>
-<span id="cb28-35"><a href="prepost-measurements.html#cb28-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-36"><a href="prepost-measurements.html#cb28-36" aria-hidden="true" tabindex="-1"></a><span class="do">## Adjusted means</span></span>
-<span id="cb28-37"><a href="prepost-measurements.html#cb28-37" aria-hidden="true" tabindex="-1"></a>datagg<span class="sc">$</span>post_adj <span class="ot">&lt;-</span> <span class="fu">predict</span>(m2,</span>
-<span id="cb28-38"><a href="prepost-measurements.html#cb28-38" aria-hidden="true" tabindex="-1"></a>                           <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">condition =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;contr&quot;</span>, <span class="st">&quot;treat1&quot;</span>, <span class="st">&quot;treat2&quot;</span>)),</span>
-<span id="cb28-39"><a href="prepost-measurements.html#cb28-39" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">pre =</span> <span class="fu">mean</span>(dat<span class="sc">$</span>pre)))</span>
-<span id="cb28-40"><a href="prepost-measurements.html#cb28-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-41"><a href="prepost-measurements.html#cb28-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted &quot;time effects&quot;</span></span>
-<span id="cb28-42"><a href="prepost-measurements.html#cb28-42" aria-hidden="true" tabindex="-1"></a>datagg<span class="sc">$</span>diff <span class="ot">&lt;-</span> datagg<span class="sc">$</span>post <span class="sc">-</span> datagg<span class="sc">$</span>pre</span>
-<span id="cb28-43"><a href="prepost-measurements.html#cb28-43" aria-hidden="true" tabindex="-1"></a>datagg<span class="sc">$</span>diff_adj <span class="ot">&lt;-</span> datagg<span class="sc">$</span>post_adj <span class="sc">-</span> <span class="fu">mean</span>(datagg<span class="sc">$</span>pre)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb28-1"><a href="prepost-measurements.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb28-2"><a href="prepost-measurements.html#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="prepost-measurements.html#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Change Score Model</span></span>
+<span id="cb28-4"><a href="prepost-measurements.html#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="prepost-measurements.html#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">#m1 &lt;- lm(post - pre ~ condition, dat)</span></span>
+<span id="cb28-6"><a href="prepost-measurements.html#cb28-6" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(post <span class="sc">~</span> condition <span class="sc">+</span> <span class="fu">offset</span>(pre), dat)</span>
+<span id="cb28-7"><a href="prepost-measurements.html#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span>
+<span id="cb28-8"><a href="prepost-measurements.html#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="prepost-measurements.html#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ANCOVA Model</span></span>
+<span id="cb28-10"><a href="prepost-measurements.html#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="prepost-measurements.html#cb28-11" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(post <span class="sc">~</span> condition <span class="sc">+</span> pre, dat)</span>
+<span id="cb28-12"><a href="prepost-measurements.html#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span>
+<span id="cb28-13"><a href="prepost-measurements.html#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="prepost-measurements.html#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted means</span></span>
+<span id="cb28-15"><a href="prepost-measurements.html#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m2, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">condition =</span> <span class="fu">c</span>(<span class="st">&quot;contr&quot;</span>, <span class="st">&quot;treat1&quot;</span>, <span class="st">&quot;treat2&quot;</span>),</span>
+<span id="cb28-16"><a href="prepost-measurements.html#cb28-16" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">pre =</span> <span class="fu">mean</span>(dat<span class="sc">$</span>pre)))</span>
+<span id="cb28-17"><a href="prepost-measurements.html#cb28-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-18"><a href="prepost-measurements.html#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="do">## Mixed Model (equivalent to change score model)</span></span>
+<span id="cb28-19"><a href="prepost-measurements.html#cb28-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-20"><a href="prepost-measurements.html#cb28-20" aria-hidden="true" tabindex="-1"></a>dat_long <span class="ot">&lt;-</span> <span class="fu">reshape</span>(dat, <span class="at">direction =</span> <span class="st">&quot;long&quot;</span>,</span>
+<span id="cb28-21"><a href="prepost-measurements.html#cb28-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">varying =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;pre&quot;</span>, <span class="st">&quot;post&quot;</span>)),</span>
+<span id="cb28-22"><a href="prepost-measurements.html#cb28-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">v.names =</span> <span class="st">&quot;resp&quot;</span>,</span>
+<span id="cb28-23"><a href="prepost-measurements.html#cb28-23" aria-hidden="true" tabindex="-1"></a>                    <span class="at">idvar =</span> <span class="st">&quot;id&quot;</span>,</span>
+<span id="cb28-24"><a href="prepost-measurements.html#cb28-24" aria-hidden="true" tabindex="-1"></a>                    <span class="at">timevar =</span> <span class="st">&quot;time&quot;</span>,</span>
+<span id="cb28-25"><a href="prepost-measurements.html#cb28-25" aria-hidden="true" tabindex="-1"></a>                    <span class="at">times =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb28-26"><a href="prepost-measurements.html#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-27"><a href="prepost-measurements.html#cb28-27" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(resp <span class="sc">~</span> condition<span class="sc">*</span>time <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id), dat_long)</span>
+<span id="cb28-28"><a href="prepost-measurements.html#cb28-28" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m3)</span>
+<span id="cb28-29"><a href="prepost-measurements.html#cb28-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-30"><a href="prepost-measurements.html#cb28-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Compare parameters of the three models</span></span>
+<span id="cb28-31"><a href="prepost-measurements.html#cb28-31" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">coef</span>(m1), <span class="fu">coef</span>(m2)[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], <span class="fu">fixef</span>(m3)[<span class="dv">4</span><span class="sc">:</span><span class="dv">6</span>])</span>
+<span id="cb28-32"><a href="prepost-measurements.html#cb28-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-33"><a href="prepost-measurements.html#cb28-33" aria-hidden="true" tabindex="-1"></a>datagg <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(<span class="fu">cbind</span>(pre, post) <span class="sc">~</span> condition, <span class="at">data =</span> dat, <span class="at">FUN =</span> mean)</span>
+<span id="cb28-34"><a href="prepost-measurements.html#cb28-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-35"><a href="prepost-measurements.html#cb28-35" aria-hidden="true" tabindex="-1"></a><span class="do">## Adjusted means</span></span>
+<span id="cb28-36"><a href="prepost-measurements.html#cb28-36" aria-hidden="true" tabindex="-1"></a>datagg<span class="sc">$</span>post_adj <span class="ot">&lt;-</span> <span class="fu">predict</span>(m2,</span>
+<span id="cb28-37"><a href="prepost-measurements.html#cb28-37" aria-hidden="true" tabindex="-1"></a>                           <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">condition =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;contr&quot;</span>, <span class="st">&quot;treat1&quot;</span>, <span class="st">&quot;treat2&quot;</span>)),</span>
+<span id="cb28-38"><a href="prepost-measurements.html#cb28-38" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">pre =</span> <span class="fu">mean</span>(dat<span class="sc">$</span>pre)))</span>
+<span id="cb28-39"><a href="prepost-measurements.html#cb28-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-40"><a href="prepost-measurements.html#cb28-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted &quot;time effects&quot;</span></span>
+<span id="cb28-41"><a href="prepost-measurements.html#cb28-41" aria-hidden="true" tabindex="-1"></a>datagg<span class="sc">$</span>diff <span class="ot">&lt;-</span> datagg<span class="sc">$</span>post <span class="sc">-</span> datagg<span class="sc">$</span>pre</span>
+<span id="cb28-42"><a href="prepost-measurements.html#cb28-42" aria-hidden="true" tabindex="-1"></a>datagg<span class="sc">$</span>diff_adj <span class="ot">&lt;-</span> datagg<span class="sc">$</span>post_adj <span class="sc">-</span> <span class="fu">mean</span>(datagg<span class="sc">$</span>pre)</span></code></pre></div>
+</details>
+</div>
+<div id="exercise-3-1" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 3<a href="prepost-measurements.html#exercise-3-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><span class="citation">Hedeker &amp; Gibbons (<a href="#ref-Hedeker2006" role="doc-biblioref">2006</a>)</span> report a smoking prevention study with students. The study used a
+<span class="math inline">\(2 \times 2\)</span> factorial design with factor “prevention curriculum” (with vs.
+without) and “TV prevention” (with vs. without). Students were randomly assigned
+to one of the four groups. Students’ knowledge about tabacco induced health
+risks before and after the prevention have been measured.</p>
+<ul>
+<li><p>Read the data set <code>television.txt</code> into R. Assign meaningful variable names.
+(You will find the necessary information at the beginning of the data file!)</p></li>
+<li><p>Calculate means and standard deviations for baseline, follow-up and change
+scores separately for the four groups. How many students are assigned to each
+group?</p></li>
+<li><p>Plot the follow-up means. Put intervention curriculum on the <span class="math inline">\(y\)</span> axis and two
+seperate lines for each tv condition. Which effects do you expect based on
+this plot?</p></li>
+<li><p>Conduct an analysis for the follow-up scores (ANOVA), the change scores, the
+adjusted follow-up scores (ANCOVA), and the adjusted change score. Interpret
+the parameters for these models. How does the knowledge of the students change
+depending on the two factors?</p></li>
+<li><p>Assess how well the assumptions for the ANCOVA model hold using visual
+methods.</p></li>
+</ul>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb29-1"><a href="prepost-measurements.html#cb29-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/television.txt&quot;</span>, <span class="at">skip =</span> <span class="dv">43</span>)</span>
+<span id="cb29-2"><a href="prepost-measurements.html#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(dat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;school&quot;</span>, <span class="st">&quot;class&quot;</span>, <span class="st">&quot;curri&quot;</span>, <span class="st">&quot;tv&quot;</span>, <span class="st">&quot;pre&quot;</span>, <span class="st">&quot;post&quot;</span>)</span>
+<span id="cb29-3"><a href="prepost-measurements.html#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="prepost-measurements.html#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(<span class="fu">cbind</span>(pre, post, post <span class="sc">-</span> pre) <span class="sc">~</span> curri <span class="sc">+</span> tv, <span class="at">data =</span> dat, <span class="at">FUN =</span> mean)</span>
+<span id="cb29-5"><a href="prepost-measurements.html#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(<span class="fu">cbind</span>(pre, post) <span class="sc">~</span> curri <span class="sc">+</span> tv, <span class="at">data =</span> dat, <span class="at">FUN =</span> sd)</span>
+<span id="cb29-6"><a href="prepost-measurements.html#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(pre <span class="sc">~</span> curri <span class="sc">+</span> tv, <span class="at">data =</span> dat, <span class="at">FUN =</span> length)</span>
+<span id="cb29-7"><a href="prepost-measurements.html#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="prepost-measurements.html#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="fu">interaction.plot</span>(dat<span class="sc">$</span>curri, dat<span class="sc">$</span>tv, dat<span class="sc">$</span>post, <span class="at">type =</span> <span class="st">&quot;b&quot;</span>, <span class="at">pch =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">16</span>),</span>
+<span id="cb29-9"><a href="prepost-measurements.html#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">&quot;Curriculum&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Mean THKS score&quot;</span>, <span class="at">trace.label =</span> <span class="st">&quot;TV&quot;</span>)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb30-1"><a href="prepost-measurements.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(post <span class="sc">~</span> curri <span class="sc">*</span> tv, <span class="at">data =</span> dat))              <span class="co"># Follow-Up</span></span>
+<span id="cb30-2"><a href="prepost-measurements.html#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(post <span class="sc">-</span> pre <span class="sc">~</span> curri <span class="sc">*</span> tv, <span class="at">data =</span> dat))        <span class="co"># Change-Score</span></span>
+<span id="cb30-3"><a href="prepost-measurements.html#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(post <span class="sc">~</span> pre <span class="sc">+</span> curri <span class="sc">*</span> tv, <span class="at">data =</span> dat))        <span class="co"># ANCOVA</span></span>
+<span id="cb30-4"><a href="prepost-measurements.html#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(post <span class="sc">-</span> pre <span class="sc">~</span> pre <span class="sc">+</span> curri <span class="sc">*</span> tv, <span class="at">data =</span> dat))  <span class="co"># Change-Score ANCOVA</span></span>
+<span id="cb30-5"><a href="prepost-measurements.html#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="prepost-measurements.html#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lm3)</span></code></pre></div>
 </details>
 
 </div>
@@ -530,6 +573,9 @@ control group and the second treatment group by 1 point</p></li>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-Hedeker2006" class="csl-entry">
+Hedeker, D. R. &amp; Gibbons, R. D. (2006). <em>Longitudinal data analysis</em>. John Wiley.
+</div>
 <div id="ref-Lowry2000" class="csl-entry">
 Lowry, R. (2000). <em>Concepts and applications of inferential statistics</em>. <a href="http://vassarstats.net/textbook/">http://vassarstats.net/textbook/</a>
 </div>

@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2024-10-15" />
+<meta name="date" content="2024-10-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -197,6 +197,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercise-1-2"><i class="fa fa-check"></i>Exercise 1</a></li>
 <li class="chapter" data-level="" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercise-2-2"><i class="fa fa-check"></i>Exercise 2</a></li>
+<li class="chapter" data-level="" data-path="prepost-measurements.html"><a href="prepost-measurements.html#exercise-3-1"><i class="fa fa-check"></i>Exercise 3</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="longitudinal-data.html"><a href="longitudinal-data.html"><i class="fa fa-check"></i><b>4</b> Longitudinal data</a>
@@ -329,7 +330,7 @@ psychometric function to the plot</p></li>
 </details>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb21-1"><a href="generalized-linear-models.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Goodness-of-fit test</span></span>
-<span id="cb21-2"><a href="generalized-linear-models.html#cb21-2" aria-hidden="true" tabindex="-1"></a>glms <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(y, n<span class="sc">-</span>y) <span class="sc">~</span> <span class="fu">factor</span>(x), <span class="at">family =</span> binomial, <span class="at">data =</span> dat)</span>
+<span id="cb21-2"><a href="generalized-linear-models.html#cb21-2" aria-hidden="true" tabindex="-1"></a>glms <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(y, n <span class="sc">-</span> y) <span class="sc">~</span> <span class="fu">factor</span>(x), <span class="at">family =</span> binomial, <span class="at">data =</span> dat)</span>
 <span id="cb21-3"><a href="generalized-linear-models.html#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(glm1, glms, <span class="at">test =</span> <span class="st">&quot;Chisq&quot;</span>)</span>
 <span id="cb21-4"><a href="generalized-linear-models.html#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-5"><a href="generalized-linear-models.html#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Overdispersion</span></span>
