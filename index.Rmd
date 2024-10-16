@@ -61,16 +61,16 @@ need more support or materials, just let me know.
 | 28.10.2024 | Simple and multiple regression           |
 | 11.11.2024 | Generalized linear models                |
 | 25.11.2024 | Pre/post measurements                    |
-| 09.12.2024 | Introduction to mixed-effects models     |
-| 13.01.2025 | Longitudinal data I                      |
-| 27.01.2025 | Longitudinal data II                     |
-| 10.02.2025 | Growth curve models                      |
-|            | Crossed random effects                   |
-|            | Gelman and Brown                         |
-|            | Multilevel models                        |
-|            | Simulation-based power analysis          |
-|            | Power simulation LMM                     |
-|            | Power simulation GLMM                    |
+| 09.12.2024 | Longitudinal data                        |
+| 13.01.2025 | Repeated measures                        |
+| 27.01.2025 | Growth curve models                      |
+| 10.02.2025 | Crossed random effects + Gelman & Brown  |
+
+
+Topics for next semester: 
+* Multilevel models
+* Simulation-based power analysis
+* Power simulation LMM and GLMM
 
 ## Literature {-}
 
