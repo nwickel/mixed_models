@@ -29,7 +29,7 @@ measurements.
   covariate $X$
 
 ```{r ex04.1, echo = FALSE}
-dat <- read.table("slides/03_prepost/ancova-data.txt", header = TRUE)
+dat <- read.table("data/ancova-data.txt", header = TRUE)
 dat$method <- factor(dat$method)
 ```
 

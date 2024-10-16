@@ -12,20 +12,20 @@
 #             (4.4) Test higher-order polynomials 
 #             (4.5) Visualization of model predictions
 #
-# input: example2_dyads.csv
-# output:
+# input:  example2_dyads.csv
+# output: icon.pdf
+#         icon-both.pdf
 #
-# created: Nov/21/2018, NU
-# last mod: Nov/21/2018, NU
+# last mod: Oct/16/2024, NW
 
-setwd("C:/Users/numbach/Work Folders/Documents/Methodenseminar/2018/statistics_seminar/14_gca")
+# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/iwm/mixed_models/06_growth_curve")
 
 library(lme4) 
 library(lattice)
 
 #--------------- (1) Read data ---------------
 
-dat <- read.csv("lzw003_supplementary-data/example2_dyads.csv")
+dat <- read.csv("../../data/lzw003_supplementary-data/example2_dyads.csv")
 dat$dyad <- as.factor(dat$dyad)
 
 #--------------- (2) Visualization of data ---------------
@@ -61,7 +61,7 @@ gcm1 <- lmer(iconicity ~ t_c + I(t_c^2) +                      # fixed effects
         (1 | dyad) + (0 + t_c | dyad) + (0 + I(t_c^2) | dyad), # random effects
         data=dat, REML=F)
 
-pdf("icon-pre.pdf", width=3.375, height=3.375, pointsize=10)
+pdf("../figures/icon-pre.pdf", width=3.375, height=3.375, pointsize=10)
 #
 xyplot(predict(gcm1) ~ t, dat, groups=dyad, type="l", xlab="Time / Interaction round",
      ylab="Iconicity")
@@ -137,7 +137,7 @@ anova(poly1, poly2, poly3, poly4)
 #dat$pre <- predict(gcm3)
 dat$pre <- predict(gcm1)
 
-pdf("icon-both.pdf", width=6.5, height=3.375)
+pdf("../figures/icon-both.pdf", width=6.5, height=3.375)
 par(mfrow=1:2, mai=c(.7,.7,.4,.1), mgp=c(2.4,1,0))
 
 plot(iconicity ~ t, dat, type="n", xlab="Time / Interaction round",

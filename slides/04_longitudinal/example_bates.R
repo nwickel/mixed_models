@@ -5,12 +5,18 @@
 #          (3) Fit models
 #
 # input: --
-# output: Plots
+# output: sleep_subjects.pdf
+#         sleep_random_intercept.pdf
+#         sleep_random_slope.pdf
+#         sleep_lattice.pdf
+#         sleep_box.pdf
+#         sleep_caterpillar.pdf
+#         sleep_shrinkage.pdf
+#         sleep_shrinkfit.pdf
 #
-# created: Oct/12/2018, NU
-# last mod: Dec/07/2022, NU
+# last mod: Oct/16/2024, NW
 
-setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/regression/05_longitudinal/figures")
+# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/mixed_models/04_longitudinal/")
 
 library(lattice)
 library(lme4)
@@ -27,7 +33,7 @@ xtabs( ~ Subject + Days, sleepstudy)
 
 #--------------- (2) Visualize data ---------------
 
-pdf("sleep_subjects.pdf", height=8, width=8, pointsize=10)
+pdf("../figures/sleep_subjects.pdf", height=8, width=8, pointsize=10)
 
 xyplot(Reaction ~ Days | Subject, sleepstudy, aspect = "xy",
   layout = c(6,3), type = c("g", "b"),
@@ -41,7 +47,7 @@ dev.off()
 # random intercept model
 lme0 <- lmer(Reaction ~ Days + (1 | Subject), sleepstudy, REML=FALSE)
 
-pdf("sleep_random_intercept.pdf", height=8, width=8, pointsize=10)
+pdf("../figures/sleep_random_intercept.pdf", height=8, width=8, pointsize=10)
 
 xyplot(Reaction ~ Days | Subject, sleepstudy, aspect = "xy",
   layout = c(6,3), type = c("g", "p"),
@@ -63,7 +69,7 @@ dev.off()
 # random slope model
 lme1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy, REML=FALSE)
 
-pdf("sleep_random_slope.pdf", height=8, width=8, pointsize=10)
+pdf("../figures/sleep_random_slope.pdf", height=8, width=8, pointsize=10)
 
 xyplot(Reaction ~ Days | Subject, sleepstudy, aspect = "xy",
   layout = c(6,3), type = c("g", "p"),
@@ -82,7 +88,7 @@ xyplot(Reaction ~ Days | Subject, sleepstudy, aspect = "xy",
 
 dev.off()
 
-pdf("sleep_lattice.pdf", height=8, width=8, pointsize=10)
+pdf("../figures/sleep_lattice.pdf", height=8, width=8, pointsize=10)
 
 xyplot(Reaction ~ Days | Subject, sleepstudy, type = c("g","p","r"),
   index.cond = function(x,y) coef(lm(y ~ x))[1],
@@ -91,7 +97,7 @@ xyplot(Reaction ~ Days | Subject, sleepstudy, type = c("g","p","r"),
 
 dev.off()
 
-pdf("sleep_box.pdf", height=3.375, width=3.375, pointsize=10)
+pdf("../figures/sleep_box.pdf", height=3.375, width=3.375, pointsize=10)
 par(mai=c(.6,.6,.1,.1), mgp=c(2.4,1,0))
 
 boxplot(Reaction ~ Days, sleepstudy)
@@ -120,7 +126,7 @@ hist(resid(lme2), border="white", col="gray", main="")
 
 # caterpillar plot
 
-pdf("sleep_caterpillar.pdf", height=4.5, width=8, pointsize=10)
+pdf("../figures/sleep_caterpillar.pdf", height=4.5, width=8, pointsize=10)
 
 dotplot(ranef(lme2, condVar=TRUE), scales = list(x = list(relation =
                                                           "free")))[[1]]
@@ -136,7 +142,7 @@ names(cc1) <- c("A", "B")
 df <- cbind(df, cc1)
 ff <- fixef(lme2)
 
-pdf("sleep_shrinkage.pdf", height=6, width=6, pointsize=10)
+pdf("../figures/sleep_shrinkage.pdf", height=6, width=6, pointsize=10)
 
 with(df,
   xyplot(`(Intercept)` ~ Days, aspect = 1,
@@ -171,7 +177,7 @@ with(df,
 dev.off()
 
 # shrinkfit
-pdf("sleep_shrinkfit.pdf", height=6, width=6, pointsize=10)
+pdf("../figures/sleep_shrinkfit.pdf", height=6, width=6, pointsize=10)
 
 xyplot(Reaction ~ Days | Subject, sleepstudy, aspect = "xy",
   layout = c(6,3), type = c("g", "p", "r"),

@@ -74,7 +74,7 @@ abline(v = c, h = .5, lty = 3)
 text(39, .8, paste("PSE =", round(c, 2)))
 
 # Goodness-of-fit test
-glms <- glm(cbind(y, n-y) ~ factor(x), family = binomial, data = dat)
+glms <- glm(cbind(y, n - y) ~ factor(x), family = binomial, data = dat)
 anova(glm1, glms, test = "Chisq")
 
 # Overdispersion

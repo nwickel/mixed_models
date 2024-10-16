@@ -7,17 +7,19 @@
 #          (5) Multilevel model
 #
 # input: --
-# output: jsp_box1.pdf, jsp_box2.pdf, jsp_lattice1.pdf, jsp_lattice2.pdf,
+# output: jsp_box1.pdf
+#         jsp_box2.pdf
+#         jsp_lattice1.pdf
+#         jsp_lattice2.pdf
 #         jsp_scatter.pdf
 #
-# created: Jun/23/2021, NU
-# last mod: Jun/23/2021, NU
+# last mod: Oct/16/2024, NW
 
 library(faraway)
 library(lattice)
 library(lme4)
 
-setwd("C:/Users/numbach/Nextcloud/Documents/teaching/regression/06_multilevel/figures/")
+# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/mixed_models/07_multilevel/")
 
 #--------------- (1) Inspect data ---------------
 
@@ -42,21 +44,21 @@ plot(math ~ social, jsp,
   ylab="Math Score")
 
 # Plots for slides
-pdf("jsp_box1.pdf", height=3.375, width=3.375, pointsize=10)
+pdf("../figures/jsp_box1.pdf", height=3.375, width=3.375, pointsize=10)
 
 par(mai=c(.6,.6,.1,.1), mgp=c(2.4,1,0))
 plot(math ~ social, jsp, xlab="Social Class", ylab="Math Score")
 
 dev.off()
 
-pdf("jsp_box2.pdf", height=3.375, width=3.375, pointsize=10)
+pdf("../figures/jsp_box2.pdf", height=3.375, width=3.375, pointsize=10)
 
 par(mai=c(.6,.6,.1,.1), mgp=c(2.4,1,0))
 plot(math ~ gender, jsp, xlab="Gender", ylab="Math Score")
 
 dev.off()
 
-pdf("jsp_scatter.pdf", height=3.375, width=3.375, pointsize=10)
+pdf("../figures/jsp_scatter.pdf", height=3.375, width=3.375, pointsize=10)
 
 par(mai=c(.6,.6,.1,.1), mgp=c(2.4,1,0))
 plot(jitter(math) ~ jitter(raven), dat, cex=.5, 
@@ -103,14 +105,14 @@ plot(math ~ gcraven, jsp,
   xlab="Raven Score",
   ylab="Math Score")
 
-pdf("jsp_lattice1.pdf")
+pdf("../figures/jsp_lattice1.pdf")
 
 xyplot(math ~ gcraven | school, data=dat, xlab="School-centered Raven Score", 
        ylab="Math Score", type=c("p", "g", "r"))
 
 dev.off()
 
-pdf("jsp_lattice2.pdf", width=15, height=5)
+pdf("../figures/jsp_lattice2.pdf", width=15, height=5)
 
 xyplot(math ~ gcraven | school:class, data=dat, xlab="School-centered Raven Score", 
        ylab="Math Score", type=c("p", "g", "r"), layout=c(31, 3))

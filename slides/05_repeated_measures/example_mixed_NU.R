@@ -8,12 +8,15 @@
 #          (6) Include diagnosis
 #
 # input: reisby.txt
-# output: hdrs-ind.pdf, hdrs-means.pdf, hdrs-means-se.pdf, hdrs-lme1.pdf, hdrs-lme2.pdf
+# output: hdrs-ind.pdf
+#         hdrs-means.pdf
+#         hdrs-means-se.pdf
+#         hdrs-lme1.pdf
+#         hdrs-lme2.pdf
 #
-# created: Jul/20/2018, NU
-# last mod: Jun/07/2021, NU
+# last mod: Oct/16/2021, NW
 
-# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/regression/04_repeated_measures/")
+# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/mixed_models/05_repeated_measures/")
 
 library(lattice)
 library(lme4)
@@ -21,7 +24,7 @@ library(ez)
 
 #--------------- (1) Read data ---------------
 
-dat      <- read.table("reisby.dat", header=TRUE)
+dat      <- read.table("../../data/reisby.dat", header=TRUE)
 dat$id   <- factor(dat$id)
 dat$diag <- factor(dat$diag, levels=c("nonen", "endog"))
 dat      <- na.omit(dat)     # drop missing values
