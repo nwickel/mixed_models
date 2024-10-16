@@ -1,8 +1,9 @@
 # example_bates.R
 #
-# content: (1) Read data
-#          (2) Visualize
+# content: (1) Load data
+#          (2) Visualize data
 #          (3) Fit models
+#          (4) Examine random effects
 #
 # input: --
 # output: sleep_subjects.pdf
@@ -21,7 +22,7 @@
 library(lattice)
 library(lme4)
 
-#--------------- (1) Load data ---------------
+#--------------- (1) Load data ------------------------------------------------
 
 data(sleepstudy)
 #?sleepstudy
@@ -31,15 +32,15 @@ head(sleepstudy)
 
 xtabs( ~ Subject + Days, sleepstudy)
 
-#--------------- (2) Visualize data ---------------
+#--------------- (2) Visualize data -------------------------------------------
 
 pdf("../figures/sleep_subjects.pdf", height=8, width=8, pointsize=10)
 
 xyplot(Reaction ~ Days | Subject, sleepstudy, aspect = "xy",
-  layout = c(6,3), type = c("g", "b"),
-  #index.cond = function(x,y) coef(lm(y ~ x))[1],
-  xlab = "Days of sleep deprivation",
-  ylab = "Average reaction time (ms)"
+       layout = c(6,3), type = c("g", "b"),
+       #index.cond = function(x,y) coef(lm(y ~ x))[1],
+       xlab = "Days of sleep deprivation",
+       ylab = "Average reaction time (ms)"
 )
 
 dev.off()
@@ -50,18 +51,18 @@ lme0 <- lmer(Reaction ~ Days + (1 | Subject), sleepstudy, REML=FALSE)
 pdf("../figures/sleep_random_intercept.pdf", height=8, width=8, pointsize=10)
 
 xyplot(Reaction ~ Days | Subject, sleepstudy, aspect = "xy",
-  layout = c(6,3), type = c("g", "p"),
-  coef.list = coef(lme0)$Subject,
-  panel = function(..., coef.list) {
-    panel.xyplot(...)
-    panel.abline(as.numeric(coef.list[packet.number(),]),
-                 col.line = trellis.par.get("superpose.line")$col[1],
-                 lty = trellis.par.get("superpose.line")$lty[2]
-                 )
-  },
-  index.cond = function(x,y) coef(lm(y ~ x))[1],
-  xlab = "Days of sleep deprivation",
-  ylab = "Average reaction time (ms)"
+       layout = c(6,3), type = c("g", "p"),
+       coef.list = coef(lme0)$Subject,
+       panel = function(..., coef.list) {
+         panel.xyplot(...)
+         panel.abline(as.numeric(coef.list[packet.number(),]),
+                      col.line = trellis.par.get("superpose.line")$col[1],
+                      lty = trellis.par.get("superpose.line")$lty[2]
+                      )
+       },
+       index.cond = function(x,y) coef(lm(y ~ x))[1],
+       xlab = "Days of sleep deprivation",
+       ylab = "Average reaction time (ms)"
 )
 
 dev.off()
@@ -72,18 +73,18 @@ lme1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy, REML=FALSE)
 pdf("../figures/sleep_random_slope.pdf", height=8, width=8, pointsize=10)
 
 xyplot(Reaction ~ Days | Subject, sleepstudy, aspect = "xy",
-  layout = c(6,3), type = c("g", "p"),
-  coef.list = coef(lme1)$Subject,
-  panel = function(..., coef.list) {
-    panel.xyplot(...)
-    panel.abline(as.numeric(coef.list[packet.number(),]),
-                 col.line = trellis.par.get("superpose.line")$col[1],
-                 lty = trellis.par.get("superpose.line")$lty[2]
-                 )
-  },
-  index.cond = function(x,y) coef(lm(y ~ x))[1],
-  xlab = "Days of sleep deprivation",
-  ylab = "Average reaction time (ms)"
+       layout = c(6,3), type = c("g", "p"),
+       coef.list = coef(lme1)$Subject,
+       panel = function(..., coef.list) {
+         panel.xyplot(...)
+         panel.abline(as.numeric(coef.list[packet.number(),]),
+                      col.line = trellis.par.get("superpose.line")$col[1],
+                      lty = trellis.par.get("superpose.line")$lty[2]
+                      )
+       },
+       index.cond = function(x,y) coef(lm(y ~ x))[1],
+       xlab = "Days of sleep deprivation",
+       ylab = "Average reaction time (ms)"
 )
 
 dev.off()
@@ -91,15 +92,16 @@ dev.off()
 pdf("../figures/sleep_lattice.pdf", height=8, width=8, pointsize=10)
 
 xyplot(Reaction ~ Days | Subject, sleepstudy, type = c("g","p","r"),
-  index.cond = function(x,y) coef(lm(y ~ x))[1],
-  xlab = "Days of sleep deprivation",
-  ylab = "Average reaction time (ms)", aspect = "xy")
+       index.cond = function(x,y) coef(lm(y ~ x))[1],
+       xlab = "Days of sleep deprivation",
+       ylab = "Average reaction time (ms)",
+       aspect = "xy")
 
 dev.off()
 
 pdf("../figures/sleep_box.pdf", height=3.375, width=3.375, pointsize=10)
-par(mai=c(.6,.6,.1,.1), mgp=c(2.4,1,0))
 
+par(mai = c(.6,.6,.1,.1), mgp = c(2.4,1,0))
 boxplot(Reaction ~ Days, sleepstudy)
 # --> good to see that assumption of homoscedasticity is violated
 
@@ -107,7 +109,7 @@ dev.off()
 
 plot(aggregate(Reaction ~ Days, sleepstudy, sd)[, 2], type="h")
 
-#--------------- (3) Fit models ---------------
+#--------------- (3) Fit models -----------------------------------------------
 
 lme2 <- lmer(Reaction ~ Days + (Days || Subject), sleepstudy, REML=FALSE)
 
@@ -122,7 +124,7 @@ qqline(resid(lme2))
 
 hist(resid(lme2), border="white", col="gray", main="")
 
-#--------------- (4) Examine random effects ---------------
+#--------------- (4) Examine random effects -----------------------------------
 
 # caterpillar plot
 
@@ -168,9 +170,9 @@ with(df,
               adj = c(0.5, -0.6))
     },
     key = list(space = "top", columns = 3,
-    text = list(c("Mixed model", "Within-group", "Population")),
-    points = list(col = trellis.par.get("superpose.symbol")$col[1:3],
-    pch = trellis.par.get("superpose.symbol")$pch[1:3]))
+               text = list(c("Mixed model", "Within-group", "Population")),
+               points = list(col = trellis.par.get("superpose.symbol")$col[1:3],
+                             pch = trellis.par.get("superpose.symbol")$pch[1:3]))
   )
 )
 
@@ -193,13 +195,13 @@ xyplot(Reaction ~ Days | Subject, sleepstudy, aspect = "xy",
                  lty = trellis.par.get("superpose.line")$lty[4]
                  )
   },
-  index.cond = function(x,y) coef(lm(y ~ x))[1],
+  index.cond = function(x, y) coef(lm(y ~ x))[1],
   xlab = "Days of sleep deprivation",
   ylab = "Average reaction time (ms)",
   key = list(space = "top", columns = 3,
-  text = list(c("Within-subject", "Mixed model", "Population")),
-  lines = list(col = trellis.par.get("superpose.line")$col[c(1:2,4)],
-  lty = trellis.par.get("superpose.line")$lty[c(1:2,4)]))
+             text = list(c("Within-subject", "Mixed model", "Population")),
+             lines = list(col = trellis.par.get("superpose.line")$col[c(1:2,4)],
+                          lty = trellis.par.get("superpose.line")$lty[c(1:2,4)]))
 )
 
 dev.off()
