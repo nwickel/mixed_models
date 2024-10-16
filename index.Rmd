@@ -21,6 +21,9 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 This is an online book accompanying a course on mixed-effects models taught to
 PhD students at the Leibniz-Institut für Wissensmedien (IWM) in Tübingen.
 
+The data sets used in the examples and exercises can be downloaded
+[here](https://github.com/nwickel/mixed_models/tree/master/data).
+
 So far, this is _work in progress_ and very rudimentary!
 
 ## Desirable background knowledge {-}
