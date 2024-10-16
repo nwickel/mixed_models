@@ -118,31 +118,95 @@ $N$    & $n_N$     & $y_{Nn_N}$  & $x_{Nn_N1}$ & \dots & $x_{Nn_Np}$\\
 \end{tabular}
 \end{center}
 \vfill
+\pause
+Today we will consider the simplest case with only two time points: pre and post
+score
 \end{frame}
 
 \begin{frame}{Outline}
 \tableofcontents
 \end{frame}
 
-\section[t test]{$t$ test}
+\section[$t$ test]{$t$ test}
 
-\begin{frame}{$t$ test for dependent samples}
+\begin{frame}{$t$ test for dependent samples (comparing two time points)}
 \begin{itemize}
   \item Straightforward analysis for two time points $n = 2$
-  \item Written as linear model
+  \item Consider for each person the change score $d_i = y_{i2} - y_{i1}$
+    and the linear model
     \begin{align*}
-         d_i &= y_{i2} - y_{i1} \\
          d_i &= \beta_0 + \varepsilon_i \\
       y_{i2} &= \beta_0 + y_{i1} + \varepsilon_i
     \end{align*}
     with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
-  \item Research question:\\
-    Is there change between the first and second time point ($H_0\colon \beta_0 = 0$)?
+  \item Interpretation:
+    \begin{center}
+    \begin{tabular}{ll}
+    $\beta_0$ & average change score
+    \end{tabular}
+    \end{center}
+  \item Hypothesis:\\
+        Is there change between the first and second time point ($H_0\colon \beta_0 = 0$)?
   \item Which effects are not considered by this?
+    \pause
+  \item It is unclear if change is due to the treatment or just appeared
+    over time
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Design}
+\begin{frame}{$t$ test for comparing two time points}
+\begin{center}
+\begin{tikzpicture}[>=stealth, y=.6cm, x=.6cm, font=\small]
+\draw[->] (0,0) -- coordinate (x axis mid) (10,0);
+\draw[->] (0,0) -- coordinate (y axis mid) (0,10);
+\node[below=0.5cm] at (x axis mid) {Pre-treatment score, $y_1$};
+\node[rotate=90, above=0.5cm] at (y axis mid) {Post-treatment score, $y_2$};
+%
+\draw (0, 1) -- (8, 9);
+\draw (6, 7) -- (7, 7) -- (7, 7.5) node [right] {$1$} -- (7, 8);
+\draw[dashed] (0, 6) node [above right] {$\beta_0$} -- (5, 6) -- (5, 0) node [below] {$0$};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{$t$ test for comparing two time points}
+\begin{lstlisting}
+# simulate two dependent time points
+cg <- MASS::mvrnorm(n = 50, mu = c(10,10),
+                    Sigma = matrix(c(1,.9,.9,1), 2))
+tg <- MASS::mvrnorm(n = 50, mu = c(10,15),
+                    Sigma = matrix(c(1,.9,.9,1), 2))
+
+sim <- as.data.frame(rbind(cg, tg))
+names(sim) <- c("t1", "t2")
+
+# add group variable
+sim$group <- factor(rep(c("CG", "TG"), each = 50))
+
+# group means
+aggregate(cbind(t1, t2) ~ group, data = sim, FUN = mean)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{$t$ test for comparing two time points}
+\begin{lstlisting}
+# t test
+t.test(sim$t2, sim$t1, paired = TRUE)
+
+# add change score
+sim$d <- sim$t2 - sim$t1
+
+# linear model
+lm1 <- lm(d ~ 1, data = sim)
+lm2 <- lm(t2 ~ offset(t1), data = sim)
+
+# visualization
+plot(t2 ~ t1, data = sim)
+abline(coef(lm2), 1)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Better design}
 \begin{itemize}
     \item At least two groups are observed before ($y_{i1}$) and after
       ($y_{i2}$) a treatment
@@ -175,79 +239,6 @@ $N$    & $n_N$     & $y_{Nn_N}$  & $x_{Nn_N1}$ & \dots & $x_{Nn_Np}$\\
       Do groups differ in the strength of their change?
 \end{itemize}
 \end{frame}
-
-\begin{frame}{$t$ test for comparing two time points}
-\begin{itemize}
-  \item Consider for each person the change score $d_i = y_{i2} - y_{i1}$
-    and the regression model
-    \begin{align*}
-         d_i &= \beta_0 + \varepsilon_i \\
-      y_{i2} &= \beta_0 + y_{i1} + \varepsilon_i
-    \end{align*}
-    with $\varepsilon_i \sim N(0, \sigma^2)$ i.i.d.
-  \item Interpretation:
-    \begin{center}
-    \begin{tabular}{ll}
-    $\beta_0$ & average change score
-    \end{tabular}
-    \end{center}
-  \item Hypothesis:\\
-        Is there change between the first and second time point ($H_0\colon \beta_0 = 0$)?
-  \item It is unclear if change is due to the treatment or just appeared
-    over time
-\end{itemize}
-\end{frame}
-
-\begin{frame}{$t$ test for comparing two time points}
-\begin{center}
-\begin{tikzpicture}[>=stealth, y=.6cm, x=.6cm, font=\small]
-\draw[->] (0,0) -- coordinate (x axis mid) (10,0);
-\draw[->] (0,0) -- coordinate (y axis mid) (0,10);
-\node[below=0.5cm] at (x axis mid) {Pre-treatment score, $y_1$};
-\node[rotate=90, above=0.5cm] at (y axis mid) {Post-treatment score, $y_2$};
-%
-\draw (0, 1) -- (8, 9);
-\draw (6, 7) -- (7, 7) -- (7, 7.5) node [right] {$1$} -- (7, 8);
-\draw[dashed] (0, 6) node [above right] {$\beta_0$} -- (5, 6) -- (5, 0) node [below] {$0$};
-\end{tikzpicture}
-\end{center}
-\end{frame}
-
-\begin{frame}[fragile]{$t$ test for comparing two time points}
-\begin{lstlisting}
-# simulate two dependent time points
-cg <- MASS::mvrnorm(n=50, mu=c(10,10), Sigma=matrix(c(1,.9,.9,1), 2))
-tg <- MASS::mvrnorm(n=50, mu=c(10,15), Sigma=matrix(c(1,.9,.9,1), 2))
-
-sim <- as.data.frame(rbind(cg, tg))
-names(sim) <- c("t1", "t2")
-
-# add group variable
-sim$group <- factor(rep(c("CG", "TG"), each=50))
-
-# group means
-aggregate(cbind(t1, t2) ~ group, sim, mean)
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{$t$ test for comparing two time points}
-\begin{lstlisting}
-# t test
-t.test(sim$t2, sim$t1, paired=TRUE)
-
-# add change score
-sim$d <- sim$t2 - sim$t1
-
-# linear model
-lm1 <- lm(d ~ 1, sim)
-lm2 <- lm(t2 ~ offset(t1), sim)
-
-# visualization
-plot(t2 ~ t1, sim)
-abline(coef(lm2), 1)
-\end{lstlisting}
-\end{frame}
-
 
 \begin{frame}{$t$ test of follow-up score of two groups}
 \begin{itemize}
@@ -289,14 +280,14 @@ abline(coef(lm2), 1)
 \begin{frame}[fragile]{$t$ test of follow-up score of two groups}
 \begin{lstlisting}
 # t test
-t.test(t2 ~ group, sim, var.equal=TRUE)
+t.test(t2 ~ group, data = sim, var.equal = TRUE)
 
 # linear model
-lm3 <- lm(t2 ~ group, sim)
+lm3 <- lm(t2 ~ group, data = sim)
 
 # visualization
 plot(t2 ~ t1, sim)
-abline(h=cumsum(coef(lm3)))
+abline(h = cumsum(coef(lm3)))
 \end{lstlisting}
 \end{frame}
 
@@ -316,7 +307,7 @@ abline(h=cumsum(coef(lm3)))
     $\beta_0$ & average change score for reference group\\
     $\beta_1$ & difference to $\beta_0$ in treatment group
     \end{tabular}
-  \item Hypothesis:
+  \item Hypotheses:
     \begin{itemize}
         \item Is there change in the reference group ($H_0\colon \beta_0 = 0$)?
         \item Does the change differ between groups ($H_0\colon \beta_1 =0$)?
@@ -345,10 +336,10 @@ abline(h=cumsum(coef(lm3)))
 \begin{frame}[fragile]{Change score analysis}
 \begin{lstlisting}
 # regression model
-lm4 <- lm(t2 ~ offset(t1) + group, sim)
+lm4 <- lm(t2 ~ offset(t1) + group, data = sim)
 
 # visualization
-plot(t2 ~ t1, sim)
+plot(t2 ~ t1, data = sim)
 abline(coef(lm4)[1], 1)
 abline(coef(lm4)[1] + coef(lm4)[2], 1)
 \end{lstlisting}
@@ -367,9 +358,9 @@ abline(coef(lm4)[1] + coef(lm4)[2], 1)
 \end{itemize}
 \end{frame}
 
-\section[ANCOVA]{Analysis of covariance}
+\section[ANCOVA]{Analysis of Covariance}
 
-\begin{frame}{Analysis of covariance (ANCOVA)}
+\begin{frame}{Analysis of Covariance (ANCOVA)}
 \begin{itemize}
   \item Regression model
     \[
@@ -382,7 +373,7 @@ abline(coef(lm4)[1] + coef(lm4)[2], 1)
     $\beta_1$ & effect of baseline score\\
     $\beta_2$ & difference to follow-up score in the treatment group
     \end{tabular}
-  \item Hypothesis:
+  \item Hypotheses:
     \begin{itemize}
         \item Is there a relationship between baseline and follow-up score ($H_0\colon \beta_1 = 0$)?
         \item Do the follow-up scores in the groups differ for persons with
@@ -392,7 +383,7 @@ abline(coef(lm4)[1] + coef(lm4)[2], 1)
 \end{frame}
 
 
-\begin{frame}{Analysis of covariance (ANCOVA)}
+\begin{frame}{Analysis of Covariance (ANCOVA)}
 \begin{center}
 \begin{tikzpicture}[>=stealth, y=.6cm, x=.6cm, font=\small]
 \draw[->] (0,0) -- coordinate (x axis mid) (10,0);
@@ -427,25 +418,26 @@ abline(coef(lm4)[1] + coef(lm4)[2], 1)
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Analysis of covariance (ANCOVA)}
+\begin{frame}[fragile]{Analysis of Covariance (ANCOVA)}
 \begin{lstlisting}
 # ancova
-lm5 <- lm(t2 ~ t1 + group, sim)
+lm5 <- lm(t2 ~ t1 + group, data = sim)
 
 # adjusted means
-predict(lm5, newdat=data.frame(t1=mean(sim$t1), group=c("CG", "TG")))
+predict(lm5, newdata = data.frame(t1 = mean(sim$t1),
+                                  group = c("CG", "TG")))
 
 # ancova with change score
-lm5a <- lm(d ~ t1 + group, sim)
+lm5a <- lm(d ~ t1 + group, data = sim)
 
 # visualization
-plot(t2 ~ t1, sim)
+plot(t2 ~ t1, data = sim)
 abline(coef(lm5)[1], coef(lm5)[2])
 abline(coef(lm5)[1] + coef(lm5)[3], coef(lm5)[2])
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Analysis of covariance with change score}
+\begin{frame}{Analysis of Covariance with change score}
 \begin{itemize}
   \item Regression model
     \begin{align*}
@@ -477,7 +469,7 @@ abline(coef(lm5)[1] + coef(lm5)[3], coef(lm5)[2])
     \end{tabular}
   \item Hypothesis:\\
         Does effect of baseline score depend on group ($H_0\colon \beta_3 = 0$)?
-  \item Interpretation of adjusted means idenpendently of baseline score
+  \item Interpretation of adjusted means independently of baseline score
     implies $\beta_3 = 0$
 \end{itemize}
 \end{frame}
@@ -505,10 +497,10 @@ abline(coef(lm5)[1] + coef(lm5)[3], coef(lm5)[2])
 \begin{frame}[fragile]{Interaction between baseline score and group}
 \begin{lstlisting}
 # regression model with interaction
-lm6 <- lm(t2 ~ t1*group, sim)
+lm6 <- lm(t2 ~ t1 * group, data = sim)
 
 # visualization
-plot(t2 ~ t1, sim)
+plot(t2 ~ t1, data = sim)
 abline(coef(lm6)[1], coef(lm6)[2])
 abline(coef(lm6)[1] + coef(lm6)[3], coef(lm6)[2] + coef(lm6)[4])
 
@@ -521,13 +513,12 @@ anova(lm4, lm5, lm6)
 
 \begin{frame}{Example: Acupuncture for shoulder pain}
 \begin{itemize}
-  \item \citet{Kleinhenz1999} investigated the effect of acupuncture on
-    the improvement of mobility for 52 patients with shoulder pain
-  \item Patients were randomly assigned to two groups (placebo vs.\
-    acupuncture)
-  \item Before and after the treatment a mobility score was measured
-  \item \citet{VickersAltman2001} show advantages of an analysis of
-    covariance compared to other methods based on these data
+  \item \citet{Kleinhenz1999} investigate the effect of acupuncture on the
+    improvement of mobility for 52 patients with shoulder pain
+  \item Patients are randomly assigned to two groups (placebo vs.\ acupuncture)
+  \item Before and after the treatment a mobility score is measured
+  \item \citet{VickersAltman2001} show advantages of an analysis of covariance
+    compared to other methods based on these data
 \end{itemize}
 \end{frame}
 
@@ -610,33 +601,34 @@ anova(lm4, lm5, lm6)
 \begin{frame}[fragile]{Example: Acupuncture for shoulder pain}
 \begin{lstlisting}
 # read data
-dat <- read.table("kleinhenz.txt", header=TRUE)
-dat$grp <- factor(dat$grp, levels=c("plac", "acu"))
+dat <- read.table("kleinhenz.txt", header = TRUE)
+dat$grp <- factor(dat$grp, levels = c("plac", "acu"))
 
 # follow-up analysis
-m1 <- lm(post ~ grp, dat)
+m1 <- lm(post ~ grp, data = dat)
 summary(m1)
 confint(m1)
 
 # change score analysis
-m2 <- lm(post ~ offset(pre) + grp, dat)
+m2 <- lm(post ~ offset(pre) + grp, data = dat)
 
 # ancova
-m3 <- lm(post ~ pre + grp, dat)
+m3 <- lm(post ~ pre + grp, data = dat)
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Example: Acupuncture for shoulder pain}
 \begin{lstlisting}
 # testing if slopes differ
-m4 <- lm(post ~ pre*grp, dat)
+m4 <- lm(post ~ pre * grp, data = dat)
 anova(m3, m4)
 
 # adjusted means
-predict(m3, data.frame(pre=mean(dat$pre), grp=c("plac", "acu")))
+predict(m3, newdata = data.frame(pre = mean(dat$pre),
+                                 grp = c("plac", "acu")))
 
 # visualization
-plot(post ~ pre, dat, xlim=c(20,100), ylim=c(20,100))
+plot(post ~ pre, data = dat, xlim = c(20,100), ylim = c(20,100))
 abline(coef(m3)[1], coef(m3)[2])
 abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
 \end{lstlisting}
@@ -678,7 +670,7 @@ abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
         d_i = y_{i2} - y_{i1}
     \]
     or the adjusted follow-up scores which are considered to be independent
-  \item Analysis of covariance
+  \item Analysis of Covariance
   \begin{itemize}
     \item has the highest power to detect differences for average change
       compared to the other methods
@@ -690,9 +682,9 @@ abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
 
 \appendix
 
-\section{Repeated measures ANOVA}
+\section{Linear mixed-effects model}
 
-\begin{frame}{Repeated measures ANOVA}
+\begin{frame}{Linear mixed-effects model}
 \begin{itemize}
   \item Regression notation with indicator variable for time ($t_{i1} = 0$,
     $t_{i2} = 1$) and\\ group ($x_i$)
@@ -714,7 +706,7 @@ abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Repeated measures ANOVA}
+\begin{frame}{Linear mixed-effects model}
 \begin{center}
 \begin{tikzpicture}[>=stealth, y=.6cm, x=.6cm, font=\small]
 \draw[->] (0,0) -- coordinate (x axis mid) (10,0);
@@ -738,7 +730,7 @@ abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
 \end{center}
 \end{frame}
 
-\begin{frame}{Repeated measures ANOVA}
+\begin{frame}{Linear mixed-effects model}
 \begin{itemize}
   \item For the two groups with $j = 1, 2$, we get
     \begin{align*}
@@ -762,23 +754,23 @@ abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
     \]
 \end{itemize}
   \vspace{-.3cm}
-  $\to$ ANOVA for two time points is equivalent to change score analysis!
+  $\to$ LMM for two time points is equivalent to change score analysis!
 \end{frame}
 
 \begin{frame}[fragile]{Example: Acupuncture for shoulder pain}
 \begin{lstlisting}
-# Read data
-dat <- read.table("kleinhenz.txt", header=TRUE)
-dat$grp <- factor(dat$grp, levels=c("plac", "acu"))
+# read data
+dat <- read.table("kleinhenz.txt", header = TRUE)
+dat$grp <- factor(dat$grp, levels = c("plac", "acu"))
 
-# Change score analysis
-m1 <- lm(post ~ offset(pre) + grp, dat)
-# Repeated-measures ANOVA
-datl <- reshape(dat, direction="long", varying=list(1:2), v.names="score")
-datl$time <- factor(datl$time, levels=1:2, labels=c("pre", "post"))
-m2 <- lmer(score ~ grp*time + (1 | id), datl)
-
-# Compare residual variances
+# change score analysis
+m1 <- lm(post ~ offset(pre) + grp, data = dat)
+# LMM
+datl <- reshape(dat, direction = "long",
+                varying = list(1:2), v.names = "score")
+datl$time <- factor(datl$time, levels = 1:2, labels = c("pre", "post"))
+m2 <- lmer(score ~ grp * time + (1 | id), data = datl)
+# compare residual variances
 sigma(m1)^2
 2 * sigma(m2)^2
 \end{lstlisting}
