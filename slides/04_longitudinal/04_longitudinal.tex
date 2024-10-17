@@ -25,6 +25,10 @@
 
 \definecolor{iwmorange}{RGB}{255,105,0}
 \definecolor{iwmgray}{RGB}{67,79,79}
+\definecolor{iwmblue}{RGB}{60,180,220}
+\definecolor{iwmgreen}{RGB}{145,200,110}
+\definecolor{iwmpurple}{RGB}{120,0,75}
+
 \setbeamercolor{title}{fg=iwmorange}
 \setbeamercolor{frametitle}{fg=iwmorange}
 \setbeamercolor{structure}{fg=iwmorange}
@@ -42,33 +46,18 @@
 \newcommand{\gvect}[1]{\boldsymbol{#1}}
 \newcommand{\gmat}[1]{\boldsymbol{#1}}
 
-\lstset{language=R,%
-  %backgroundcolor=\color{iwmgray!80!white},
-  basicstyle=\ttfamily\color{iwmorange},
-  frame=single,
-  commentstyle=\slshape\color{black},
-  keywordstyle=\bfseries\color{white},
-  identifierstyle=\color{white},
-  stringstyle=\color{green!85!black},
-  numbers=none,%left,numberstyle=\tiny,
-  basewidth={.5em, .4em},
-  showstringspaces=false,
-  emphstyle=\color{red!50!white}}
-
-\lstdefinestyle{plain}{language=R,
-  frame=none,
-  basicstyle=\ttfamily\color{iwmorange},
-  commentstyle=\slshape\color{iwmgray},
-  keywordstyle=\bfseries\color{iwmgray},
-  identifierstyle=\color{iwmgray},
-  stringstyle=\color{iwmgray},
-  numbers=none,
-  basewidth={.5em, .4em},
-  showstringspaces=false}
-
-\pgfmathdeclarefunction{gauss}{2}{%
-  \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
-}
+\lstset{language = R,%
+  basicstyle = \ttfamily\color{iwmgray},
+  frame = single,
+  rulecolor = \color{iwmgray},
+  commentstyle = \slshape\color{iwmgreen},
+  keywordstyle = \bfseries\color{iwmgray},
+  identifierstyle = \color{iwmpurple},
+  stringstyle = \color{iwmblue},
+  numbers = none,%left,numberstyle = \tiny,
+  basewidth = {.5em, .4em},
+  showstringspaces = false,
+  emphstyle = \color{red!50!white}}
 
 \AtBeginSection[]{
   \frame{
@@ -89,10 +78,11 @@
 \titlepage
 \end{frame}
 
-% \begin{frame}{Outline}
-% \tableofcontents
-% \end{frame}
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
 
+\section[Introduction]{Introduction mixed-effects models}
 
 \begin{frame}{Mixed-effects models}
 \begin{itemize}
@@ -114,28 +104,29 @@
 \end{frame}
 
 
-% \begin{frame}{Mixed-effects models}
-%   \begin{itemize}
-%     \item Mixed-effects models are a class of statistical models that
-%       include fixed effects as well as random effects
-%     \item Fixed effects vs.\ random effects\footnote{Some critical
-%       discussion on these definitions:
-%       \url{http://andrewgelman.com/2005/01/25/why_i_dont_use/}}
-%     \begin{itemize}
-%       \item For fixed effects, only effects of the factor levels used in the
-%         present study are considered (manipulated levels, e.\,g., groups,
-%         sex, \dots)\\[1ex]
-% 
-%         $\to$ Of interest is how these levels differ
-%       \item For random effects, the factor levels considered in a study are
-%         regarded as a (random) sample from some population (e.\,g., words,
-%         raters, subjects, \dots)\\[1ex]
-% 
-%         $\to$ Of interest are conlusions about the underlying population and its
-%         variation
-%     \end{itemize}
-%   \end{itemize}
-% \end{frame}
+\begin{frame}{Mixed-effects models}
+  \begin{itemize}
+    \item Mixed-effects models are a class of statistical models that
+      include fixed effects as well as random effects
+    \item Fixed effects vs.\ random effects\footnote{Some critical
+      discussion on these definitions:
+      \url{http://andrewgelman.com/2005/01/25/why_i_dont_use/}}
+    \begin{itemize}
+      \item For fixed effects, only effects of the factor levels used in the
+        present study are considered (manipulated conditions, e.\,g., assigned
+        groups, but also sex, or other variables \dots)\\[1ex]
+
+        $\to$ Of interest is how these levels differ\\[1ex]
+
+      \item For random effects, the factor levels considered in a study are
+        regarded as a (random) sample from some population (e.\,g., words,
+        raters, subjects, \dots)\\[1ex]
+
+        $\to$ Of interest are conlusions about the underlying population and its
+        variation
+    \end{itemize}
+  \end{itemize}
+\end{frame}
 
 
 \begin{frame}{General linear model}
@@ -320,6 +311,7 @@ with
 \end{itemize}
 \end{frame}
 
+\section{Sleep study}
 
 \begin{frame}[fragile]{Longitudinal data}
   \begin{itemize}
@@ -334,16 +326,16 @@ with
   package\footnote{The example can be found in a book draft by Douglas
       Bates: \url{http://lme4.r-forge.r-project.org/} or the JSS paper on
       \texttt{lme4}: \url{https://www.jstatsoft.org/article/view/v067i01}}
-  \begin{lstlisting}[style=plain]
-  library(lme4)
-  data(sleepstudy)
-  ?sleepstudy
-  str(sleepstudy)
-  summary(sleepstudy)
-  head(sleepstudy)
+  \begin{lstlisting}
+library(lme4)
+data(sleepstudy)
+?sleepstudy
+str(sleepstudy)
+summary(sleepstudy)
+head(sleepstudy)
   \end{lstlisting}
   \end{itemize}
-\nocite{Bates2010lme4}
+\nocite{Bates2010lme4, Bates2015}
 \end{frame}
 
 \begin{frame}{Sleep study}
@@ -391,164 +383,162 @@ with
 %   \end{lstlisting}
 % \end{frame}
 
-\begin{frame}{Visualization of data}
-  \begin{center}
-      \includegraphics[scale=.8]{../figures/sleep_box}
-  \end{center}
-\end{frame}
-
-\begin{frame}{Visualization of individual data}
-  \begin{center}
-      \includegraphics[scale=.37]{../figures/sleep_subjects}
-  \end{center}
-\end{frame}
-
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Visualization of data}
+  \begin{columns}
+    \begin{column}{.53\textwidth}
+      \includegraphics[scale=.8]{../figures/sleep_box}
+    \end{column}
+    \begin{column}{.55\textwidth}
+\begin{lstlisting}
+boxplot(Reaction ~ Days, sleepstudy)
+\end{lstlisting}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Visualization of individual data}
+  \begin{columns}
+    \begin{column}{.53\textwidth}
+      \includegraphics[scale=.5]{../figures/sleep_subjects}
+    \end{column}
+    \begin{column}{.55\textwidth}
 \begin{lstlisting}
 library(lattice)
 
-xyplot(Reaction ~ Days | Subject, sleepstudy,
+xyplot(Reaction ~ Days | Subject,
+  data = sleepstudy,
   type = c("g","b"),
-  index.cond = function(x,y){ coef(lm(y ~ x))[1] },
   xlab = "Days of sleep deprivation",
   ylab = "Average reaction time (ms)",
   aspect = "xy")
-
-boxplot(Reaction ~ Days, sleepstudy)
 \end{lstlisting}
+    \end{column}
+  \end{columns}
 \end{frame}
-
-}
 
 \begin{frame}{Random intercept model}
-\begin{align*}
-\text{(Level 1)}  \quad y_{ij} &= b_{0i} + b_{1i}\,Days_{ij} + \varepsilon_{ij}\\
-\text{(Level 2)}  \quad b_{0i} &= \beta_0 + \upsilon_{0i}\\
-                  \quad b_{1i} &= \beta_1\\
-\text{(2) in (1)} \quad y_{ij} &= \beta_0 + \beta_1\,Days_{ij} +
-                                  \upsilon_{0i} + \varepsilon_{ij}
-\end{align*}
-\vfill
-with $\upsilon_{0i} \sim N(0, \sigma^2_{\upsilon})$ i.i.d.,
-$\varepsilon_{ij} \sim N(0, \sigma^2)$ i.i.d., $\upsilon_{0i}$ and
-$\varepsilon_{ij}$ i.i.d.\\[2ex]
-\vfill
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+  \begin{itemize}
+\item The random intercept model adds a random intercept for each subject
+\[
+  y_{ij} = \beta_0 + \beta_1\,Days_{ij} + \upsilon_{0i} + \varepsilon_i
+\]
+with $\upsilon_{0i} \overset{iid}{\sim} N(0, \sigma^2_{\upsilon})$,
+      $\varepsilon_{ij} \overset{iid}{\sim} N(0, \sigma^2)$
+    \item The slope is identical for each subject (and the population)
+  \end{itemize}
+      \vspace{2.2cm}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \includegraphics[scale=.5]{../figures/sleep_random_intercept}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
+% \begin{align*}
+% \text{(Level 1)}  \quad y_{ij} &= b_{0i} + b_{1i}\,Days_{ij} + \varepsilon_{ij}\\
+% \text{(Level 2)}  \quad b_{0i} &= \beta_0 + \upsilon_{0i}\\
+%                   \quad b_{1i} &= \beta_1\\
+% \text{(2) in (1)} \quad y_{ij} &= \beta_0 + \beta_1\,Days_{ij} +
+%                                   \upsilon_{0i} + \varepsilon_{ij}
+% \end{align*}
+% \vfill
+% with $\upsilon_{0i} \sim N(0, \sigma^2_{\upsilon})$ i.i.d.,
+% $\varepsilon_{ij} \sim N(0, \sigma^2)$ i.i.d., $\upsilon_{0i}$ and
+% $\varepsilon_{ij}$ i.i.d.\\[2ex]
+% \vfill
 
 \begin{frame}[fragile]{Random intercept model}
 \begin{lstlisting}
 lme0 <- lmer(Reaction ~ Days + (1 | Subject), sleepstudy)
 summary(lme0)
 
-# Model matrices
+# model matrices
 X <- model.matrix(~ Days, sleepstudy)
 Z <- model.matrix(~ 0 + Subject, sleepstudy)
 
-# Coefficients
+# coefficients
 coef(lme0)
 fixef(lme0)
 ranef(lme0)
 \end{lstlisting}
 \end{frame}
 
-}
-
-\begin{frame}{Visualization of individual data}
-  \begin{center}
-      \includegraphics[scale=.37]{../figures/sleep_random_intercept}
-  \end{center}
-\end{frame}
-
-
 \begin{frame}[fragile]{Random slope model}
-\begin{align*}
-\text{(Level 1)}  \quad y_{ij} &= b_{0i} + b_{1i}\,Days_{ij} + \varepsilon_{ij}\\
-\text{(Level 2)}  \quad b_{0i} &= \beta_0 + \upsilon_{0i}\\
-                  \quad b_{1i} &= \beta_1 + \upsilon_{1i}\\
-\text{(2) in (1)} \quad y_{ij} &= \beta_0 + \beta_1\,Days_{ij} +
-                   \upsilon_{0i} + \upsilon_{1i} \, Days_{ij}+ \varepsilon_{ij}
-\end{align*}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+  \begin{itemize}
+\item The random slope model adds a random intercept and a random slope for each
+  subject
+\[
+  y_{ij} = \beta_0 + \beta_1\,Days_{ij} + \upsilon_{0i} +
+      \upsilon_{1i}\,Days_{ij} + \varepsilon_{ij}
+\]
 with
 \begin{align*}
-  \begin{pmatrix} \upsilon_{0i}\\ \upsilon_{1i} \end{pmatrix} &\sim
+  \begin{pmatrix} \upsilon_{0i}\\ \upsilon_{1i} \end{pmatrix} &\overset{iid}{\sim}
     N \left(\begin{pmatrix} 0\\ 0 \end{pmatrix}, \, \gmat{\Sigma}_\upsilon =
       \begin{pmatrix}
         \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0 \upsilon_1} \\
         \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_1} \\
       \end{pmatrix} \right)
-    \text{ i.i.d.} \\
-  \varepsilon_{ij} & \sim N(0, \sigma_{\varepsilon}^2)
-    \text{ i.i.d.}
+    \\
+  \varepsilon_{ij} & \overset{iid}{\sim} N(0, \sigma_{\varepsilon}^2)
 \end{align*}
+      \vspace{-.5cm}
+    \item Individual slopes for each subject
+  \end{itemize}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \includegraphics[scale=.5]{../figures/sleep_random_slope}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
-\begin{frame}[fragile]{Random intercept model}
+\begin{frame}[fragile]{Random slope model}
 \begin{lstlisting}
 lme1 <- lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 summary(lme1)
 
-# Model matrices
+# model matrices
 X <- model.matrix(~ Days, sleepstudy)
 Z <- model.matrix(~ 0 + Subject + Subject:Days, sleepstudy)
 
-# Coefficients
+# coefficients
 coef(lme1)
 fixef(lme1)
 ranef(lme1)
 \end{lstlisting}
 \end{frame}
 
-}
-
-
-\begin{frame}{Visualization of individual data}
-  \begin{center}
-      \includegraphics[scale=.37]{../figures/sleep_random_slope}
-  \end{center}
-\end{frame}
-
-
-\begin{frame}[fragile]{Mixed-effects model with uncorrelated random effects}
-  We will now consider a model without correlated random effects
+\begin{frame}[fragile]{Model with uncorrelated random effects}
+  \begin{itemize}
+    \item We will now consider a model without correlated random effects
   \[
     y_{ij} = \beta_0 + \beta_1 Days_{ij} + \upsilon_{0i} + \upsilon_{1i} Days_{ij} +
     \varepsilon_{ij}
   \]
 with
-\begin{align*}
-  \gvect{\upsilon} & \sim N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} = 
+      \[
+  \gvect{\upsilon}  \overset{iid}{\sim} N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} = 
     \begin{pmatrix}
       \sigma^2_{\upsilon_0} & 0 \\
       0 & \sigma^2_{\upsilon_1} \\
-    \end{pmatrix}\right) 
-    \text{ i.i.d.} \\
-  \varepsilon_{ij} & \sim N(0, \sigma_{\varepsilon}^2)
-    \text{ i.i.d.}
-\end{align*}
-\end{frame}
-
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
-\begin{frame}[fragile]{Mixed-effects model with uncorrelated random effects}
+    \end{pmatrix}\right) ~~~\text{and}~~~
+  \varepsilon_{ij}  \overset{iid}{\sim} N(0, \sigma_{\varepsilon}^2)
+\]
+  \end{itemize}
   \begin{lstlisting}
 lme2 <- lmer(Reaction ~ Days + (Days || Subject), sleepstudy)
 summary(lme2)
 
-# Likelihood-ratio test
+# likelihood-ratio test
 anova(lme1, lme2)
-
-# Confidence intervals
+# confidence intervals
 confint(lme2)
   \end{lstlisting}
 \end{frame}
-
-}
 
 \begin{frame}{Confidence intervals and interpretation}
   \begin{itemize}
@@ -565,67 +555,155 @@ confint(lme2)
   \end{itemize}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Examining random effects and predictions}
       \begin{lstlisting}
 coef(lme2)
 fixef(lme2)
 ranef(lme2)
 
-# Correlational structure for intercepts and slopes
+# correlational structure for intercepts and slopes
 dotplot(ranef(lme2, condVar = TRUE),
-      scales = list(x = list(relation = "free")))[[1]]
+        scales = list(x = list(relation = "free")))[[1]]
 
-# Predictions for all subjects
+# predictions for all subjects
 predict(lme2)
       \end{lstlisting}
 \end{frame}
 
-}
-
 \begin{frame}[fragile]{Examining random effects and predictions}
   \begin{center}
-    \includegraphics[scale=.5]{../figures/sleep_caterpillar}
+    \includegraphics[scale=.6]{../figures/sleep_caterpillar}
   \end{center}
 \end{frame}
 
 \begin{frame}{Examining random effects and predictions}
-  \begin{center}
-    \includegraphics[scale=.48]{../figures/sleep_shrinkfit}
-  \end{center}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \includegraphics[scale=.5]{../figures/sleep_shrinkfit}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \begin{itemize}
+        \item Within-subject regression line shows regression line fitted to
+          data for each individual
+        \item Population regression line shows fixed effects for mixed-effects
+          model
+        \item Mixed model regression line shows individual regression lines as
+          predicted by mixed-effects models
+      \end{itemize}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}{Shrinkage}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
   \begin{itemize}
-    \item When the per-subject slopes and intercepts calculated from a
+    \item When per-subject slopes and intercepts calculated from a
       mixed-effects model are compared to estimated slopes and intercepts
-      within subjects, the estimates from the mixed-effects model are
-      generally closer to the population estimates (the fixed effects)
+      within subjects, estimates from mixed-effects model are
+      closer to the population estimates (the fixed effects)
     \item This pattern is sometimes described as {\it shrinkage} of
       coefficients toward the population values
-    \item In a mixed-effects model we assume that the levels of a grouping
-      factor are a selection from a population and, as a result, can be
-      expected to share characteristics to some degree
+    \item The more within-subject variance, the stronger parameters {\it shrink}
+      towards the population parameters
+    % \item In a mixed-effects model, we assume that the levels of a grouping
+    %   factor are a selection from a population and, as a result, can be
+    %   expected to share characteristics to some degree
+  \end{itemize}
+    \end{column}
+    \begin{column}{.5\textwidth}
+    \includegraphics[scale=.48]{../figures/sleep_shrinkage}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Assumptions}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \begin{itemize}
+        \item Assumptions can be checked visually
+        \item Normality assumption
+          \begin{lstlisting}
+qqmath(lme2,
+     col = sleepstudy$Subject,
+     pch = sleepstudy$Days)
+          \end{lstlisting}
+        \item Independence assumption
+          \begin{lstlisting}
+plot(lme2,
+     col = sleepstudy$Subject,
+     pch = sleepstudy$Days)
+          \end{lstlisting}
+      \end{itemize}
+      {\tiny \url{https://bbolker.github.io/morelia_2018/notes/mixedlab.html}}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \includegraphics[scale=.5]{../figures/assump_qqplot_slope.pdf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Assumptions}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \includegraphics[scale=.5]{../figures/assump_resid_slope.pdf}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \includegraphics[scale=.5]{../figures/assump_resid_intercept.pdf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\section{Parameter estimation}
+
+\begin{frame}{Maximum Likelihood Estimation}
+  \begin{itemize}
+    \item The maximum likelihood principle was introduced by
+      R.\,A.\ Fisher
+      \begin{itemize}
+      \item It can be used for almost all estimation problems, also complex
+        ones
+      \item The resulting estimation functions have many desirable
+        properties
+      \end{itemize}
+    \item Obtaining the MLE $\hat{\vartheta}$ takes the
+      following steps\\[1ex]
+    \begin{enumerate}
+      \item Generate the log-likelihood
+      \[
+        \log L(\vartheta)
+      \]
+      \vspace{-3ex}
+      \item Take the derivative of the log-likelihood with respect to
+        parameter $\vartheta$
+      \[
+        (\log L)' (\vartheta) = \frac{d \log L(\vartheta)}{d \vartheta}
+      \]
+      \vspace{-3ex}
+      \item Set the derivative equal to 0
+      \[
+        (\log L)' (\hat{\vartheta}) = 0
+      \]
+      \vspace{-3ex}
+      \item Solve the resulting equation for the estimator $\hat{\vartheta}$
+    \end{enumerate}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Shrinkage}
-  \begin{center}
-    \includegraphics[scale=.48]{../figures/sleep_shrinkage}
-  \end{center}
+\begin{frame}{Restricted Maximum Likelihood Estimation}
+  \begin{itemize}
+    \item The restricted maximum likelihood (REML) approach is a form of Maximum
+      Likelihood Estimation
+    \item In particular, REML is used as a method for fitting linear
+      mixed-effects models
+    \item In contrast to traditional Maximum Likelihood Estimation, REML can
+      produce unbiased estimates of variance and covariance parameters
+    \item MLE and REML do not outmatch each other, both can be used
+    \item REML is the default in \texttt{lme4}, but if we want to conduct
+      likelihood ratio tests, only MLE estimates are valid
+  \end{itemize}
 \end{frame}
 
-% {\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-% 
-% \begin{frame}[fragile]{}
-%   \begin{lstlisting}
-%   ##
-%   \end{lstlisting}
-% \end{frame}
-% 
-% }
-% 
 % \begin{frame}[fragile]{}
 %   \begin{block}{Exercise}
 %     \begin{itemize}
