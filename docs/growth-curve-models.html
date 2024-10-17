@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 Longitudinal data | Course on Mixed-effects Models</title>
-  <meta name="description" content="Chapter 4 Longitudinal data | Course on Mixed-effects Models" />
+  <title>Chapter 6 Growth curve models | Course on Mixed-effects Models</title>
+  <meta name="description" content="Chapter 6 Growth curve models | Course on Mixed-effects Models" />
   <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 Longitudinal data | Course on Mixed-effects Models" />
+  <meta property="og:title" content="Chapter 6 Growth curve models | Course on Mixed-effects Models" />
   <meta property="og:type" content="book" />
   
   
   <meta name="github-repo" content="https://github.com/nwickel/mixed_models/" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 Longitudinal data | Course on Mixed-effects Models" />
+  <meta name="twitter:title" content="Chapter 6 Growth curve models | Course on Mixed-effects Models" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="prepost-measurements.html"/>
-<link rel="next" href="repeated-measurements.html"/>
+<link rel="prev" href="repeated-measurements.html"/>
+<link rel="next" href="crossed-random-effects.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -244,72 +244,27 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="longitudinal-data" class="section level1 hasAnchor" number="4">
-<h1><span class="header-section-number">Chapter 4</span> Longitudinal data<a href="longitudinal-data.html#longitudinal-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>This chapter gives an introduction to linear mixed-effects models using a
-standard example: the <code>sleepstudy</code> data set. Random intercept and random slope
-models are introduced.</p>
-<div id="slides-3" class="section level2 hasAnchor" number="4.1">
-<h2><span class="header-section-number">4.1</span> Slides<a href="longitudinal-data.html#slides-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<object data="slides/04_longitudinal/04_longitudinal.pdf" type="application/pdf" width="100%" height="500px">
+<div id="growth-curve-models" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Growth curve models<a href="growth-curve-models.html#growth-curve-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="slides-5" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Slides<a href="growth-curve-models.html#slides-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>TODO</p>
+<!--
+```{=html}
+<object data="slides/06_growth_curve/06_growth_curve.pdf" type="application/pdf" width="100%" height="500px">
   <p>
-    Unable to display PDF file. <a href="slides/04_longitudinal/04_longitudinal.pdf">Download</a> instead.
+    Unable to display PDF file. <a href="slides/06_growth_curve/06_growth_curve.pdf">Download</a> instead.
   </p>
 </object>
+```
+-->
 </div>
-<div id="exercises-3" class="section level2 hasAnchor" number="4.2">
-<h2><span class="header-section-number">4.2</span> Exercises<a href="longitudinal-data.html#exercises-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div id="exercise-1-3" class="section level3 unnumbered hasAnchor">
-<h3>Exercise 1<a href="longitudinal-data.html#exercise-1-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Load (or maybe install first) the package <code>languageR</code>. Then, load the data set
-<code>quasif</code> from this package. You can use <code>?quasif</code> to inspect the data set.</p>
-<ul>
-<li><p>Use the function <code>xtabs()</code> to inspect the structure of your data. Are your
-factors crossed or nested?</p></li>
-<li><p>Create a box plot looking at the distribution of reaction time for short and
-long SOAs</p></li>
-<li><p>Visualize your data points individually for each subject. Use <code>xyplot()</code> from
-the <code>lattice</code> package or functions from the package <code>ggplot2</code></p></li>
-<li><p>Fit a model with random intercepts for <code>Item</code> and random intercepts as well as
-random slopes for <code>Subject</code></p></li>
-<li><p>Test your random effects using likelihood-ratio tests</p></li>
-<li><p>Decide which model fits the data (empirically) best</p></li>
-<li><p>Compute confidence intervals for the estimated parameters of this model</p></li>
-<li><p>Look at the model assumptions for this model</p></li>
-</ul>
-<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb31-1"><a href="longitudinal-data.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
-<span id="cb31-2"><a href="longitudinal-data.html#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="longitudinal-data.html#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># load data set</span></span>
-<span id="cb31-4"><a href="longitudinal-data.html#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quasif, <span class="at">package =</span> <span class="st">&quot;languageR&quot;</span>)</span>
-<span id="cb31-5"><a href="longitudinal-data.html#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-6"><a href="longitudinal-data.html#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(RT <span class="sc">~</span> SOA, <span class="at">data =</span> quasif)</span></code></pre></div>
-</details>
-<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb32-1"><a href="longitudinal-data.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span> SOA <span class="sc">+</span> Item, <span class="at">data =</span> quasif)</span>
-<span id="cb32-2"><a href="longitudinal-data.html#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span> Subject <span class="sc">+</span> Item, <span class="at">data =</span> quasif)</span>
-<span id="cb32-3"><a href="longitudinal-data.html#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ftable</span>(<span class="fu">xtabs</span>(<span class="sc">~</span> Subject <span class="sc">+</span> Item <span class="sc">+</span> SOA, <span class="at">data =</span> quasif))</span>
-<span id="cb32-4"><a href="longitudinal-data.html#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-5"><a href="longitudinal-data.html#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">xyplot</span>(RT <span class="sc">~</span> SOA <span class="sc">|</span> Subject, <span class="at">data =</span> quasif, <span class="at">groups =</span> Item, <span class="at">auto.key =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-</details>
-<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb33-1"><a href="longitudinal-data.html#cb33-1" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Item) <span class="sc">+</span> (SOA <span class="sc">|</span> Subject), <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb33-2"><a href="longitudinal-data.html#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lme1)</span>
-<span id="cb33-3"><a href="longitudinal-data.html#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="longitudinal-data.html#cb33-4" aria-hidden="true" tabindex="-1"></a>lme2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Item) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject<span class="sc">:</span>SOA), <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb33-5"><a href="longitudinal-data.html#cb33-5" aria-hidden="true" tabindex="-1"></a>lme3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Item) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject), <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb33-6"><a href="longitudinal-data.html#cb33-6" aria-hidden="true" tabindex="-1"></a>lme4 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject), <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb33-7"><a href="longitudinal-data.html#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-8"><a href="longitudinal-data.html#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lme4, lme3, lme2, lme1)</span>
-<span id="cb33-9"><a href="longitudinal-data.html#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(lme2, <span class="at">method =</span> <span class="st">&quot;boot&quot;</span>)</span>
-<span id="cb33-10"><a href="longitudinal-data.html#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-11"><a href="longitudinal-data.html#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lme2, <span class="at">col =</span> quasif<span class="sc">$</span>Subject, <span class="at">pch =</span> quasif<span class="sc">$</span>Item)</span></code></pre></div>
-</details>
-<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb34-1"><a href="longitudinal-data.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqmath</span>(lme2, <span class="at">col =</span> quasif<span class="sc">$</span>Subject, <span class="at">pch =</span> quasif<span class="sc">$</span>Item)</span></code></pre></div>
+<div id="exercises-5" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Exercises<a href="growth-curve-models.html#exercises-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="growth-curve-models.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Add exercises</span></span></code></pre></div>
 </details>
 
-</div>
 </div>
 </div>
             </section>
@@ -317,8 +272,8 @@ random slopes for <code>Subject</code></p></li>
           </div>
         </div>
       </div>
-<a href="prepost-measurements.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="repeated-measurements.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="repeated-measurements.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="crossed-random-effects.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -339,7 +294,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/nwickel/mixed_models/edit/master/04_longitudinal.Rmd",
+"link": "https://github.com/nwickel/mixed_models/edit/master/06_growth_curve.Rmd",
 "text": "Edit"
 },
 "history": {

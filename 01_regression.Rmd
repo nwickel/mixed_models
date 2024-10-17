@@ -73,7 +73,7 @@ Simulate a data set based on a simple regression model with
 
 What functions in R do we need?
 
-```{r ex02.1, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+```{r ex01.1, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 x <- 1:20
 n <- length(x)
 a <- 0.2
@@ -111,7 +111,7 @@ abline(lm1)
 * What happens to your standard errors?
 
 
-```{r ex02.2, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+```{r ex01.2, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 n <- 100 # 40
 x0 <- 1:20
 x <- sample(x0, n, replace = TRUE)
@@ -158,7 +158,7 @@ plot(y ~ jitter(x), dat)
 
 * Compare your results.
 
-```{r ex02.3, results = "hide", class.source = "fold-hide"}
+```{r ex01.3, results = "hide", class.source = "fold-hide"}
 x   <- rnorm(100, mean = 1)
 y   <- rnorm(100, mean = 2)
 dat <- data.frame(id    = 1:200,
@@ -206,7 +206,7 @@ aov1 <- aov(score ~ group, data = dat)
  
 * Which model fits the data better?
 
-```{r ex02.4, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+```{r ex01.4, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 data(cars)
 
 lm1 <- lm(dist ~ speed, data = cars)

@@ -1,4 +1,4 @@
-# Introduction to power
+# Crossed random effects
 
 ## Slides
 
@@ -6,7 +6,7 @@ TODO
 
 ## Exercises
 
-```{r ex08}
+```{r ex07}
 # TODO: Add exercises
 ```
 

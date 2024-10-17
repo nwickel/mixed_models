@@ -54,7 +54,7 @@ count data.
 
 * Is there reason to assume that there is any overdispersion?
 
-```{r ex03.1, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+```{r ex02.1, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 dat <- data.frame(x = 37:43,
                   y = c(2, 3, 10, 25, 34, 36, 39),
                   n = 40)
@@ -101,7 +101,7 @@ summary(glm(cbind(y, n - y) ~ x, family = quasibinomial, data = dat))
 
 * Compare the confidence intervals for the estimated parameters for both models
 
-```{r ex03.2, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+```{r ex02.2, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 # Load data set
 data(Affairs, package = "AER")
 Affairs$rating <- factor(Affairs$rating, levels = 1:5)
@@ -126,7 +126,7 @@ confint(pois2)
 
 #### Visualize model predictions {-}
 
-```{r ex03.3, class.source = "fold-hide"}
+```{r ex02.3, class.source = "fold-hide"}
 ## Plot predictions for "average" females
 newdat <- expand.grid(yearsmarried = seq(0, 15, 1), rating = factor(1:5))
 newdat$gender        <- "female"

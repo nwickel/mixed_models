@@ -14,12 +14,9 @@ exercises-3
 repeated-measurements
 slides-4
 exercises-4
-data-simulation-for-linear-mixed-effects-models
+growth-curve-models
 slides-5
 exercises-5
-introduction-to-power
+crossed-random-effects
 slides-6
 exercises-6
-power-simulation-for-glmm
-slides-7
-exercises-7
