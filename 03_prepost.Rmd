@@ -28,27 +28,27 @@ measurements.
 * Before the course, familiarity with computers was assessed in a pre test as
   covariate $X$
 
-```{r ex04.1, echo = FALSE}
+```{r ex03.1, echo = FALSE}
 dat <- read.table("data/ancova-data.txt", header = TRUE)
 dat$method <- factor(dat$method)
 ```
 
 Data for method 1:
-```{r ex04.2, echo = FALSE}
+```{r ex03.2, echo = FALSE}
 knitr::kable(t(dat[dat$method == 1, c("pre", "post")]), col.names = NULL)
 ```
 
 Data for method 2:
-```{r ex04.3, echo = FALSE}
+```{r ex03.3, echo = FALSE}
 knitr::kable(t(dat[dat$method == 2, c("pre", "post")]), col.names = NULL)
 ```
 
 Data for method 3:
-```{r ex04.4, echo = FALSE}
+```{r ex03.4, echo = FALSE}
 knitr::kable(t(dat[dat$method == 3, c("pre", "post")]), col.names = NULL)
 ```
 
-```{r ex04.5, echo = FALSE, fig.width = 3.375, fig.height = 3.375, fig.align = "center"}
+```{r ex03.5, echo = FALSE, fig.width = 3.375, fig.height = 3.375, fig.align = "center"}
 par(mai = c(.8, .8, .1, .1), mgp = c(2.4, 1, 0))
 datm <- aggregate(cbind(pre, post) ~ method, data = dat, FUN = mean)
 dotchart(as.matrix(datm[, 2:3]), xlab = "Score", ylab = "Method")
@@ -69,7 +69,7 @@ dotchart(as.matrix(datm[, 2:3]), xlab = "Score", ylab = "Method")
 
 * What are the adjusted means for the ANCOVA model?
 
-```{r ex04.6, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+```{r ex03.6, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 ## Fit models
 lm1 <- lm(post ~ pre, data = dat)
 lm2 <- lm(post ~ pre + method, data = dat)
