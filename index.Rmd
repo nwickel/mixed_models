@@ -68,8 +68,11 @@ need more support or materials, just let me know.
 
 
 Topics for next semester: 
+
 * Multilevel models
+
 * Simulation-based power analysis
+
 * Power simulation LMM and GLMM
 
 ## Literature {-}

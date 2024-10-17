@@ -1,5 +1,9 @@
 # Longitudinal data
 
+This chapter gives an introduction to linear mixed-effects models using a
+standard example: the `sleepstudy` data set. Random intercept and random slope
+models are introduced.
+
 ## Slides
 
 ```{=html}
@@ -27,31 +31,33 @@ Load (or maybe install first) the package `languageR`. Then, load the data set
 * Visualize your data points individually for each subject. Use `xyplot()` from
   the `lattice` package or functions from the package `ggplot2`
 
-    \item Fit a model with random intercepts for Items and random
-      intercepts as well as slopes for Subjects.
-    \item Test your random effects using likelihood-ratio tests.
+* Fit a model with random intercepts for `Item` and random intercepts as well as
+  random slopes for `Subject`
 
-    \item Decide which model fits the data (empirically) best. Compute
-      confidence intervals for the estimated parameters of this model.
-    \item Look at the model assumptions for this model.
+* Test your random effects using likelihood-ratio tests
+
+* Decide which model fits the data (empirically) best
+
+* Compute confidence intervals for the estimated parameters of this model
+
+* Look at the model assumptions for this model
 
 ```{r ex04, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 
-library(languageR)
 library(lattice)
 
 # load data set
-data(quasif)
+data(quasif, package = "languageR")
 
-plot(RT ~ SOA, data = quasif)
+boxplot(RT ~ SOA, data = quasif)
 
-xtabs( ~ SOA + Item, data = quasif)
-xtabs(~ Subject + Item + SOA, data = quasif)
+xtabs(~ SOA + Item, data = quasif)
+xtabs(~ Subject + Item, data = quasif)
+ftable(xtabs(~ Subject + Item + SOA, data = quasif))
 
 xyplot(RT ~ SOA | Subject, data = quasif, groups = Item, auto.key = TRUE)
 
-lme1 <- lmer(RT ~ SOA + (1 | Item) + (SOA | Subject),
-             data = quasif, REML = FALSE)
+lme1 <- lmer(RT ~ SOA + (1 | Item) + (SOA | Subject), data = quasif, REML = FALSE)
 summary(lme1)
 
 lme2 <- lmer(RT ~ SOA + (1 | Item) + (1 | Subject) + (1 | Subject:SOA), data = quasif, REML = FALSE)
@@ -59,11 +65,9 @@ lme3 <- lmer(RT ~ SOA + (1 | Item) + (1 | Subject), data = quasif, REML = FALSE)
 lme4 <- lmer(RT ~ SOA + (1 | Subject), data = quasif, REML = FALSE)
 
 anova(lme4, lme3, lme2, lme1)
+confint(lme2, method = "boot")
 
-confint(lme2, method="boot")
-
-plot(lme2)
-
-qqmath(resid(lme2))
+plot(lme2, col = quasif$Subject, pch = quasif$Item)
+qqmath(lme2, col = quasif$Subject, pch = quasif$Item)
 ```
 
