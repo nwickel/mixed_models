@@ -1,0 +1,69 @@
+# Longitudinal data
+
+## Slides
+
+```{=html}
+<object data="slides/04_longitudinal/04_longitudinal.pdf" type="application/pdf" width="100%" height="500px">
+  <p>
+    Unable to display PDF file. <a href="slides/04_longitudinal/04_longitudinal.pdf">Download</a> instead.
+  </p>
+</object>
+```
+
+## Exercises
+
+### Exercise 1 {-}
+
+Load (or maybe install first) the package `languageR`. Then, load the data set
+`quasif` from this package. You can use `?quasif` to inspect the data set.
+
+
+* Use the function `xtabs()` to inspect the structure of your data. Are your
+  factors crossed or nested?
+
+* Create a box plot looking at the distribution of reaction time for short and
+  long SOAs
+
+* Visualize your data points individually for each subject. Use `xyplot()` from
+  the `lattice` package or functions from the package `ggplot2`
+
+    \item Fit a model with random intercepts for Items and random
+      intercepts as well as slopes for Subjects.
+    \item Test your random effects using likelihood-ratio tests.
+
+    \item Decide which model fits the data (empirically) best. Compute
+      confidence intervals for the estimated parameters of this model.
+    \item Look at the model assumptions for this model.
+
+```{r ex04, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+
+library(languageR)
+library(lattice)
+
+# load data set
+data(quasif)
+
+plot(RT ~ SOA, data = quasif)
+
+xtabs( ~ SOA + Item, data = quasif)
+xtabs(~ Subject + Item + SOA, data = quasif)
+
+xyplot(RT ~ SOA | Subject, data = quasif, groups = Item, auto.key = TRUE)
+
+lme1 <- lmer(RT ~ SOA + (1 | Item) + (SOA | Subject),
+             data = quasif, REML = FALSE)
+summary(lme1)
+
+lme2 <- lmer(RT ~ SOA + (1 | Item) + (1 | Subject) + (1 | Subject:SOA), data = quasif, REML = FALSE)
+lme3 <- lmer(RT ~ SOA + (1 | Item) + (1 | Subject), data = quasif, REML = FALSE)
+lme4 <- lmer(RT ~ SOA + (1 | Subject), data = quasif, REML = FALSE)
+
+anova(lme4, lme3, lme2, lme1)
+
+confint(lme2, method="boot")
+
+plot(lme2)
+
+qqmath(resid(lme2))
+```
+

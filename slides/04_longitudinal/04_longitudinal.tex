@@ -103,6 +103,41 @@
   \begin{flushright}{\footnotesize \citet{Fox2016}}\end{flushright}
 \end{frame}
 
+\begin{frame}{Data schema for dependent data}
+  \small
+\begin{columns}
+  \column{.5\textwidth}
+\begin{tabular}{cccccc}
+\hline
+Person & Time      & Observ.     & \multicolumn{3}{c}{Covariates}\\\hline
+1      & 1         & $y_{11}$    & $x_{111}$   & \dots & $x_{11p}$  \\
+1      & 2         & $y_{12}$    & $x_{121}$   & \dots & $x_{12p}$  \\
+.      & .         & .           & .           & \dots & .          \\
+1      & $n_1$     & $y_{1n_1}$  & $x_{1n_11}$ & \dots & $x_{1n_1p}$\\
+.      & .         & .           & .           & \dots & .          \\
+.      & .         & .           & .           & \dots & .          \\
+$N$    & 1         & $y_{N1}$    & $x_{N11}$   & \dots & $x_{N1p}$  \\
+$N$    & 2         & $y_{N2}$    & $x_{N21}$   & \dots & $x_{N2p}$  \\
+.      & .         & .           & .           & \dots & .          \\
+$N$    & $n_N$     & $y_{Nn_N}$  & $x_{Nn_N1}$ & \dots & $x_{Nn_Np}$\\
+\hline
+\end{tabular}
+%
+  \column{.5\textwidth}
+\begin{itemize}
+\item $i = 1, \dots, N$ persons
+\item $j = 1, \dots, n_i$ time points for person $i$
+\item All observations: $\sum_i^N n_i$
+\item Vector of all observations for person $i$\\
+  $(\vect{y}_i)_{n_i \times 1}$\\
+\item Vector of covariates for person $i$ at time point $j$\\
+  $(\vect{x}_{ij})_{p \times 1}$
+\item All covariates of person $i$\\
+  $(\vect{X}_i)_{n_i \times p}$
+\end{itemize}
+\end{columns}
+\end{frame}
+
 
 \begin{frame}{Mixed-effects models}
   \begin{itemize}
@@ -128,8 +163,147 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Crossed random effects}
+  \begin{itemize}
+    % \item Crossed random effects are fitted for cross-classified data (each
+    %   level of one factor is crossed with each level of the other factor)
+    \item In many experiments in psychology the reaction of each subject ($j =
+      1, \dots, N$) to a complete set of stimuli or items ($k = 1, \dots, K$) is
+      measured
+  \[
+    y_{ijk} = \beta_0 + \beta_ix_{i} + \upsilon_{0j} + \eta_{0k} + \varepsilon_{ijk}
+  \]
+  with $\varepsilon_{ijk} \overset{iid}{\sim} N(0,\sigma^2)$, 
+  $\upsilon_{0j} \overset{iid}{\sim} N(0,\sigma^2_{\upsilon})$, and 
+  $\eta_{0k} \overset{iid}{\sim} N(0,\sigma^2_{\eta})$
 
-\begin{frame}{General linear model}
+    \item Data are completely crossed: all subjects work on all items
+  \end{itemize}
+  \footnotesize
+  \begin{center}
+  \begin{tabular}{lcccccc}
+    & & \multicolumn{5}{c}{Subject}\\
+    \cline{3-7}
+     & & 1 & 2 & 3 & \dots & 20 \\
+    \hline
+      & 1 & $1$ & $1$ & $1$ & \dots & $1$ \\
+      & 2 & $1$ & $1$ & $1$ & \dots & $1$ \\
+Item  & 3 & $1$ & $1$ & $1$ & \dots & $1$ \\
+      & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots\\
+      & 10 & $1$ & $1$ & $1$ & \dots & $1$ \\
+      \hline
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Crossed random effects}
+  \vspace{-.6cm}
+  \begin{columns}
+    \begin{column}[t]{4.5cm}
+  \begin{lstlisting}
+> head(dat, 12)
+   id  cond   item  av
+1   1 cond1 item01 105
+2   1 cond1 item02 116
+3   1 cond1 item03 104
+4   1 cond1 item04  81
+5   1 cond1 item05  99
+6   1 cond1 item06 109
+7   1 cond1 item07 100
+8   1 cond1 item08 103
+9   1 cond1 item09  89
+10  1 cond1 item10  94
+11  2 cond1 item01 107
+12  2 cond1 item02 100
+  \end{lstlisting}
+    \end{column}
+
+    \begin{column}[t]{7cm}
+  \begin{lstlisting}
+> xtabs( ~ item + id, dat)
+        id
+item     1 2 3 4 5 6 7 8 9 ... 20
+  item01 1 1 1 1 1 1 1 1 1 ...  1
+  item02 1 1 1 1 1 1 1 1 1 ...  1
+  item03 1 1 1 1 1 1 1 1 1 ...  1
+  item04 1 1 1 1 1 1 1 1 1 ...  1
+  item05 1 1 1 1 1 1 1 1 1 ...  1
+  item06 1 1 1 1 1 1 1 1 1 ...  1
+  item07 1 1 1 1 1 1 1 1 1 ...  1
+  item08 1 1 1 1 1 1 1 1 1 ...  1
+  item09 1 1 1 1 1 1 1 1 1 ...  1
+  item10 1 1 1 1 1 1 1 1 1 ...  1
+  \end{lstlisting}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}{Nested random effects}
+  \begin{itemize}
+    \item We talk about nested random effects, when certain levels of one factor
+      are combined only with certain leves of another factor (factors are nested
+      within each other)
+    \item The standard example for a nested design are students in classes in
+      schools
+  \[
+    y_{ijk} = \beta_0 + \upsilon_{0i} + \eta_{0ij} + \varepsilon_{ijk}
+    \]
+  with $\varepsilon_{ijk} \overset{iid}{\sim} N(0,\sigma^2)$, $\upsilon_{0i} \overset{iid}{\sim}
+  N(0,\sigma^2_{\upsilon})$ , and $\eta_{0ij} \overset{iid}{\sim} N(0,\sigma^2_{\eta})$
+      \end{itemize}
+ \begin{center}
+  \begin{tabular}{lccccccccccc}
+    & & \multicolumn{10}{c}{Classes}\\
+    \cline{3-12}
+     & & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10\\
+    \hline
+         & 1 & $n_1$ & $n_2$ & . & . & . & . & . & . & . & . \\
+         & 2 & . & . & $n_3$ & $n_4$ & . & . & . & . & . & . \\
+Schools  & 3 & . & . & . & . & $n_5$ & $n_6$ & . & . & . & . \\
+         & 4 & . & . & . & . & . & . & $n_7$ & $n_8$ & . & . \\
+         & 5 & . & . & . & . & . & . & . & . & $n_9$ & $n_{10}$\\
+      \hline
+  \end{tabular}
+  \end{center}
+\end{frame}
+\begin{frame}[fragile]{Nested random effects}
+  \vspace{-.6cm}
+  \begin{columns}
+    \begin{column}[t]{.38\textwidth}
+  \begin{lstlisting}
+> head(dat, 12)
+   id   class  school  av
+1   1 class01 school1 105
+2   2 class01 school1  93
+3   3 class01 school1 119
+4   4 class01 school1  94
+5   5 class01 school1 107
+6   6 class01 school1 100
+7   7 class01 school1  98
+8   8 class01 school1 108
+9   9 class01 school1 108
+10 10 class01 school1  91
+11 11 class01 school1  75
+12 12 class01 school1  76
+  \end{lstlisting}
+    \end{column}
+
+    \begin{column}[t]{.63\textwidth}
+  \begin{lstlisting}
+> xtabs(~school + class, dat, sparse = TRUE)
+school1 19 17  .  .  .  .  .  .  .  .
+school2  .  . 23 21  .  .  .  .  .  .
+school3  .  .  .  . 18 20  .  .  .  .
+school4  .  .  .  .  .  . 19 21  .  .
+school5  .  .  .  .  .  .  .  . 23 19
+  \end{lstlisting}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}{Linear model}
   \begin{itemize}
     \item We have observations $(y_i, x_{i1}, \ldots, x_{ip}) ~~\text{with}~~ i = 1, \ldots, N$
 and the stochastical model
@@ -176,41 +350,6 @@ which corresponds to
 \]
   \end{itemize}
 \end{frame}
-
-% \begin{frame}{Data schema for dependent data}
-%   \small
-% \begin{columns}
-%   \column{.65\textwidth}
-% \begin{tabular}{cccccc}
-% \hline
-% Person & Time      & Observ.     & \multicolumn{3}{c}{Covariates}\\\hline
-% 1      & 1         & $y_{11}$    & $x_{111}$   & \dots & $x_{11p}$  \\
-% 1      & 2         & $y_{12}$    & $x_{121}$   & \dots & $x_{12p}$  \\
-% .      & .         & .           & .           & \dots & .          \\
-% 1      & $n_1$     & $y_{1n_1}$  & $x_{1n_11}$ & \dots & $x_{1n_1p}$\\
-% .      & .         & .           & .           & \dots & .          \\
-% .      & .         & .           & .           & \dots & .          \\
-% $N$    & 1         & $y_{N1}$    & $x_{N11}$   & \dots & $x_{N1p}$  \\
-% $N$    & 2         & $y_{N2}$    & $x_{N21}$   & \dots & $x_{N2p}$  \\
-% .      & .         & .           & .           & \dots & .          \\
-% $N$    & $n_N$     & $y_{Nn_N}$  & $x_{Nn_N1}$ & \dots & $x_{Nn_Np}$\\
-% \hline
-% \end{tabular}
-% %
-%   \column{.45\textwidth}
-% \begin{itemize}
-% \item $i = 1, \dots, N$ persons
-% \item $j = 1, \dots, n_i$ time points for person $i$
-% \item All observations: $\sum_i^N n_i$
-% \item Vector of all observations for person $i$\\
-%   $(\vect{y}_i)_{n_i \times 1}$\\
-% \item Vector of covariates for person $i$ at time point $j$\\
-%   $(\vect{x}_{ij})_{p \times 1}$
-% \item All covariates of person $i$\\
-%   $(\vect{X}_i)_{n_i \times p}$
-% \end{itemize}
-% \end{columns}
-% \end{frame}
 
 \begin{frame}{Linear mixed-effects model}
   \begin{itemize}
