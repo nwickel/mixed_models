@@ -2,9 +2,6 @@
 
 ## Slides
 
-TODO
-
-<!--
 ```{=html}
 <object data="slides/05_repeated_measures/05_repeated_measures.pdf" type="application/pdf" width="100%" height="500px">
   <p>
@@ -12,11 +9,83 @@ TODO
   </p>
 </object>
 ```
--->
 
 ## Exercises
 
-```{r ex05}
-# TODO: Add exercises
+* Expand the linear mixed-effects model two more than one factor
+
+* Add diagnosis ("endogenous" vs. "non-endogenous") as additional between factor
+
+* Test if this factor interacts with week using a likelihood-ratio test
+
+* Use parametric bootstrapping to get a sampling distribution for your LRT
+  statistic
+
+* Plot the sampling distribution and add the empirical confidence interval
+
+* Plot the predictions of the model
+
+  \[
+    y_{ij} = \beta_0 + \beta_1 time + \beta_2 diag + \upsilon_{0i} + \upsilon_{1i} time +
+    \varepsilon_{ij}
+  \]
+  with
+  \begin{align*}
+    \begin{pmatrix} \upsilon_{0i}\\ \upsilon_{1i} \end{pmatrix} &\sim
+      N \left(\begin{pmatrix} 0\\ 0 \end{pmatrix}, \, \boldsymbol{\Sigma}_\upsilon =
+        \begin{pmatrix}
+          \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0 \upsilon_1} \\
+          \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_1} \\
+        \end{pmatrix} \right)
+      \text{ i.i.d.} \\
+    \boldsymbol{\varepsilon}_i &\sim N(\mathbf{0}, \, \sigma^2 \mathbf{I}_{n_i})
+      \text{ i.i.d.}
+  \end{align*}
+
+```{r ex05.1, results = "hide", class.source = "fold-hide"}
+dat      <- read.table("data/reisby.dat", header = TRUE)
+dat$id   <- factor(dat$id)
+dat$diag <- factor(dat$diag, levels = c("nonen", "endog"))
+dat      <- na.omit(dat)     # drop missing values
+
+# Add diagnosis
+lme1 <- lmer(hamd ~ week + diag + (week | id), dat, REML = FALSE)
+lme2 <- lmer(hamd ~ week * diag + (week | id), dat, REML = FALSE)
+anova(lme1, lme2)
+```
+
+```{r ex05.2, cache = TRUE, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+# Parametric bootstrapping
+nsim <- 1000
+LR <- rep(NA, nsim)
+sim2 <- simulate(lme2, nsim)
+
+for (i in seq_len(nsim)) {
+  fit1 <- lmer(sim2[, i] ~ week + diag + (week | id), dat, REML = FALSE)
+  fit2 <- lmer(sim2[, i] ~ week * diag + (week | id), dat, REML = FALSE)
+  LR[i] <- 2 * (summary(fit2)$logLik - summary(fit1)$logLik)
+}
+
+hist(LR, breaks = 50, col = "grey", border = "white", freq = FALSE, main = "")
+curve(dchisq(x, df = 1), add = TRUE)
+abline(v = 2 * (summary(lme2)$logLik - summary(lme1)$logLik), lty = 2)
+# Empirical p-value
+mean(LR > 2 * (summary(lme2)$logLik - summary(lme1)$logLik))
+```
+
+```{r ex05.3, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+# Predictions with diagnosis as fixed effect
+datm <- aggregate(hamd ~ week + diag, data = dat, FUN = mean)
+datm$pred1 <- predict(lme1, newdata = datm, re.form = ~0)
+
+colors <- c("#3CB4DC", "#91C86E")
+
+plot(hamd ~ week, data = datm, col = colors[datm$diag],
+     ylim = c(0, 28), xlab = "Week", ylab = "HDRS score")
+lines(pred1 ~ week, data = subset(datm, datm$diag == "nonen"), col = colors[1])
+lines(pred1 ~ week, data = subset(datm, datm$diag == "endog"), col = colors[2])
+legend("bottomleft", legend = c("Endogenous", "Non endogenous"), col = colors,
+       pch = 21, lty = 1, pt.bg = "white", bty = "n")
+
 ```
 

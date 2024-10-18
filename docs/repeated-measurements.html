@@ -248,21 +248,83 @@ div.csl-indent {
 <h1><span class="header-section-number">Chapter 5</span> Repeated measurements<a href="repeated-measurements.html#repeated-measurements" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="slides-4" class="section level2 hasAnchor" number="5.1">
 <h2><span class="header-section-number">5.1</span> Slides<a href="repeated-measurements.html#slides-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>TODO</p>
-<!--
-```{=html}
 <object data="slides/05_repeated_measures/05_repeated_measures.pdf" type="application/pdf" width="100%" height="500px">
   <p>
     Unable to display PDF file. <a href="slides/05_repeated_measures/05_repeated_measures.pdf">Download</a> instead.
   </p>
 </object>
-```
--->
 </div>
 <div id="exercises-4" class="section level2 hasAnchor" number="5.2">
 <h2><span class="header-section-number">5.2</span> Exercises<a href="repeated-measurements.html#exercises-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="repeated-measurements.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Add exercises</span></span></code></pre></div>
+<ul>
+<li><p>Expand the linear mixed-effects model two more than one factor</p></li>
+<li><p>Add diagnosis (“endogenous” vs. “non-endogenous”) as additional between factor</p></li>
+<li><p>Test if this factor interacts with week using a likelihood-ratio test</p></li>
+<li><p>Use parametric bootstrapping to get a sampling distribution for your LRT
+statistic</p></li>
+<li><p>Plot the sampling distribution and add the empirical confidence interval</p></li>
+<li><p>Plot the predictions of the model</p>
+<p><span class="math display">\[
+  y_{ij} = \beta_0 + \beta_1 time + \beta_2 diag + \upsilon_{0i} + \upsilon_{1i} time +
+  \varepsilon_{ij}
+\]</span>
+with
+<span class="math display">\[\begin{align*}
+  \begin{pmatrix} \upsilon_{0i}\\ \upsilon_{1i} \end{pmatrix} &amp;\sim
+    N \left(\begin{pmatrix} 0\\ 0 \end{pmatrix}, \, \boldsymbol{\Sigma}_\upsilon =
+      \begin{pmatrix}
+        \sigma^2_{\upsilon_0} &amp; \sigma_{\upsilon_0 \upsilon_1} \\
+        \sigma_{\upsilon_0 \upsilon_1} &amp; \sigma^2_{\upsilon_1} \\
+      \end{pmatrix} \right)
+    \text{ i.i.d.} \\
+  \boldsymbol{\varepsilon}_i &amp;\sim N(\mathbf{0}, \, \sigma^2 \mathbf{I}_{n_i})
+    \text{ i.i.d.}
+\end{align*}\]</span></p></li>
+</ul>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb35-1"><a href="repeated-measurements.html#cb35-1" aria-hidden="true" tabindex="-1"></a>dat      <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/reisby.dat&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb35-2"><a href="repeated-measurements.html#cb35-2" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>id   <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>id)</span>
+<span id="cb35-3"><a href="repeated-measurements.html#cb35-3" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>diag <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>diag, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;nonen&quot;</span>, <span class="st">&quot;endog&quot;</span>))</span>
+<span id="cb35-4"><a href="repeated-measurements.html#cb35-4" aria-hidden="true" tabindex="-1"></a>dat      <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(dat)     <span class="co"># drop missing values</span></span>
+<span id="cb35-5"><a href="repeated-measurements.html#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="repeated-measurements.html#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Add diagnosis</span></span>
+<span id="cb35-7"><a href="repeated-measurements.html#cb35-7" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(hamd <span class="sc">~</span> week <span class="sc">+</span> diag <span class="sc">+</span> (week <span class="sc">|</span> id), dat, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb35-8"><a href="repeated-measurements.html#cb35-8" aria-hidden="true" tabindex="-1"></a>lme2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(hamd <span class="sc">~</span> week <span class="sc">*</span> diag <span class="sc">+</span> (week <span class="sc">|</span> id), dat, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb35-9"><a href="repeated-measurements.html#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lme1, lme2)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb36-1"><a href="repeated-measurements.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametric bootstrapping</span></span>
+<span id="cb36-2"><a href="repeated-measurements.html#cb36-2" aria-hidden="true" tabindex="-1"></a>nsim <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb36-3"><a href="repeated-measurements.html#cb36-3" aria-hidden="true" tabindex="-1"></a>LR <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, nsim)</span>
+<span id="cb36-4"><a href="repeated-measurements.html#cb36-4" aria-hidden="true" tabindex="-1"></a>sim2 <span class="ot">&lt;-</span> <span class="fu">simulate</span>(lme2, nsim)</span>
+<span id="cb36-5"><a href="repeated-measurements.html#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="repeated-measurements.html#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(nsim)) {</span>
+<span id="cb36-7"><a href="repeated-measurements.html#cb36-7" aria-hidden="true" tabindex="-1"></a>  fit1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(sim2[, i] <span class="sc">~</span> week <span class="sc">+</span> diag <span class="sc">+</span> (week <span class="sc">|</span> id), dat, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb36-8"><a href="repeated-measurements.html#cb36-8" aria-hidden="true" tabindex="-1"></a>  fit2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(sim2[, i] <span class="sc">~</span> week <span class="sc">*</span> diag <span class="sc">+</span> (week <span class="sc">|</span> id), dat, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb36-9"><a href="repeated-measurements.html#cb36-9" aria-hidden="true" tabindex="-1"></a>  LR[i] <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> (<span class="fu">summary</span>(fit2)<span class="sc">$</span>logLik <span class="sc">-</span> <span class="fu">summary</span>(fit1)<span class="sc">$</span>logLik)</span>
+<span id="cb36-10"><a href="repeated-measurements.html#cb36-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb36-11"><a href="repeated-measurements.html#cb36-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-12"><a href="repeated-measurements.html#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(LR, <span class="at">breaks =</span> <span class="dv">50</span>, <span class="at">col =</span> <span class="st">&quot;grey&quot;</span>, <span class="at">border =</span> <span class="st">&quot;white&quot;</span>, <span class="at">freq =</span> <span class="cn">FALSE</span>, <span class="at">main =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb36-13"><a href="repeated-measurements.html#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dchisq</span>(x, <span class="at">df =</span> <span class="dv">1</span>), <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb36-14"><a href="repeated-measurements.html#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">2</span> <span class="sc">*</span> (<span class="fu">summary</span>(lme2)<span class="sc">$</span>logLik <span class="sc">-</span> <span class="fu">summary</span>(lme1)<span class="sc">$</span>logLik), <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb37-1"><a href="repeated-measurements.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Empirical p-value</span></span>
+<span id="cb37-2"><a href="repeated-measurements.html#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(LR <span class="sc">&gt;</span> <span class="dv">2</span> <span class="sc">*</span> (<span class="fu">summary</span>(lme2)<span class="sc">$</span>logLik <span class="sc">-</span> <span class="fu">summary</span>(lme1)<span class="sc">$</span>logLik))</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb38-1"><a href="repeated-measurements.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictions with diagnosis as fixed effect</span></span>
+<span id="cb38-2"><a href="repeated-measurements.html#cb38-2" aria-hidden="true" tabindex="-1"></a>datm <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(hamd <span class="sc">~</span> week <span class="sc">+</span> diag, <span class="at">data =</span> dat, <span class="at">FUN =</span> mean)</span>
+<span id="cb38-3"><a href="repeated-measurements.html#cb38-3" aria-hidden="true" tabindex="-1"></a>datm<span class="sc">$</span>pred1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(lme1, <span class="at">newdata =</span> datm, <span class="at">re.form =</span> <span class="sc">~</span><span class="dv">0</span>)</span>
+<span id="cb38-4"><a href="repeated-measurements.html#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="repeated-measurements.html#cb38-5" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#3CB4DC&quot;</span>, <span class="st">&quot;#91C86E&quot;</span>)</span>
+<span id="cb38-6"><a href="repeated-measurements.html#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="repeated-measurements.html#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hamd <span class="sc">~</span> week, <span class="at">data =</span> datm, <span class="at">col =</span> colors[datm<span class="sc">$</span>diag],</span>
+<span id="cb38-8"><a href="repeated-measurements.html#cb38-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">28</span>), <span class="at">xlab =</span> <span class="st">&quot;Week&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;HDRS score&quot;</span>)</span>
+<span id="cb38-9"><a href="repeated-measurements.html#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pred1 <span class="sc">~</span> week, <span class="at">data =</span> <span class="fu">subset</span>(datm, datm<span class="sc">$</span>diag <span class="sc">==</span> <span class="st">&quot;nonen&quot;</span>), <span class="at">col =</span> colors[<span class="dv">1</span>])</span>
+<span id="cb38-10"><a href="repeated-measurements.html#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pred1 <span class="sc">~</span> week, <span class="at">data =</span> <span class="fu">subset</span>(datm, datm<span class="sc">$</span>diag <span class="sc">==</span> <span class="st">&quot;endog&quot;</span>), <span class="at">col =</span> colors[<span class="dv">2</span>])</span>
+<span id="cb38-11"><a href="repeated-measurements.html#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Endogenous&quot;</span>, <span class="st">&quot;Non endogenous&quot;</span>), <span class="at">col =</span> colors,</span>
+<span id="cb38-12"><a href="repeated-measurements.html#cb38-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">pt.bg =</span> <span class="st">&quot;white&quot;</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
 </details>
 
 </div>

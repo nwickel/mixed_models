@@ -25,6 +25,10 @@
 
 \definecolor{iwmorange}{RGB}{255,105,0}
 \definecolor{iwmgray}{RGB}{67,79,79}
+\definecolor{iwmblue}{RGB}{60,180,220}
+\definecolor{iwmgreen}{RGB}{145,200,110}
+\definecolor{iwmpurple}{RGB}{120,0,75}
+
 \setbeamercolor{title}{fg=iwmorange}
 \setbeamercolor{frametitle}{fg=iwmorange}
 \setbeamercolor{structure}{fg=iwmorange}
@@ -34,41 +38,25 @@
 
 \title{Repeated measures}
 \author{Nora Wickelmaier}
-\date{December 5, 2022}
-%\date{Last modified: \today}
+\date{Last modified: \today}
 
 \newcommand{\vect}[1]{\mathbf{#1}}
 \newcommand{\mat}[1]{\mathbf{#1}}
 \newcommand{\gvect}[1]{\boldsymbol{#1}}
 \newcommand{\gmat}[1]{\boldsymbol{#1}}
 
-\lstset{language=R,%
-  %backgroundcolor=\color{iwmgray!80!white},
-  basicstyle=\ttfamily\color{iwmorange},
-  frame=single,
-  commentstyle=\slshape\color{black},
-  keywordstyle=\bfseries\color{white},
-  identifierstyle=\color{white},
-  stringstyle=\color{green!85!black},
-  numbers=none,%left,numberstyle=\tiny,
-  basewidth={.5em, .4em},
-  showstringspaces=false,
-  emphstyle=\color{red!50!white}}
-
-\lstdefinestyle{plain}{language=R,
-  frame=none,
-  basicstyle=\ttfamily\color{iwmorange},
-  commentstyle=\slshape\color{iwmgray},
-  keywordstyle=\bfseries\color{iwmgray},
-  identifierstyle=\color{iwmgray},
-  stringstyle=\color{iwmgray},
-  numbers=none,
-  basewidth={.5em, .4em},
-  showstringspaces=false}
-
-\pgfmathdeclarefunction{gauss}{2}{%
-  \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
-}
+\lstset{language = R,%
+  basicstyle = \ttfamily\color{iwmgray},
+  frame = single,
+  rulecolor = \color{iwmgray},
+  commentstyle = \slshape\color{iwmgreen},
+  keywordstyle = \bfseries\color{iwmgray},
+  identifierstyle = \color{iwmpurple},
+  stringstyle = \color{iwmblue},
+  numbers = none,%left,numberstyle = \tiny,
+  basewidth = {.5em, .4em},
+  showstringspaces = false,
+  emphstyle = \color{red!50!white}}
 
 \AtBeginSection[]{
   \frame{
@@ -225,7 +213,7 @@ known as intraclass correlation (ICC)
   \end{itemize}
 \end{frame}
 
-\section{Example: Depression and Imipramin}
+\section[Example]{Example: Depression and Imipramin}
 
 \begin{frame}{Depression and Imipramin \citep{ReisbyGram77}}
   \begin{itemize}
@@ -247,21 +235,26 @@ known as intraclass correlation (ICC)
 
 \begin{frame}{Descriptive statistics}
 \begin{columns}
-\begin{column}{12cm}
-HDRS score
-\begin{center}
+\begin{column}{.55\textwidth}
+  \includegraphics[scale=.8]{../figures/hdrs-box}
+\end{column}
+\begin{column}{.6\textwidth}
+  HDRS score\\[1ex]
+  {\footnotesize
 \begin{tabular}{rrrrrrr}
   \hline
-  $t$ & Week 0 & Week 1 & Week 2 & Week 3 & Week 4 & Week 5 \\ 
+  $t$ & W0 & W1 & W2 & W3 & W4 & W5 \\ 
   \hline
   $M$  & 23.44 & 21.84 & 18.31 & 16.42 & 13.62 & 11.95 \\ 
   $SD$ &  4.53 & 4.70  & 5.49  & 6.42  & 6.97  & 7.22 \\ 
   $n$  & 61    & 63    & 65    & 65    & 63    & 58    \\ 
   \hline
 \end{tabular}
-\end{center}
-Empirical correlation matrix of HDRS score
-\begin{center}
+  }
+
+  \vspace{.5cm}
+  Empirical correlation matrix of HDRS score\\[1ex]
+  {\footnotesize
 \begin{tabular}{rrrrrrr}
   \hline
    & W0 & W1 & W2 & W3 & W4 & W5 \\ 
@@ -274,21 +267,21 @@ Empirical correlation matrix of HDRS score
   Week 5 & .18 & .22 & .46 & .57 & .65 &   1 \\ 
   \hline
 \end{tabular}
-\end{center}
+  }
+
+  \vspace{1cm}
 \end{column}
 \end{columns}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Depression and Imipramin}
   \begin{lstlisting}
-dat      <- read.table("reisby.dat", header = TRUE)
+dat      <- read.table("data/reisby.dat", header = TRUE)
 dat$id   <- factor(dat$id)
 dat$diag <- factor(dat$diag, levels = c("nonen", "endog"))
-dat      <- na.omit(dat)     # Drop missing values
+dat      <- na.omit(dat)     # drop missing values
 
-# Descriptive statistics
+# descriptive statistics
 aggregate(hamd ~ week, dat, mean)
 aggregate(hamd ~ week, dat, sd)
 aggregate(hamd ~ week, dat, length)
@@ -301,15 +294,16 @@ cor(reshape(dat[, c("hamd", "id", "week")],
 
 \begin{frame}[fragile]{Fitting repeated-measures ANOVA}
   \begin{lstlisting}
-# Week needs to be a factor when computing an ANOVA
+# week needs to be a factor when computing an ANOVA
 dat$week2 <- factor(dat$week)
+contrasts(dat$week2) <- "contr.sum"   # effect coding
 summary(aov(hamd ~ week2 + Error(id/week2), dat))
-# --> ?? 
+# --> ??
 
 library(ez)   # "SPSS"-style
 ezANOVA(data = dat, dv = hamd, wid = id, within = week2, type = 3)
 
-# Check data
+# check data
 ezDesign(data = dat, x = week, y = id, col = diag)
 replications(hamd ~ week2 + id, dat)
   \end{lstlisting}
@@ -317,11 +311,11 @@ replications(hamd ~ week2 + id, dat)
 
 \begin{frame}[fragile]{Fitting repeated-measures ANOVA}
   \begin{lstlisting}
-# Remove IDs with missing observations
+# remove IDs with missing observations
 ids <- names(which(replications(hamd ~ id, dat)$id == 6))
 dat_val <- dat[dat$id %in% ids, ]
 
-# Fit ANOVAs again
+# fit ANOVAs again
 aov1 <- aov(hamd ~ week2 + Error(id/week2), dat_val)
 summary(aov1)
 
@@ -338,21 +332,20 @@ library(lme4)
 lme1 <- lmer(hamd ~ week2 + (1 | id), dat_val)
 anova(lme1)
 
-# Calculate mean sum of squares for id by hand
+# calculate mean sum of squares for id by hand
 sp <- attr(VarCorr(lme1)$id, "stddev")
 se <- sigma(lme1)
 se^2 + 6 * sp^2
   \end{lstlisting}
 \end{frame}
 
-}
-
 \section{Mixed-effects regression}
 
-\begin{frame}{Depression and Imipramin -- individual process}
-\begin{center}
-\includegraphics[width=10.5cm]{../figures/hdrs-ind}
-\end{center}
+\begin{frame}{Depression and Imipramin -- individual processes}
+  \vspace{-.2cm}
+  \begin{center}
+    \includegraphics[width = 11cm]{../figures/hdrs-ind}
+  \end{center}
 \end{frame}
 
 \begin{frame}{Alternative model with a constant time term}
@@ -404,6 +397,7 @@ $\varepsilon_{ij}$ i.i.d.\\[2ex]
       $\hat{\sigma}_\upsilon = 4.02$
     \item The mean improvement per week is $\hat{\beta}_1 = -2.38$
   \end{itemize}
+  \vspace{1cm}
 \end{column}
 \end{columns}
 \end{frame}
@@ -456,20 +450,19 @@ with
 
 \begin{frame}{Model predictions}
 \begin{columns}
-\begin{column}{.4\textwidth}
-\includegraphics[width=5cm]{../figures/hdrs-lme2}
-\end{column}
-%
-\begin{column}{.6\textwidth}
-  \begin{itemize}
-    \item The estimated mean baseline HDRS score is $\hat{\beta}_0 = 23.58$
-    \item The estimated standard deviation between patients is
-      $\hat{\sigma}_{\upsilon_0} = 3.55$
-    \item The mean improvement per week is $\hat{\beta}_1 = -2.38$
-    \item The estimated standard deviation between patients is
-      $\hat{\sigma}_{\upsilon_1} = 1.44$
-  \end{itemize}
-\end{column}
+  \begin{column}{.4\textwidth}
+    \includegraphics[width=5cm]{../figures/hdrs-lme2}
+  \end{column}
+  \begin{column}{.6\textwidth}
+    \begin{itemize}
+      \item The estimated mean baseline HDRS score is $\hat{\beta}_0 = 23.58$
+      \item The estimated standard deviation between patients is
+        $\hat{\sigma}_{\upsilon_0} = 3.55$
+      \item The mean improvement per week is $\hat{\beta}_1 = -2.38$
+      \item The estimated standard deviation between patients is
+        $\hat{\sigma}_{\upsilon_1} = 1.44$
+    \end{itemize}
+  \end{column}
 \end{columns}
   \begin{itemize}
     \item The estimated correlation between individual intercepts and
@@ -510,111 +503,102 @@ hence, a more flexible covariance structure when compared to compound
   symmetry
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Fitting mixed-effects models}
 \begin{lstlisting}
-# Random intercept model
+# random intercept model
 lme1 <- lmer(hamd ~ week + (1 | id), dat, REML=FALSE)
 summary(lme1)
 
-# Random slope model
+# random slope model
 lme2 <- lmer(hamd ~ week + (week | id), dat, REML=FALSE)
 summary(lme2)
 
-# Model comparison
+# model comparison
 anova(lme1, lme2)
 \end{lstlisting}
 \end{frame}
 
-}
-
-\begin{frame}{Summary}
+\begin{frame}[<+->]{Summary}
   \begin{itemize}
     \item Assumptions of repeated measures ANOVA are often too restrictive
       for measurements taken over time
     \item Mixed-effects models allow for a more flexible variance-covariance
       structure
+    \item For unequal group sizes, repeated measures ANOVA is not defined
     \item (For within designs where assumptions of equal variance are more
       plausible, repeated measures ANOVA is well suited)
   \end{itemize}
   \vfill
 \end{frame}
 
+\begin{frame}[fragile]{}
+  \begin{block}{Exercise}
+    \begin{itemize}
+      \item Expand the linear mixed-effects model two more than one factor
+      \item Add diagnosis (``endogenous`` vs.\ ``non-endogenous'') as additional
+        between factor
+      \item Test if this factor interacts with \texttt{week} using a
+        likelihood-ratio test
+      \item Use parametric bootstrapping to get a sampling distribution for your
+        LRT statistic
+      \item Plot the sampling distribution and add the empirical confidence
+        interval
+    \end{itemize}
+  \end{block}
+\end{frame}
+
 \appendix
 
-\section{Expanding the model to more than one factor}
-
-\begin{frame}{Two types of depression}
-\begin{center}
-\includegraphics[scale=.8]{../figures/hdrs-means-se}
-\end{center}
-\end{frame}
-
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
-\begin{frame}[fragile]{Fitting repeated-measures ANOVA}
-  \begin{lstlisting}
-# ANOVA with aov()
-aov2 <- aov(hamd ~ week2 * diag + Error(id/week2), dat_val)
-summary(aov2)
-
-# Using ezANOVA()
-ez2 <- ezANOVA(data = dat_val, dv = hamd, wid = id,
-               within = week2, between = diag,
-               type = 1)
-ez2$ANOVA
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Fitting repeated-measures ANOVA}
-  \begin{lstlisting}
-# Mixed-effects model
-lme2 <- lmer(hamd ~ week2 * diag + (1 | id), dat_val)
-anova(lme2)
-
-# Calculate mean sum of squares for id by hand
-sp <- attr(VarCorr(lme2)$id, "stddev")
-se <- attr(VarCorr(lme2), "sc")
-se^2 + 6 * sp^2
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Fitting mixed-effects model}
-  \begin{lstlisting}
-# And this works on the complete data set
-lme3 <- lmer(hamd ~ week2 * diag + (1 | id), dat)
-anova(lme3)
-
-# Type I sum of squares
-lmerTest:::anova.lmerModLmerTest(lme3)
-
-# Or via likelihood ratio tests
-m0 <- lmer(hamd ~ 1 + (1 | id), dat, REML=FALSE)
-m1 <- lmer(hamd ~ week2 + (1 | id), dat, REML=FALSE)
-m2 <- lmer(hamd ~ week2 + diag + (1 | id), dat, REML=FALSE)
-anova(m0, m1, m2, lme3)
-  \end{lstlisting}
-\end{frame}
-
-}
-
-% {\setbeamercolor{background canvas}{bg=iwmgray!80!white}
+% \section{Expanding the model to more than one factor}
 % 
-% \begin{frame}[fragile]{}
+% \begin{frame}{Two types of depression}
+% \begin{center}
+% \includegraphics[scale=.8]{../figures/hdrs-means-se}
+% \end{center}
+% \end{frame}
+% 
+% \begin{frame}[fragile]{Fitting repeated-measures ANOVA}
 %   \begin{lstlisting}
-%   ##
+% # ANOVA with aov()
+% aov2 <- aov(hamd ~ week2 * diag + Error(id/week2), dat_val)
+% summary(aov2)
+% 
+% # Using ezANOVA()
+% ez2 <- ezANOVA(data = dat_val, dv = hamd, wid = id,
+%                within = week2, between = diag,
+%                type = 1)
+% ez2$ANOVA
 %   \end{lstlisting}
 % \end{frame}
 % 
-% }
+% \begin{frame}[fragile]{Fitting repeated-measures ANOVA}
+%   \begin{lstlisting}
+% # Mixed-effects model
+% lme2 <- lmer(hamd ~ week2 * diag + (1 | id), dat_val)
+% anova(lme2)
 % 
-% \begin{frame}[fragile]{}
-%   \begin{block}{Exercise}
-%     \begin{itemize}
-%       \item 
-%     \end{itemize}
-%   \end{block}
+% # Calculate mean sum of squares for id by hand
+% sp <- attr(VarCorr(lme2)$id, "stddev")
+% se <- attr(VarCorr(lme2), "sc")
+% se^2 + 6 * sp^2
+%   \end{lstlisting}
+% \end{frame}
+% 
+% \begin{frame}[fragile]{Fitting mixed-effects model}
+%   \begin{lstlisting}
+% # And this works on the complete data set
+% lme3 <- lmer(hamd ~ week2 * diag + (1 | id), dat)
+% anova(lme3)
+% 
+% # Type I sum of squares
+% lmerTest:::anova.lmerModLmerTest(lme3)
+% 
+% # Or via likelihood ratio tests
+% m0 <- lmer(hamd ~ 1 + (1 | id), dat, REML=FALSE)
+% m1 <- lmer(hamd ~ week2 + (1 | id), dat, REML=FALSE)
+% m2 <- lmer(hamd ~ week2 + diag + (1 | id), dat, REML=FALSE)
+% anova(m0, m1, m2, lme3)
+%   \end{lstlisting}
 % \end{frame}
 
 %\begin{frame}[allowframebreaks]{References}
