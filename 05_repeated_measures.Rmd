@@ -16,7 +16,7 @@
 
 * Add diagnosis ("endogenous" vs. "non-endogenous") as additional between factor
 
-* Test if this factor interacts with week using a likelihood-ratio test
+* Test if this factor interacts with `week` using a likelihood-ratio test
 
 * Use parametric bootstrapping to get a sampling distribution for your LRT
   statistic
