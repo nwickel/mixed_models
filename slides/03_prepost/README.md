@@ -12,7 +12,7 @@ Here are some clean coding tips:
 
   - Use sensible Spacing:
 
-```{r}
+```r
 ## Spacing
 # Good
 x[, 1]
