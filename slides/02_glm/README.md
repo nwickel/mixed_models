@@ -1,5 +1,12 @@
-For the future, I would like to make this two sessions:
+# R and Workflow
 
-1. Multiple regression with one more example
-2. GLM with a focus on how to get from logistic function to GLM
+* Install new R version (there is a new one each Halloween)
+
+  RStudio is __not__ R!
+
+* How to cite packages
+
+* What is a vignette and where do I find it?
+
+* Use `|>` not `%>%`
 
