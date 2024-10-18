@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2024-10-17" />
+<meta name="date" content="2024-10-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -166,7 +166,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Course information</a>
 <ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#desirable-background-knowledge"><i class="fa fa-check"></i>Desirable background knowledge</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#overview-of-dates"><i class="fa fa-check"></i>Overview of dates</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#overview-of-dates-and-topics"><i class="fa fa-check"></i>Overview of dates and topics</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#literature"><i class="fa fa-check"></i>Literature</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="simple-and-multiple-regression.html"><a href="simple-and-multiple-regression.html"><i class="fa fa-check"></i><b>1</b> Simple and multiple regression</a>
@@ -278,12 +278,13 @@ random slopes for <code>Subject</code></p></li>
 <li><p>Look at the model assumptions for this model</p></li>
 </ul>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb31-1"><a href="longitudinal-data.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
-<span id="cb31-2"><a href="longitudinal-data.html#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="longitudinal-data.html#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># load data set</span></span>
-<span id="cb31-4"><a href="longitudinal-data.html#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quasif, <span class="at">package =</span> <span class="st">&quot;languageR&quot;</span>)</span>
-<span id="cb31-5"><a href="longitudinal-data.html#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-6"><a href="longitudinal-data.html#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(RT <span class="sc">~</span> SOA, <span class="at">data =</span> quasif)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb31-1"><a href="longitudinal-data.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb31-2"><a href="longitudinal-data.html#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
+<span id="cb31-3"><a href="longitudinal-data.html#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="longitudinal-data.html#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># load data set</span></span>
+<span id="cb31-5"><a href="longitudinal-data.html#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(quasif, <span class="at">package =</span> <span class="st">&quot;languageR&quot;</span>)</span>
+<span id="cb31-6"><a href="longitudinal-data.html#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="longitudinal-data.html#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(RT <span class="sc">~</span> SOA, <span class="at">data =</span> quasif)</span></code></pre></div>
 </details>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb32-1"><a href="longitudinal-data.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span> SOA <span class="sc">+</span> Item, <span class="at">data =</span> quasif)</span>
@@ -293,20 +294,22 @@ random slopes for <code>Subject</code></p></li>
 <span id="cb32-5"><a href="longitudinal-data.html#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">xyplot</span>(RT <span class="sc">~</span> SOA <span class="sc">|</span> Subject, <span class="at">data =</span> quasif, <span class="at">groups =</span> Item, <span class="at">auto.key =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 </details>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb33-1"><a href="longitudinal-data.html#cb33-1" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Item) <span class="sc">+</span> (SOA <span class="sc">|</span> Subject), <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb33-2"><a href="longitudinal-data.html#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lme1)</span>
-<span id="cb33-3"><a href="longitudinal-data.html#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="longitudinal-data.html#cb33-4" aria-hidden="true" tabindex="-1"></a>lme2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Item) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject<span class="sc">:</span>SOA), <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb33-5"><a href="longitudinal-data.html#cb33-5" aria-hidden="true" tabindex="-1"></a>lme3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Item) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject), <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb33-6"><a href="longitudinal-data.html#cb33-6" aria-hidden="true" tabindex="-1"></a>lme4 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject), <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb33-7"><a href="longitudinal-data.html#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-8"><a href="longitudinal-data.html#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lme4, lme3, lme2, lme1)</span>
-<span id="cb33-9"><a href="longitudinal-data.html#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(lme2, <span class="at">method =</span> <span class="st">&quot;boot&quot;</span>)</span>
-<span id="cb33-10"><a href="longitudinal-data.html#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-11"><a href="longitudinal-data.html#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lme2, <span class="at">col =</span> quasif<span class="sc">$</span>Subject, <span class="at">pch =</span> quasif<span class="sc">$</span>Item)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb33-1"><a href="longitudinal-data.html#cb33-1" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Item) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> SOA <span class="sc">|</span> Subject),</span>
+<span id="cb33-2"><a href="longitudinal-data.html#cb33-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb33-3"><a href="longitudinal-data.html#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lme1)</span>
+<span id="cb33-4"><a href="longitudinal-data.html#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="longitudinal-data.html#cb33-5" aria-hidden="true" tabindex="-1"></a>lme2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Item) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject), <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb33-6"><a href="longitudinal-data.html#cb33-6" aria-hidden="true" tabindex="-1"></a>lme3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> SOA <span class="sc">|</span> Subject), <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb33-7"><a href="longitudinal-data.html#cb33-7" aria-hidden="true" tabindex="-1"></a>lme4 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> SOA <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject), <span class="at">data =</span> quasif, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb33-8"><a href="longitudinal-data.html#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="longitudinal-data.html#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lme4, lme2, lme1)</span>
+<span id="cb33-10"><a href="longitudinal-data.html#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lme4, lme3, lme1)</span>
+<span id="cb33-11"><a href="longitudinal-data.html#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(lme1, <span class="at">method =</span> <span class="st">&quot;boot&quot;</span>)</span>
+<span id="cb33-12"><a href="longitudinal-data.html#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="longitudinal-data.html#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lme1, <span class="at">col =</span> quasif<span class="sc">$</span>Subject, <span class="at">pch =</span> quasif<span class="sc">$</span>Item)</span></code></pre></div>
 </details>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb34-1"><a href="longitudinal-data.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqmath</span>(lme2, <span class="at">col =</span> quasif<span class="sc">$</span>Subject, <span class="at">pch =</span> quasif<span class="sc">$</span>Item)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb34-1"><a href="longitudinal-data.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqmath</span>(lme1, <span class="at">col =</span> quasif<span class="sc">$</span>Subject, <span class="at">pch =</span> quasif<span class="sc">$</span>Item)</span></code></pre></div>
 </details>
 
 </div>

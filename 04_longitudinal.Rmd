@@ -44,6 +44,7 @@ Load (or maybe install first) the package `languageR`. Then, load the data set
 
 ```{r ex04, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 
+library(lme4)
 library(lattice)
 
 # load data set
@@ -57,17 +58,19 @@ ftable(xtabs(~ Subject + Item + SOA, data = quasif))
 
 xyplot(RT ~ SOA | Subject, data = quasif, groups = Item, auto.key = TRUE)
 
-lme1 <- lmer(RT ~ SOA + (1 | Item) + (SOA | Subject), data = quasif, REML = FALSE)
+lme1 <- lmer(RT ~ 1 + SOA + (1 | Item) + (1 + SOA | Subject),
+             data = quasif, REML = FALSE)
 summary(lme1)
 
-lme2 <- lmer(RT ~ SOA + (1 | Item) + (1 | Subject) + (1 | Subject:SOA), data = quasif, REML = FALSE)
-lme3 <- lmer(RT ~ SOA + (1 | Item) + (1 | Subject), data = quasif, REML = FALSE)
-lme4 <- lmer(RT ~ SOA + (1 | Subject), data = quasif, REML = FALSE)
+lme2 <- lmer(RT ~ 1 + SOA + (1 | Item) + (1 | Subject), data = quasif, REML = FALSE)
+lme3 <- lmer(RT ~ 1 + SOA + (1 + SOA | Subject), data = quasif, REML = FALSE)
+lme4 <- lmer(RT ~ 1 + SOA + (1 | Subject), data = quasif, REML = FALSE)
 
-anova(lme4, lme3, lme2, lme1)
-confint(lme2, method = "boot")
+anova(lme4, lme2, lme1)
+anova(lme4, lme3, lme1)
+confint(lme1, method = "boot")
 
-plot(lme2, col = quasif$Subject, pch = quasif$Item)
-qqmath(lme2, col = quasif$Subject, pch = quasif$Item)
+plot(lme1, col = quasif$Subject, pch = quasif$Item)
+qqmath(lme1, col = quasif$Subject, pch = quasif$Item)
 ```
 

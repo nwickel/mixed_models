@@ -30,7 +30,7 @@ lm4 <- lm(y4 ~ x4, anscombe)
 rbind(coef(lm1), coef(lm2), coef(lm3), coef(lm4))
 
 # Plot data
-par(mfrow=c(2,2), mai = c(.6, .6, .1, .1), mgp = c(2.4, 1, 0))
+par(mfrow = c(2,2), mai = c(.6, .6, .1, .1), mgp = c(2.4, 1, 0))
 plot(y1 ~ x1, anscombe, pch = 16, col = "blue")
 abline(lm1, lwd = 2)
 plot(y2 ~ x2, anscombe, pch = 16, col = "blue")
@@ -54,8 +54,8 @@ dat <- reshape(anscombe,
                timevar   = "reg",
                v.names   = c("x", "y"))[, -4]   # drop id
 
-lattice::xyplot(y ~ x | as.factor(reg), dat, pch=16, type=c("p", "r"))
-lattice::xyplot(y ~ x | as.factor(reg), dat, pch=16, type=c("p", "smooth"))
+lattice::xyplot(y ~ x | as.factor(reg), dat, pch = 16, type = c("p", "r"))
+lattice::xyplot(y ~ x | as.factor(reg), dat, pch = 16, type = c("p", "smooth"))
 ```
 
 ## Exercises

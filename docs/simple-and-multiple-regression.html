@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2024-10-17" />
+<meta name="date" content="2024-10-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -166,7 +166,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Course information</a>
 <ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#desirable-background-knowledge"><i class="fa fa-check"></i>Desirable background knowledge</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#overview-of-dates"><i class="fa fa-check"></i>Overview of dates</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#overview-of-dates-and-topics"><i class="fa fa-check"></i>Overview of dates and topics</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#literature"><i class="fa fa-check"></i>Literature</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="simple-and-multiple-regression.html"><a href="simple-and-multiple-regression.html"><i class="fa fa-check"></i><b>1</b> Simple and multiple regression</a>
@@ -277,7 +277,7 @@ everybody on the same page.</p>
 ## [4,]    3.001727 0.4999091</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="simple-and-multiple-regression.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot data</span></span>
-<span id="cb3-2"><a href="simple-and-multiple-regression.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="at">mai =</span> <span class="fu">c</span>(.<span class="dv">6</span>, .<span class="dv">6</span>, .<span class="dv">1</span>, .<span class="dv">1</span>), <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.4</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb3-2"><a href="simple-and-multiple-regression.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), <span class="at">mai =</span> <span class="fu">c</span>(.<span class="dv">6</span>, .<span class="dv">6</span>, .<span class="dv">1</span>, .<span class="dv">1</span>), <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.4</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
 <span id="cb3-3"><a href="simple-and-multiple-regression.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y1 <span class="sc">~</span> x1, anscombe, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
 <span id="cb3-4"><a href="simple-and-multiple-regression.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(lm1, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
 <span id="cb3-5"><a href="simple-and-multiple-regression.html#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y2 <span class="sc">~</span> x2, anscombe, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
@@ -314,11 +314,11 @@ everybody on the same page.</p>
 <span id="cb8-5"><a href="simple-and-multiple-regression.html#cb8-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">timevar   =</span> <span class="st">&quot;reg&quot;</span>,</span>
 <span id="cb8-6"><a href="simple-and-multiple-regression.html#cb8-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">v.names   =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>))[, <span class="sc">-</span><span class="dv">4</span>]   <span class="co"># drop id</span></span>
 <span id="cb8-7"><a href="simple-and-multiple-regression.html#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="simple-and-multiple-regression.html#cb8-8" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">xyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> <span class="fu">as.factor</span>(reg), dat, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">type=</span><span class="fu">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;r&quot;</span>))</span></code></pre></div>
+<span id="cb8-8"><a href="simple-and-multiple-regression.html#cb8-8" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">xyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> <span class="fu">as.factor</span>(reg), dat, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">type =</span> <span class="fu">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;r&quot;</span>))</span></code></pre></div>
 </details>
 <p><img src="mixed_models_files/figure-html/example-6.png" width="672" /></p>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="simple-and-multiple-regression.html#cb9-1" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">xyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> <span class="fu">as.factor</span>(reg), dat, <span class="at">pch=</span><span class="dv">16</span>, <span class="at">type=</span><span class="fu">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;smooth&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="simple-and-multiple-regression.html#cb9-1" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">xyplot</span>(y <span class="sc">~</span> x <span class="sc">|</span> <span class="fu">as.factor</span>(reg), dat, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">type =</span> <span class="fu">c</span>(<span class="st">&quot;p&quot;</span>, <span class="st">&quot;smooth&quot;</span>))</span></code></pre></div>
 </details>
 <p><img src="mixed_models_files/figure-html/example-7.png" width="672" /></p>
 </div>
