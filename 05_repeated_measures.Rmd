@@ -1,5 +1,8 @@
 # Repeated measurements
 
+In this chapter, we will go on with models for longitudinal data and compare
+mixed-effects models to repeated measures ANOVA.
+
 ## Slides
 
 ```{=html}
@@ -11,6 +14,8 @@
 ```
 
 ## Exercises
+
+### Exercise 1 {-}
 
 * Expand the linear mixed-effects model two more than one factor
 
