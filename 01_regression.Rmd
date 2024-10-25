@@ -106,7 +106,7 @@ abline(lm1)
 
   Hint: Use `sample(x, n, replace = TRUE)`
 
-* Re-cover your parameters as done on slide 11
+* Re-cover your parameters as done on slide 14
 
 * What happens to your standard errors?
 

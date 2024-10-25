@@ -323,12 +323,12 @@ hist(pars[3, ])
 \begin{frame}{}
   \begin{block}{Exercise}
     \begin{itemize}
-      \item Simulate data with the parameters from slide~8
+      \item Simulate data with the parameters from slide~11
       \item Do not assume that we have one subject per value for $x$, but
         more than one subject
       \item Simulate data for $n=40$ and $n=100$\\
         Hint: Use \texttt{sample(x, n, replace = TRUE)}
-      \item Re-cover your parameters as done on slide~11
+      \item Re-cover your parameters as done on slide~14
       \item What happens to your standard errors?
     \end{itemize}
   \end{block}
@@ -406,7 +406,7 @@ $\hat{\sigma}^2_{\hat{\beta_1}}$ for the variances
 
 \begin{frame}{Assumptions}
   \begin{itemize}
-    \item We have the stochstic model $y_i = \beta_0 + \beta_1 \cdot x_i +
+    \item We have the stochastic model $y_i = \beta_0 + \beta_1 \cdot x_i +
       \varepsilon_i$ with $\varepsilon_i \sim N(0, \sigma^2)~\text{i.i.d.}$
     \item The error variables $\varepsilon_i$ are considered to be
       non-observable and comprise influence that cannot be controlled and is
@@ -470,7 +470,7 @@ plot(lm4)
       \item Create two vectors $x$ and $y$ with 100 observations each and
         $X \sim N(1,1)$ and $Y \sim N(2,1)$
       \item Create a data frame with variables \texttt{id}, \texttt{group}
-        and \texttt{score}. $x$ and $y$ are your score values
+        and \texttt{score}. $X$ and $Y$ are your score values
       \item Conduct a $t$ test assuming that $X$ and $Y$ are independent
         having the same variances
       \item Then use the function \texttt{aov()} to compute an analysis of
