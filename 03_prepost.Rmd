@@ -187,7 +187,7 @@ dat_long <- reshape(dat, direction = "long",
                     timevar = "time",
                     times = c(0, 1))
 
-m3 <- lmer(resp ~ condition*time + (1 | id), dat_long)
+m3 <- lmer(resp ~ condition * time + (1 | id), dat_long)
 summary(m3)
 
 ## Compare parameters of the three models
@@ -203,6 +203,15 @@ datagg$post_adj <- predict(m2,
 # Adjusted "time effects"
 datagg$diff <- datagg$post - datagg$pre
 datagg$diff_adj <- datagg$post_adj - mean(datagg$pre)
+
+# OR
+
+m4 <- lm(post - pre ~ condition + scale(pre), dat)
+summary(m4)
+
+# Adjusted "time effects"
+predict(m4, newdata = data.frame(condition = c("contr", "treat1", "treat2"),
+                                 pre = mean(dat$pre)))
 ```
 
 ### Exercise 3 {-}
