@@ -13,7 +13,7 @@
 # setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/iwm/mixed_models/slides/03_prepost/")
 
 library(lme4)
-library(lmerTest)
+library(ggplot2)
 
 #--------------- (1) Kleinhenz analysis ---------------------------------------
 
@@ -42,23 +42,8 @@ anova(m1, m3)
 
 predict(m3, newdata = data.frame(pre = mean(dat$pre), grp = c("plac", "acu")))
 
-m4 <- lm(post - pre ~ pre + grp, data = dat)
-
-## Plots
-
-plot(post ~ pre, dat[dat$grp == "plac", ], xlim = c(30, 95), ylim = c(30, 95))
-points(post ~ pre, dat[dat$grp == "acu", ], pch = 16)
-
-# Predictions change score
-abline(coef(m1)[1], 1, lty=2)
-abline(coef(m1)[1] + coef(m1)[2], 1)
-
-# Predictions ANCOVA
-abline(coef(m3)[1], coef(m3)[2], lty = 2, col = "blue")
-abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2], col = "blue")
-
-# Mean post value
-abline(h = mean(dat$post), col = "red")
+# Reparametrization: intercept tests adjusted time effect in reference group
+m4 <- lm(post - pre ~ scale(pre) + grp, data = dat)
 
 #--------------- (2) Plots ----------------------------------------------------
 
@@ -126,4 +111,57 @@ legend("bottomright", c("Acupuncture", "Placebo"), pch = c(8,1), lty = 1:2,
 
 dev.off()
 
+### Time effect plots
+
+dat1 <- data.frame(grp = c("plac", "acu"),
+                   mean = predict(lm4,
+                     newdat = data.frame(grp = c("plac", "acu"))
+                     )
+                   )
+dat1$model <- "follow-up"
+
+
+dat2 <- data.frame(grp = c("plac", "acu"),
+                   mean = predict(lm3,
+                     newdat = data.frame(grp = c("plac", "acu"),
+                                         pre = mean(dat$pre)))
+                   )
+dat2$model <- "change score"
+
+dat3 <- data.frame(grp = c("plac", "acu"),
+                   mean = predict(lm1,
+                     newdat = data.frame(grp = c("plac", "acu"),
+                                         pre = mean(dat$pre)))
+                   )
+dat3$model <- "ancova"
+
+
+datplot <- rbind(dat1, dat2, dat3)
+datplot <- rbind(datplot, datplot)
+datplot$time <- rep(c("post", "pre"), each = 6)
+datplot$mean[datplot$time == "pre"] <- mean(dat$pre)
+
+datplot$grp <- factor(datplot$grp, levels = c("plac", "acu"))
+datplot$time <- factor(datplot$time, levels = c("pre" , "post"))
+datplot$model <- factor(datplot$model, levels = c("follow-up", "change score", "ancova"))
+
+mean_obs <- aggregate(cbind(pre, post) ~ grp, dat, mean)
+mean_obs <- reshape(mean_obs, direction = "long",
+                    varying = list(c("pre", "post")),
+                    times = c("pre", "post"),
+                    v.names = "mean")[, -4]
+
+pdf("../figures/acu-timeeffects.pdf", height = 3.375, width = 5, pointsize = 10)
+
+ggplot(datplot) +
+  geom_line(aes(x = time, y = mean, group = model, color = model)) +
+  geom_point(mean_obs, mapping = aes(x = time, y = mean), size = 3, color = "darkgray") +
+  facet_wrap( ~ grp) +
+  scale_color_manual(values = c("#78004B", "#3CB4DC", "#FF6900")) +
+  xlab("Time") +
+  ylab("Mean score") +
+  theme_bw() +
+  theme(legend.position = "top", legend.title=element_blank())
+
+dev.off()
 

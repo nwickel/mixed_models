@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Pre/post measurements | Course on Mixed-effects Models</title>
   <meta name="description" content="Chapter 3 Pre/post measurements | Course on Mixed-effects Models" />
-  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Pre/post measurements | Course on Mixed-effects Models" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2024-10-22" />
+<meta name="date" content="2024-10-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -508,7 +508,7 @@ control group and the second treatment group by 1 point</p></li>
 <span id="cb28-24"><a href="prepost-measurements.html#cb28-24" aria-hidden="true" tabindex="-1"></a>                    <span class="at">timevar =</span> <span class="st">&quot;time&quot;</span>,</span>
 <span id="cb28-25"><a href="prepost-measurements.html#cb28-25" aria-hidden="true" tabindex="-1"></a>                    <span class="at">times =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
 <span id="cb28-26"><a href="prepost-measurements.html#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-27"><a href="prepost-measurements.html#cb28-27" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(resp <span class="sc">~</span> condition<span class="sc">*</span>time <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id), dat_long)</span>
+<span id="cb28-27"><a href="prepost-measurements.html#cb28-27" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(resp <span class="sc">~</span> condition <span class="sc">*</span> time <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> id), dat_long)</span>
 <span id="cb28-28"><a href="prepost-measurements.html#cb28-28" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m3)</span>
 <span id="cb28-29"><a href="prepost-measurements.html#cb28-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-30"><a href="prepost-measurements.html#cb28-30" aria-hidden="true" tabindex="-1"></a><span class="do">## Compare parameters of the three models</span></span>
@@ -523,7 +523,16 @@ control group and the second treatment group by 1 point</p></li>
 <span id="cb28-39"><a href="prepost-measurements.html#cb28-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-40"><a href="prepost-measurements.html#cb28-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted &quot;time effects&quot;</span></span>
 <span id="cb28-41"><a href="prepost-measurements.html#cb28-41" aria-hidden="true" tabindex="-1"></a>datagg<span class="sc">$</span>diff <span class="ot">&lt;-</span> datagg<span class="sc">$</span>post <span class="sc">-</span> datagg<span class="sc">$</span>pre</span>
-<span id="cb28-42"><a href="prepost-measurements.html#cb28-42" aria-hidden="true" tabindex="-1"></a>datagg<span class="sc">$</span>diff_adj <span class="ot">&lt;-</span> datagg<span class="sc">$</span>post_adj <span class="sc">-</span> <span class="fu">mean</span>(datagg<span class="sc">$</span>pre)</span></code></pre></div>
+<span id="cb28-42"><a href="prepost-measurements.html#cb28-42" aria-hidden="true" tabindex="-1"></a>datagg<span class="sc">$</span>diff_adj <span class="ot">&lt;-</span> datagg<span class="sc">$</span>post_adj <span class="sc">-</span> <span class="fu">mean</span>(datagg<span class="sc">$</span>pre)</span>
+<span id="cb28-43"><a href="prepost-measurements.html#cb28-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-44"><a href="prepost-measurements.html#cb28-44" aria-hidden="true" tabindex="-1"></a><span class="co"># OR</span></span>
+<span id="cb28-45"><a href="prepost-measurements.html#cb28-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-46"><a href="prepost-measurements.html#cb28-46" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(post <span class="sc">-</span> pre <span class="sc">~</span> condition <span class="sc">+</span> <span class="fu">scale</span>(pre), dat)</span>
+<span id="cb28-47"><a href="prepost-measurements.html#cb28-47" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m4)</span>
+<span id="cb28-48"><a href="prepost-measurements.html#cb28-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-49"><a href="prepost-measurements.html#cb28-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Adjusted &quot;time effects&quot;</span></span>
+<span id="cb28-50"><a href="prepost-measurements.html#cb28-50" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(m4, <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">condition =</span> <span class="fu">c</span>(<span class="st">&quot;contr&quot;</span>, <span class="st">&quot;treat1&quot;</span>, <span class="st">&quot;treat2&quot;</span>),</span>
+<span id="cb28-51"><a href="prepost-measurements.html#cb28-51" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">pre =</span> <span class="fu">mean</span>(dat<span class="sc">$</span>pre)))</span></code></pre></div>
 </details>
 </div>
 <div id="exercise-3-1" class="section level3 unnumbered hasAnchor">
