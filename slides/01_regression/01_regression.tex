@@ -180,7 +180,7 @@ and
     \item When $x$ and $y$ are $z$ standardized with $\bar x = \bar y = 0$ and
       $\sigma_x = \sigma_y = 1$, we get
       \[
-        \hat\beta_0 = 0 ~~~~~ \text{and} ~~~~~ \beta_1 = r
+        \hat\beta_0 = 0 ~~~~~ \text{and} ~~~~~ \hat\beta_1 = r
       \]
   \end{itemize}
 \end{frame}
@@ -338,8 +338,8 @@ hist(pars[3, ])
   \begin{itemize}
     \item We get the $(1-\alpha)$ confidence intervals for the estimates with
 \[
-  \left[\hat{\beta_0} - \hat{\sigma}_{\hat{\beta_0}} \, t_{1-\beta_0/2} (n-2),~
-  \hat{\beta_0} + \hat{\sigma}_{\hat{\beta_0}} \, t_{1-\beta_0/2} (n-2)\right]
+  \left[\hat{\beta_0} - \hat{\sigma}_{\hat{\beta_0}} \, t_{1-\alpha/2} (n-2),~
+  \hat{\beta_0} + \hat{\sigma}_{\hat{\beta_0}} \, t_{1-\alpha/2} (n-2)\right]
 \]
 and
 \[
@@ -640,12 +640,12 @@ aggregate(y ~ z, dat, mean)
   \begin{itemize}
     \item We can now use the parameters to calculate adjusted means for the
       two groups
-    \item The observed means are $\bar x_{treat} = 190.14$ and $\bar
-      x_{contr} = 181.25$
+    \item The observed means are $\bar y_{contr} = 181.25$ and
+      $\bar y_{treat} = 190.14$
     \item The adjusted means correspond to
 \begin{align*}
-\bar x_{contr} & = \beta_0\\
-\bar x_{treat} & = \beta_0 + \beta_2
+  \bar y_{contr} & = \beta_0 & = 181.99\\
+  \bar y_{treat} & = \beta_0 + \beta_2 & = 189.30
 \end{align*}
 These are the means for a value of $x = 0$ which should have a meaningful
 interpretation
