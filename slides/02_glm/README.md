@@ -6,7 +6,10 @@
 
 * How to cite packages
 
+* How can I see which packages are loaded? Installed?
+
 * What is a vignette and where do I find it?
 
-* Use `|>` not `%>%`
+* Use `|>` not `%>%`; compare tidyverse style guide:
+  https://style.tidyverse.org/
 

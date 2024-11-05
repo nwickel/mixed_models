@@ -86,41 +86,123 @@
 \tableofcontents
 \end{frame}
 
-% TODO: Mayba change these slides?
-\begin{frame}[allowframebreaks]{Intuition}
-  \begin{itemize}
-    \item In linear regression, a constant change in a predictor leads to a
-      constant change in the response variable\\
-        $\to$ implies that response variable can vary indefinitely in both
-          directions (or only varies by a relative small amount)
+\begin{frame}{Linear regression}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \begin{itemize}
+        \item Constant change in predictor leads to constant change in response
+          variable\\[2ex]
+        \item[$\to$] Implies that response variable can vary indefinitely in both
+              directions (or only varies by a relative small amount)
+      \end{itemize}
+    \end{column}
+    \begin{column}{.6\textwidth}
+        \includegraphics[scale=.7]{../figures/glm_lin}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Extending linear regression for arbitrary distributions}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \begin{itemize}
     \item Generalized linear models allow for response variables that have
-      \textbf{arbitrary distributions} (rather than simply normal
-      distributions), and for an arbitrary function of the response
-      variable (the link function) to vary linearly with the predictors
-      (rather than assuming that the response itself must vary linearly)
-      \framebreak
+      \textbf{arbitrary distributions}
+    \item[$\to$] An arbitrary function of the response variable (the link function)
+      varies linearly with the predictors (rather than assuming that the
+          response itself must vary linearly)
+      \end{itemize}
+    \end{column}
+    \begin{column}{.6\textwidth}
+        \includegraphics[scale=.7]{../figures/glm_bin}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{Intuition}
+  \vspace{.7cm}
+  \begin{itemize}
     \item Example 1: Model that predicts probability of making yes/no
       choice
       \begin{itemize}
-        \item A model that predicts the likelihood of a given person going
-          to the beach as a function of temperature
-        \item A reasonable model might predict, for example, that a change
-          in 10 degrees makes a person two times more or less likely to go
-          to the beach
-        \item That means th odds are doubling: from 2:1 odds to 4:1 odds
+        \item How likely is it for a given person to go to the beach as a
+          function of temperature?
+        \item A model might predict, for example, that a change in 10 degrees
+          makes a person two times more or less likely to go to the beach
+        \item That means the odds are doubling: from 2:1 odds to 4:1 odds
           and so on
       \end{itemize}
-    \item Example 2: Model that predicts a certain count
+  \end{itemize}
+  \vspace{.5cm}
+
+  \begin{tabular}{|l|c|c|c|}
+    \hline
+    Temperature &  $10^{\circ} C$  &  $20^{\circ} C$ & $30^{\circ} C$  \\
+    \hline
+    &
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/relax} &
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/relax} &
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/relax} \\
+    Odds & $1:1$  & $2:1$ & $4:1$ \\
+    \hline
+  \end{tabular}
+
+  \vfill
+{\scriptsize
+  \url{https://www.flaticon.com/free-icons/tanning},
+  \url{https://www.flaticon.com/free-icons/work}
+  }
+  \framebreak
+  
+  \begin{itemize}
+      \item Example 2: Model that predicts a certain count
       \begin{itemize}
-        \item A realistic model would predict a constant rate of
-          increased beach attendance (e.g. an increase of 10 degrees leads
-          to a doubling in beach attendance, and a drop of 10 degrees leads
-          to a halving in attendance
+        \item A model might predict a constant rate of increased beach
+          attendance (e.g., an increase of 10 degrees leads to a doubling in
+          beach attendance, and a drop of 10 degrees leads to a halving in
+          attendance)
         \item This prediction would be independent of the size of the beach
       \end{itemize}
   \end{itemize}
   \vspace{.5cm}
-{\footnotesize\url{https://en.wikipedia.org/wiki/Generalized_linear_model}}
+
+  \begin{tabular}{|l|c|c|}
+    \hline
+    Temperature &  $20^{\circ} C$ & $30^{\circ} C$  \\
+    \hline
+    &
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    &
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning} \\
+    & &
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning}
+    \includegraphics[width = 1cm]{../figures/tanning} \\
+    Number & 5  & 10 \\
+    \hline
+  \end{tabular}
+
+  \vspace{.5cm}
+{\scriptsize \url{https://en.wikipedia.org/wiki/Generalized_linear_model}}
+
 \end{frame}
 
 \begin{frame}[fragile]{Generalized linear models}
@@ -129,9 +211,9 @@
 \[
   g(E(y)) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_k x_k,
 \]
-where $g()$ is the link function that links the mean to the linear predictor.
-The response $y$ is assumed to be independent and to follow a distribution
-from the exponential family
+where $g()$ is the link function that links the mean to the linear predictor
+\item The response $y$ is assumed to be independent and to follow a distribution
+  from the exponential family
 
 \item In R, a GLM is fitted by
 
@@ -188,24 +270,53 @@ Probit model
 \end{frame}
 
 
+\begin{frame}{Probabilities, Odds, Logit}
+  \begin{columns}
+    \begin{column}{.35\textwidth}
+\small
+  Probabilities, Odds and Logits are measures for the tendency that an event
+  occurs
+  \begin{itemize}
+    \item $Odds = \dfrac{p}{1 - p}$\\
+      number of expected events per complementary event
+    \item $logit = \log(Odds)$\\
+      logrithm of odds
+  \end{itemize} 
+    \end{column}
+    \begin{column}{.65\textwidth}
+\includegraphics[scale=.55]{../figures/oddslogit}
+    \end{column}
+  \end{columns}
+  \begin{center}
+\begin{tabular}{|cccccccc|}
+\hline
+$p$       & 0.01    & 0.05 & 0.33 & 0.50 & 0.66 & 0.95 & 0.99 \\
+Odds        & 1/99    & 1/19 & 0.49 & 1 & 1.94 & 19 & 99 \\
+logit $p$ & $-$4.60 & $-$2.94 & $-$0.71 & 0 & 0.66 & 2.94 & 4.60 \\
+\hline
+\end{tabular}
+  \end{center}
+\end{frame}
+
+
 \begin{frame}{Logit model / logistic regression}
   \begin{itemize}
     \item We want to model the probability of $y$ with the logistic
       function
   \begin{equation*}
-    p(y) = \frac{1}{1 + e^{-y}}~~\text{  with } y \sim Binom(n, p)
+    p(y) = \frac{1}{1 + e^{-z}}~~\text{  with } y \sim Binom(n, p)
   \end{equation*}
     \item How do we get the logit model $\log\frac{p}{1 - p} =
       \beta_0 + \beta_1 x$ from that?
   \end{itemize}\pause
       \begin{align*}
         \log\left(\frac{p}{1 - p}\right) = \log(p) - \log(1-p) 
-        & = \log\left(\frac{1}{1 + e^{-y}}\right) - \log\left(1 - \frac{1}{1 + e^{-y}}\right) \\
-        & = \log(1) - \log(1 + e^{-y}) - \log(e^{-y}) + \log(1 + e^{-y}) \\
-        & = -\log(e^{-y})\\
-        & = y := \beta_0 + \beta_1 x
+        & = \log\left(\frac{1}{1 + e^{-z}}\right) - \log\left(1 - \frac{1}{1 + e^{-z}}\right) \\
+        & = \log(1) - \log(1 + e^{-z}) - \log(e^{-z}) + \log(1 + e^{-z}) \\
+        & = -\log(e^{-z})\\
+        & = z := \beta_0 + \beta_1 x
       \end{align*}
-     with \color{iwmorange}{$1 - \frac{1}{1 + e^{-y}} = \frac{e^{-y}}{1 + e^{-y}}$}
+     with \color{iwmorange}{$1 - \frac{1}{1 + e^{-z}} = \frac{e^{-z}}{1 + e^{-z}}$}
 \end{frame}
 
 \begin{frame}{Refresher: Logarithm rules}
@@ -303,13 +414,14 @@ using \texttt{glm()} with $logit(p_{pos}) = \beta_0 + \beta_1x$ where
 
 \begin{frame}{Poisson distribution}
 \begin{itemize}
-  \item The Poisson distribution is popular for modelling the number of
+  \item The Poisson distribution is popular for modeling the number of
     times an event occurs in an interval of time or space
 \[
-  P(k~\text{events in an interval}) = \exp(-\lambda)\frac{\lambda^k}{k!}
+  P(X = k) = \exp(-\lambda)\frac{\lambda^k}{k!}
 \]
 where $k$ is the number of events in a certain interval and $\lambda$ is
 the average number of events per interval
+\item $X \sim Poisson(\lambda)$ with $E(X) = \lambda$ and $Var(X) = \lambda$ 
 \end{itemize}
 \end{frame}
 
@@ -326,7 +438,7 @@ the average number of events per interval
   \begin{lstlisting}
 x <- 0:8
 px <- dpois(x, lambda = 2.5)
-plot(x, px, type = "h")
+plot(px ~ x, type = "h")
 \end{lstlisting}
 \end{column}
 \end{columns}
@@ -335,12 +447,12 @@ plot(x, px, type = "h")
 \begin{frame}{Poisson regression}
 
 Poisson regression is used to model count variables\footnote{Simulated dataset from
-  \url{https://stats.idre.ucla.edu/stat/data/poisson_sim.csv} \citep{UCLAstats}}.\\[2ex]
+  \url{https://stats.idre.ucla.edu/stat/data/poisson_sim.csv} \citep{UCLAstats}}\\[2ex]
 \begin{columns}[c]
-\begin{column}{6cm}
+\begin{column}{.5\textwidth}
   \includegraphics[scale = .65]{../figures/pois_example}
 \end{column}
-\begin{column}{5cm}
+\begin{column}{.5\textwidth}
   Variables
   \begin{itemize}
     \item Number of awards earned by students at one high school
@@ -383,27 +495,6 @@ summary(m1)
 \end{lstlisting}
 \end{frame}
 
-% \begin{frame}[fragile]{Poisson regression}
-%   \begin{lstlisting}
-% plot(num_awards ~ math, dat, type="n", ylim=c(-.5,6.1),
-%   xlab="Math grade", ylab="Number of awards")
-%
-% points(jitter(num_awards, 1) ~ jitter(math, 1),
-%   dat[dat$prog == "General",], pch=16, col="red")
-% points(jitter(num_awards, 1) ~ jitter(math, 1),
-%   dat[dat$prog == "Academic",], pch=16, col="blue")
-% points(jitter(num_awards, 1) ~ jitter(math, 1),
-%   dat[dat$prog == "Vocational",], pch=16, col="green")
-% lines(phat ~ math, dat[dat$prog == "General",], col="red")
-% lines(phat ~ math, dat[dat$prog == "Academic",], col="blue")
-% lines(phat ~ math, dat[dat$prog == "Vocational",], col="green")
-%
-% legend("topleft", c("General", "Academic", "Vocational"),
-%   col=c("red", "blue", "green"), lty=1, pch=16, bty="n")
-% \end{lstlisting}
-% \end{frame}
-
-
 \begin{frame}{Poisson regression}
 \begin{itemize}
   \item The results show that the model fits the data with $G^2(196) =
@@ -419,10 +510,10 @@ summary(m1)
 
 \begin{frame}{Predictions of the poisson regression}
 \begin{columns}[c]
-\begin{column}{6cm}
+\begin{column}{.5\textwidth}
   \includegraphics[scale=.7]{../figures/pois_pre}
 \end{column}
-\begin{column}{5cm}
+\begin{column}{.5\textwidth}
   Variables
   \begin{itemize}
     \item Number of awards earned by students at one high school
@@ -454,8 +545,10 @@ summary(m1)
 \end{frame}
 
 \begin{frame}[fragile]{Overdispersion}
-In R this is done by changing the \texttt{family} argument to
-  \texttt{quasibinomial} or \texttt{quasipoisson}.
+  \begin{itemize}
+    \item In R this is done by changing the \texttt{family} argument to
+      \texttt{quasibinomial} or \texttt{quasipoisson}.
+  \end{itemize}
   \vfill
 \begin{lstlisting}
 # Fit poisson regression
@@ -482,10 +575,10 @@ summary(m2)
 
 
 \begin{frame}[fragile]{}
-  \begin{block}{Exercise}
+  \begin{block}{Exercise\footnote{Inspired by \url{https://rstudio-pubs-static.s3.amazonaws.com/1047952_9306ae04c1de4543812af559d777dd72.html}}}
     \begin{itemize}
       \item Fit a regression model to the \texttt{Affairs} data set from the
-        \texttt{AER} package in R\footnote{Inspired by \url{https://rstudio-pubs-static.s3.amazonaws.com/1047952_9306ae04c1de4543812af559d777dd72.html}}
+        \texttt{AER} package in R
       \item The variable \texttt{affairs} is the number of extramarital affairs
         in the past year and is our response variable
       \item Include the variables \texttt{gender}, \texttt{age},

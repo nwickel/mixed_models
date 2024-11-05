@@ -35,7 +35,7 @@ count data.
     p_{pos} = \frac{1}{1 +
       \exp(-\frac{\displaystyle x - c}{\displaystyle a})}
   \]
-  using `glm()´ with $logit(p_{pos}) = \beta_0 + \beta_1x$ where $a = 1/\beta_1$
+  using `glm()` with $logit(p_{pos}) = \beta_0 + \beta_1x$ where $a = 1/\beta_1$
   and $c = -\beta_0/\beta_1$.
 
 * Calculate the intensity $x$ for which $p_{pos} = 0.5$ (Point of Subjective
