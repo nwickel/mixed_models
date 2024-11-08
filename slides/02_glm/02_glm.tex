@@ -280,7 +280,7 @@ Probit model
     \item $Odds = \dfrac{p}{1 - p}$\\
       number of expected events per complementary event
     \item $logit = \log(Odds)$\\
-      logrithm of odds
+      natural logarithm of odds
   \end{itemize} 
     \end{column}
     \begin{column}{.65\textwidth}
@@ -429,12 +429,12 @@ the average number of events per interval
   Poisson distribution with probability of events for $\lambda = 2.5$\\[2ex]
 
 \begin{columns}[c]
-\begin{column}{.6\textwidth}
+\begin{column}{.5\textwidth}
   \begin{center}
     \includegraphics[scale=.7]{../figures/pois_dist}
   \end{center}
 \end{column}
-\begin{column}{.4\textwidth}
+\begin{column}{.5\textwidth}
   \begin{lstlisting}
 x <- 0:8
 px <- dpois(x, lambda = 2.5)
@@ -549,6 +549,9 @@ summary(m1)
     \item In R this is done by changing the \texttt{family} argument to
       \texttt{quasibinomial} or \texttt{quasipoisson}.
   \end{itemize}
+
+%small change
+
   \vfill
 \begin{lstlisting}
 # Fit poisson regression
