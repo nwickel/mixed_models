@@ -13,3 +13,7 @@
 * Use `|>` not `%>%`; compare tidyverse style guide:
   https://style.tidyverse.org/
 
+# TODOs
+
+* Add slide with Binomial distribution
+
