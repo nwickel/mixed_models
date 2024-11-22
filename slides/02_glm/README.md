@@ -1,4 +1,4 @@
-# R and Workflow
+# R and workflow
 
 * Install new R version (there is a new one each Halloween)
 
