@@ -54,7 +54,7 @@ datm <- aggregate(cbind(pre, post) ~ method, data = dat, FUN = mean)
 dotchart(as.matrix(datm[, 2:3]), xlab = "Score", ylab = "Method")
 ```
 
-* Fit the following models to data
+* Fit the following models to the data
 
   \begin{align}
     y_{ij} &= \beta_0 + \beta_1 \cdot x_{ij} + \varepsilon_{ij}\\

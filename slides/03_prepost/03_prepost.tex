@@ -96,27 +96,6 @@ Challenges
 \item Predictors can change over time
 \item In cross over designs: carry over effects
 \end{itemize}
-\end{frame}
-
-\begin{frame}{Data schema}
-\vfill
-\begin{center}
-\begin{tabular}{cccccc}
-\hline
-Person & Time      & Observation & \multicolumn{3}{c}{Covariates}\\\hline
-1      & 1         & $y_{11}$    & $x_{111}$   & \dots & $x_{11p}$  \\
-1      & 2         & $y_{12}$    & $x_{121}$   & \dots & $x_{12p}$  \\
-.      & .         & .           & .           & \dots & .          \\
-1      & $n_1$     & $y_{1n_1}$  & $x_{1n_11}$ & \dots & $x_{1n_1p}$\\
-.      & .         & .           & .           & \dots & .          \\
-.      & .         & .           & .           & \dots & .          \\
-$N$    & 1         & $y_{N1}$    & $x_{N11}$   & \dots & $x_{N1p}$  \\
-$N$    & 2         & $y_{N2}$    & $x_{N21}$   & \dots & $x_{N2p}$  \\
-.      & .         & .           & .           & \dots & .          \\
-$N$    & $n_N$     & $y_{Nn_N}$  & $x_{Nn_N1}$ & \dots & $x_{Nn_Np}$\\
-\hline
-\end{tabular}
-\end{center}
 \vfill
 \pause
 Today we will consider the simplest case with only two time points: pre and post
@@ -129,7 +108,7 @@ score
 
 \section[$t$ test]{$t$ test}
 
-\begin{frame}{$t$ test for dependent samples (comparing two time points)}
+\begin{frame}[<+->]{$t$ test for dependent samples (comparing two time points)}
 \begin{itemize}
   \item Straightforward analysis for two time points $n = 2$
   \item Consider for each person the change score $d_i = y_{i2} - y_{i1}$
@@ -148,7 +127,7 @@ score
   \item Hypothesis:\\
         Is there change between the first and second time point ($H_0\colon \beta_0 = 0$)?
   \item Which effects are not considered by this?
-    \pause
+    %\pause
   \item It is unclear if change is due to the treatment or just appeared
     over time
 \end{itemize}
@@ -172,10 +151,10 @@ score
 \begin{frame}[fragile]{$t$ test for comparing two time points}
 \begin{lstlisting}
 # simulate two dependent time points
-cg <- MASS::mvrnorm(n = 50, mu = c(10,10),
-                    Sigma = matrix(c(1,.9,.9,1), 2))
-tg <- MASS::mvrnorm(n = 50, mu = c(10,15),
-                    Sigma = matrix(c(1,.9,.9,1), 2))
+cg <- MASS::mvrnorm(n = 50, mu = c(10, 10),
+                    Sigma = matrix(c(1, .9, .9, 1), nrow = 2))
+tg <- MASS::mvrnorm(n = 50, mu = c(10, 15),
+                    Sigma = matrix(c(1, .9, .9, 1), nrow = 2))
 
 sim <- as.data.frame(rbind(cg, tg))
 names(sim) <- c("t1", "t2")
@@ -240,7 +219,7 @@ abline(coef(lm2), 1)
 \end{itemize}
 \end{frame}
 
-\begin{frame}{$t$ test of follow-up score of two groups}
+\begin{frame}[<+->]{$t$ test of follow-up score of two groups}
 \begin{itemize}
   \item In regression notation with $x_i = 1$, if $i$th person is part of
     the treatment group, and else $0$:
@@ -293,7 +272,7 @@ abline(h = cumsum(coef(lm3)))
 
 \section{Change score analysis}
 
-\begin{frame}{Change score analysis}
+\begin{frame}[<+->]{Change score analysis}
 \begin{itemize}
   \item Regression model
     \begin{align*}
@@ -360,7 +339,7 @@ abline(coef(lm4)[1] + coef(lm4)[2], 1)
 
 \section[ANCOVA]{Analysis of Covariance}
 
-\begin{frame}{Analysis of Covariance (ANCOVA)}
+\begin{frame}[<+->]{Analysis of Covariance (ANCOVA)}
 \begin{itemize}
   \item Regression model
     \[
@@ -452,7 +431,7 @@ abline(coef(lm5)[1] + coef(lm5)[3], coef(lm5)[2])
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Different slopes for groups}
+\begin{frame}[<+->]{Different slopes for groups}
 \begin{itemize}
   \item Regression model
     \[
@@ -566,7 +545,7 @@ anova(lm4, lm5, lm6)
   \end{tabular}
 \begin{align*}
          y_{i2} &= \beta_0 + y_{i1} + \beta_1 \, x_i + \varepsilon_i \\
-  \hat{\beta}_1 &= 10.8 \; (2.3, 19.4)
+  \hat{\beta}_1 &= 10.8, 0.95\text{-CI: } (2.3, 19.4)
 \end{align*}
 \end{column}
 \end{columns}
@@ -592,7 +571,7 @@ anova(lm4, lm5, lm6)
 \begin{align*}
          y_{i2} &= \beta_0 + \beta_1 \, y_{i1} + \beta_2 \, x_i +
                     \varepsilon_i \\
-  \hat{\beta}_2 &= 12.7 \; (4.1, 21.3)
+  \hat{\beta}_2 &= 12.7, 0.95\text{-CI: } (4.1, 21.3)
 \end{align*}
 \end{column}
 \end{columns}
@@ -634,7 +613,7 @@ abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}{Summary}
+\begin{frame}[<+->]{Summary}
 \begin{itemize}
   \item We considered the basic case when several groups are observed at
     two time points (baseline and follow-up)
@@ -653,32 +632,12 @@ abline(coef(m3)[1] + coef(m3)[3], coef(m3)[2])
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{``Adjusted'' time effects}
-  \begin{columns}
-    \begin{column}{.4\textwidth}
-      \begin{itemize}
-        \item Often people prefer the view of comparing the time effects within
-          the groups instead of the adjusted follow-up scores
-        \item The ANCOVA model will give you these time effects within the
-          groups with a little reparametrization
-      \end{itemize}
-    \end{column}
-    \begin{column}{.6\textwidth}
-      \includegraphics[height=5.5cm]{../figures/acu-timeeffects}
-    \end{column}
-  \end{columns}
-\begin{lstlisting}
-m5 <- lm(post - pre ~ scale(pre) + grp, data = dat)
-predict(m5, data.frame(pre = mean(dat$pre), grp = c("plac", "acu"))))
-\end{lstlisting}
-\end{frame}
-
-\appendix
-
 \section{Linear mixed-effects model}
 
-\begin{frame}{Linear mixed-effects model}
+\begin{frame}[<+->]{Linear mixed-effects model}
 \begin{itemize}
+  \item Often people prefer the view of comparing the time effects within the
+    groups instead of the adjusted follow-up scores
   \item Regression notation with indicator variable for time ($t_{i1} = 0$,
     $t_{i2} = 1$) and\\ group ($x_i$)
     \[
@@ -723,7 +682,7 @@ predict(m5, data.frame(pre = mean(dat$pre), grp = c("plac", "acu"))))
 \end{center}
 \end{frame}
 
-\begin{frame}{Linear mixed-effects model}
+\begin{frame}[<+->]{Linear mixed-effects model}
 \begin{itemize}
   \item For the two groups with $j = 1, 2$, we get
     \begin{align*}
@@ -745,9 +704,8 @@ predict(m5, data.frame(pre = mean(dat$pre), grp = c("plac", "acu"))))
     \[
         \varepsilon_i = \varepsilon_{i2} - \varepsilon_{i1} \sim N(0, \sigma_d^2 = 2 \sigma^2)
     \]
+  \item[$\to$] LMM for two time points is equivalent to change score analysis!
 \end{itemize}
-  \vspace{-.3cm}
-  $\to$ LMM for two time points is equivalent to change score analysis!
 \end{frame}
 
 \begin{frame}[fragile]{Example: Acupuncture for shoulder pain}
@@ -769,6 +727,24 @@ sigma(m1)^2
 \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]{``Adjusted'' time effects}
+  \begin{columns}
+    \begin{column}{.4\textwidth}
+      \begin{itemize}
+        \item The ANCOVA model will give you adjusted time effects within the
+          groups with a little reparametrization
+      \end{itemize}
+    \end{column}
+    \begin{column}{.6\textwidth}
+      \includegraphics[height=5.5cm]{../figures/acu-timeeffects}
+    \end{column}
+  \end{columns}
+\begin{lstlisting}
+m5 <- lm(post - pre ~ scale(pre) + grp, data = dat)
+predict(m5, data.frame(pre = mean(dat$pre), grp = c("plac", "acu"))))
+\end{lstlisting}
+\end{frame}
+
 
 % \begin{frame}[fragile]{}
 %   \begin{lstlisting}
@@ -785,6 +761,8 @@ sigma(m1)^2
 %     \end{itemize}
 %   \end{block}
 % \end{frame}
+
+\appendix
 
 %\begin{frame}[allowframebreaks]{References}
 \begin{frame}{References}
