@@ -473,7 +473,8 @@ with
 \end{frame}
 
 \begin{frame}{Implied marginal covariance matrix}
-For the three time points $t_{ij} = 0, 1, 2$,
+  \begin{itemize}
+    \item For the three time points $t_{ij} = 0, 1, 2$,
 \[
   \mat{Z}_i =
     \begin{pmatrix}
@@ -499,24 +500,106 @@ we get
   \end{pmatrix}
    + \sigma^2 \mat{I}_{n_i}
 \end{align*}
-hence, a more flexible covariance structure when compared to compound
+\item Hence, a more flexible covariance structure when compared to compound
   symmetry
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Fitting mixed-effects models}
 \begin{lstlisting}
 # random intercept model
-lme1 <- lmer(hamd ~ week + (1 | id), dat, REML=FALSE)
+lme1 <- lmer(hamd ~ week + (1 | id), dat, REML = FALSE)
 summary(lme1)
 
 # random slope model
-lme2 <- lmer(hamd ~ week + (week | id), dat, REML=FALSE)
+lme2 <- lmer(hamd ~ week + (week | id), dat, REML = FALSE)
 summary(lme2)
 
 # model comparison
 anova(lme1, lme2)
 \end{lstlisting}
 \end{frame}
+ 
+\begin{frame}{Wald test}
+  \begin{itemize}
+    \item For the fixed effects, based on the covariance matrix
+\[
+  Var(\gvect{\hat\beta}) = \left( \sum_{i = 1}^N
+    \mat{X}'_i \gmat{\Sigma}_i^{-1} \mat{X}_i \right)^{-1}
+\]
+we can construct Wald tests analogously to the regular linear model with
+  approximately normally or $t$ distributed test statistics
+
+    \item First, $\gmat{\Sigma}_i$ must be estimated; hence, the quality of the
+      approximation strongly depends on the quality of the estimation of the
+      variance and covariance components
+
+    \item Many authors principally discourage using Wald tests for random
+      effects \citep[e.\,g.,][p.~52]{HedekerGibbons06}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Likelihood ratio test}
+  \begin{itemize}
+    \item Hypotheses about fixed and random effects can be tested with
+      likelihood ratio tests
+    \item When $M_0$ is a model that results from a more general model $M_1$ by
+      parameter restrictions, then the test statistic
+\[
+  G^2 = 2\log \frac{L(M_1)}{L(M_0)}
+      = 2\,(\log L(M_1) - \log L(M_0))
+\]
+  is approximately $\chi^2$ distributed with $(\text{Number of parameters
+  in } M_1) - (\text{Number of parameters in } M_0)$ degrees of
+  freedom
+    \item However, for fixed effects this test can result in progressive test
+      decisions for small samples (H$_0$ is rejected too often)
+    \item For random effects and hypotheses of the form H$_0$:
+      $\sigma^2_\upsilon = 0$, the test is rather conservative
+  \end{itemize}
+  \nocite{BrykRaudenbush2002}
+\end{frame}
+ 
+ 
+% \begin{frame}{Parametrisches Bootstrapping}
+% Zur Absicherung der Ergebnisse des Likelihoodverhältnistests bietet sich ein
+% parametrisches Bootstrapverfahren an:\\[2ex]
+% 
+% \begin{itemize}
+% \item Anpassen des allgemeinen ($M_1$) und restringierten Modells ($M_0$) an
+% die Daten. Berechnung der $G^2$-Statistik.
+% 
+% \item Simulation von $B$ Bootstrap-Stichproben $\vect{x}^{*B}$ auf Basis
+% der stochastischen Komponente von $M_0$: Für diese Stichproben gilt H$_0$.
+% 
+% \item Für jede Bootstrap-Stichprobe: Anpassen von $M_1$ und $M_0$ und
+% Berechnung einer Bootstrap-Replikation von $G^2$.
+% 
+% \item Bestimmung der Signifikanz von $G^2$ anhand der empirischen
+% Stichprobenverteilung der Bootstrap-Replikationen.
+% \end{itemize}
+% \end{frame}
+% 
+% 
+% \subsection{Modell mit zeitlich variierenden Kovariablen}
+% 
+% 
+% \begin{frame}{Modell mit zeitlich variierenden Kovariablen}
+% \begin{align*}
+% \text{(Ebene 1)}  \quad y_{ij} &= b_{0i} + b_{1i}\,t_{ij} + b_{2i}\,x_{ij}
+%                                   + \varepsilon_{ij}\\
+% \text{(Ebene 2)}  \quad b_{0i} &= \beta_0 + \beta_3 \, g_i + \upsilon_{0i}\\
+%                   \quad b_{1i} &= \beta_1 + \upsilon_{1i}\\
+%                   \quad b_{2i} &= \beta_2\\
+% \text{(2) in (1)} \quad y_{ij} &= \beta_0 + \beta_1\,t_{ij} +
+%     \beta_2\,x_{ij} + \beta_3\,g_i + \upsilon_{0i} +
+%     \upsilon_{1i}\, t_{ij}  + \varepsilon_{ij}
+% \end{align*}
+% Zeitlich variierende Kovariablen gehen als Ebene-1-Effekte in das Modell ein.
+% Variablen, die über die Zeit konstant bleiben, dagegen als Ebene-2-Effekte, da
+% sie nur zwischen Personen variieren.
+% \end{frame}
 
 \begin{frame}[<+->]{Summary}
   \begin{itemize}
