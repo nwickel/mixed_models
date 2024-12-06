@@ -138,6 +138,34 @@ $N$    & $n_N$     & $y_{Nn_N}$  & $x_{Nn_N1}$ & \dots & $x_{Nn_Np}$\\
 \end{columns}
 \end{frame}
 
+\begin{frame}{Bivariate data}
+  \begin{itemize}
+    \item Consider two normal random variables $X$ and $Y$ with a correlation
+      $\rho_{xy}$
+    \item We then have a bivariate normal distribution with mean vector
+      $\boldsymbol \mu$ and covariance matrix $\boldsymbol \Sigma$
+  \begin{equation*}
+  \begin{pmatrix} X\\ Y \end{pmatrix}  \sim
+    N \left(\boldsymbol\mu = \begin{pmatrix} \mu_x\\ \mu_y \end{pmatrix}, \,
+      \gmat{\Sigma} =
+      \begin{pmatrix}
+        \sigma^2_{x} & \sigma_{xy} \\
+        \sigma_{xy} & \sigma^2_{y} \\
+      \end{pmatrix} \right)
+\end{equation*}
+      where $\sigma_{xy} = \rho_{xy}\cdot\sigma_{x}\cdot\sigma_{y}$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Bivariate data}
+  \begin{columns}
+    \begin{column}{1.2\textwidth}
+      \only<1>{\includegraphics[scale=.7]{../figures/bivariate-normal_00}}
+      \only<2>{\includegraphics[scale=.7]{../figures/bivariate-normal_08}}
+      \only<3>{\includegraphics[scale=.7]{../figures/bivariate-normal_0-8}}
+    \end{column}
+  \end{columns}
+\end{frame}
 
 \begin{frame}{Mixed-effects models}
   \begin{itemize}
@@ -310,7 +338,7 @@ and the stochastical model
 \begin{align*}
   y_i & = \beta_0 + \beta_1 \cdot x_{i1} + \ldots + \beta_p \cdot x_{ip} +
         \varepsilon_i \\
-  \varepsilon_i & \sim N (0, \sigma^2)~\text{i.i.d.}
+  \varepsilon_i & \overset{iid}{\sim} N (0, \sigma^2)
 \end{align*}
 
 \vspace{-.4cm}
@@ -362,10 +390,9 @@ with fixed effects $\gvect{\beta}$, random effects
 $\gvect{\upsilon}_i$, and the design matrices $\mat{X}_i$ and $\mat{Z}_i$
   and the assumptions
 \[
-  \gvect{\upsilon}_i \sim N(\vect{0}, \, \gmat{\Sigma}_\upsilon)
-    \text{ i.i.d.}, \qquad
-  \gvect{\varepsilon}_i \sim N(\vect{0}, \, \sigma^2 \mat{I}_{n_i})
-    \text{ i.i.d.}
+  \gvect{\upsilon}_i \overset{iid}{\sim}N(\vect{0}, \, \gmat{\Sigma}_\upsilon),
+      \qquad
+  \gvect{\varepsilon}_i \overset{iid}{\sim} N(\vect{0}, \, \sigma^2 \mat{I}_{n_i})
 \]
 \item This implies for the marginal covariance matrix
 \[
@@ -430,22 +457,20 @@ $\gvect{\upsilon}_i$, and the design matrices $\mat{X}_i$ and $\mat{Z}_i$
 \begin{itemize}
   \item Random intercept model
 \[y_{ij} = \beta_0 + \beta_1 x_{ij} + \upsilon_{0i} + \varepsilon_i\]
-with $\upsilon_{0i} \sim N(0, \sigma^2_{\upsilon})$ i.i.d.,
-$\varepsilon_{ij} \sim N(0, \sigma^2)$ i.i.d., $\upsilon_{0i}$ and
+with $\upsilon_{0i} \overset{iid}{\sim} N(0, \sigma^2_{\upsilon})$,
+$\varepsilon_{ij} \overset{iid}{\sim} N(0, \sigma^2)$, $\upsilon_{0i}$ and
 $\varepsilon_{ij}$ i.i.d.\\[2ex]
   \item Random slope model
 \[y_{ij} = \beta_0 + \beta_1 x_{ij} + \upsilon_{0i} + \upsilon_{1i} x_{ij} + \varepsilon_i\]
 with
 \begin{align*}
-  \begin{pmatrix} \upsilon_{0i}\\ \upsilon_{1i} \end{pmatrix} &\sim
+  \begin{pmatrix} \upsilon_{0i}\\ \upsilon_{1i} \end{pmatrix} & \overset{iid}{\sim}
     N \left(\begin{pmatrix} 0\\ 0 \end{pmatrix}, \, \gmat{\Sigma}_\upsilon =
       \begin{pmatrix}
         \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0 \upsilon_1} \\
         \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_1} \\
-      \end{pmatrix} \right)
-    \text{ i.i.d.} \\
-  \gvect{\varepsilon}_i &\sim N(\vect{0}, \, \sigma^2 \mat{I}_{n_i})
-    \text{ i.i.d.}
+      \end{pmatrix} \right) \\
+  \gvect{\varepsilon}_i & \overset{iid}{\sim} N(\vect{0}, \, \sigma^2 \mat{I}_{n_i})
 \end{align*}
 \end{itemize}
 \end{frame}
