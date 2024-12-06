@@ -80,10 +80,317 @@
 \titlepage
 \end{frame}
 
-% \begin{frame}{Outline}
-% \tableofcontents
-% \end{frame}
+\begin{frame}{Polynomial regression}
+  \begin{itemize}
+    \item A lot of times the assumption of a linear time trend is too
+      simple
+    \item Change is not happening unbraked linearly but flattens out
+    \item Quadratic regression model
+\begin{align*}
+  y_{ij} &= b_{0i} + b_{1i}\,t_{ij} + b_{2i}\,t^2_{ij} + \varepsilon_{ij}\\
+         &= b_{0i} + (b_{1i} + b_{2i}\,t_{ij}) t_{ij}  + \varepsilon_{ij}
+\end{align*}
+    \item The linear change depends on time $t$
+\[
+  \frac{\partial y}{\partial t} = b_{1i} + 2b_{2i} \, t
+\]
+    \item The intercept $t = -b_{1i}/(2 b_{2i})$ is the point in time when a
+      positive (negative) trend becomes negative (postive)
+  \end{itemize}
+\end{frame}
 
+\begin{frame}{Quadratic time trends}
+\begin{center}
+\includegraphics[width=9cm]{../figures/quad}
+\end{center}
+\end{frame}
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Depression and Imipramin}
+
+\begin{frame}{Depression and Imipramin \citep{ReisbyGram77}}
+  \begin{itemize}
+    \item \citet{ReisbyGram77} studied the effect of Imipramin on 66
+      inpatients treated for depression
+    \item Depression was measured with the Hamilton depression rating scale
+      (HDRS)
+    \item Additionally, the concentration of Imipramin and its metabolite
+      Desipramin was measured in their blood plasma
+    \item Patients were classified into endogenous and non-endogenous
+      depressed
+    \item Depression was measured weekly for 6 time points; the effect of
+      the antidepressant was observed starting at week 2 for four weeks
+  \end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}{Descriptive statistics}
+\begin{columns}
+\begin{column}{.55\textwidth}
+  \includegraphics[scale=.8]{../figures/hdrs-box}
+\end{column}
+\begin{column}{.6\textwidth}
+  HDRS score\\[1ex]
+  {\footnotesize
+\begin{tabular}{rrrrrrr}
+  \hline
+  $t$ & W0 & W1 & W2 & W3 & W4 & W5 \\ 
+  \hline
+  $M$  & 23.44 & 21.84 & 18.31 & 16.42 & 13.62 & 11.95 \\ 
+  $SD$ &  4.53 & 4.70  & 5.49  & 6.42  & 6.97  & 7.22 \\ 
+  $n$  & 61    & 63    & 65    & 65    & 63    & 58    \\ 
+  \hline
+\end{tabular}
+  }
+
+  \vspace{.5cm}
+  Empirical correlation matrix of HDRS score\\[1ex]
+  {\footnotesize
+\begin{tabular}{rrrrrrr}
+  \hline
+   & W0 & W1 & W2 & W3 & W4 & W5 \\ 
+  \hline
+  Week 0 &   1 & .49 & .41 & .33 & .23 & .18 \\ 
+  Week 1 & .49 &   1 & .49 & .41 & .31 & .22 \\ 
+  Week 2 & .41 & .49 &   1 & .74 & .67 & .46 \\ 
+  Week 3 & .33 & .41 & .74 &   1 & .82 & .57 \\ 
+  Week 4 & .23 & .31 & .67 & .82 &   1 & .65 \\ 
+  Week 5 & .18 & .22 & .46 & .57 & .65 &   1 \\ 
+  \hline
+\end{tabular}
+  }
+
+  \vspace{1cm}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{Model with quadratic trend}
+  \begin{itemize}
+    \item Model with quadratic individual and group trend
+      \[
+ y_{ij} = \beta_0 + \beta_1\,t_{ij} + \beta_2\,t^2_{ij} + \upsilon_{0i} +
+      \upsilon_1\,t_{ij} + \upsilon_2\,t^2_{ij} + \varepsilon_{ij}
+      \]
+with
+\begin{align*}
+  \begin{pmatrix}
+    \upsilon_{0i}\\
+    \upsilon_{1i}\\
+    \upsilon_{2i}
+  \end{pmatrix} &\sim
+  N \left(\begin{pmatrix}
+      0\\ 0\\ 0
+  \end{pmatrix}, \,
+  \begin{pmatrix}
+    \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0 \upsilon_1} & \sigma_{\upsilon_0 \upsilon_2}\\
+    \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_1} & \sigma_{\upsilon_1 \upsilon_2}\\
+    \sigma_{\upsilon_0 \upsilon_2} & \sigma_{\upsilon_1 \upsilon_2} & \sigma^2_{\upsilon_2}\\
+      \end{pmatrix} \right)
+    \text{ i.i.d.} \\
+  \gvect{\varepsilon}_i &\sim N(\vect{0}, \, \sigma^2 \mat{I}_{n_i})
+    \text{ i.i.d.}
+\end{align*}
+  \end{itemize}
+\vspace{-.5cm}
+\end{frame}
+
+\begin{frame}[fragile]{Depression and Imipramin}
+  \begin{lstlisting}
+dat      <- read.table("data/reisby.dat", header = TRUE)
+dat$id   <- factor(dat$id)
+dat$diag <- factor(dat$diag, levels = c("nonen", "endog"))
+dat      <- na.omit(dat)     # drop missing values
+
+# random intercept model
+lme1 <- lmer(hamd ~ week + (1 | id), dat, REML = FALSE)
+
+# random slope model
+lme2 <- lmer(hamd ~ week + (week | id), dat, REML = FALSE)
+
+# model with quadratic time trend
+lme3 <- lmer(hamd ~ week + I(week^2) + (week + I(week^2) | id), dat,
+  REML = FALSE)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{ML estimates of parameters}
+\begin{lstlisting}
+...
+Random effects:
+ Groups   Name        Variance Std.Dev. Corr       
+ id       (Intercept) 10.4402  3.2311              
+          week         6.6381  2.5764   -0.11      
+          I(week^2)    0.1937  0.4402   -0.08 -0.83
+ Residual             10.5160  3.2428              
+Number of obs: 375, groups:  id, 66
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept) 23.76025    0.55206  43.039
+week        -2.63258    0.47900  -5.496
+I(week^2)    0.05148    0.08835   0.583
+...
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Model predictions}
+\begin{columns}
+\begin{column}{6cm}
+\includegraphics[width=6cm]{../figures/hdrs-quad}
+\end{column}
+%
+\begin{column}{5cm}
+  \begin{itemize}
+    \item Averaged over persons an approximately linear trend is obtained,
+      $\hat{\beta}_1 = -2.63$, $\hat{\beta}_2 = 0.05$
+    \item Some of the predicted individual trends are strongly nonlinear
+  \end{itemize}
+\end{column}
+\end{columns}
+  \begin{itemize}
+    \item Test against a model without individual quadratic trends\\[2ex]
+
+H$_0$: $\sigma^2_{\upsilon_2} = \sigma_{\upsilon_0 \upsilon_2} =
+\sigma_{\upsilon_1 \upsilon_2} = 0$ \qquad
+$G^2(3) = 10.98$, $p = .012$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Model predictions}
+  \begin{lstlisting}
+# model without random quadratic time effect 
+lme3.0 <- lmer(hamd ~ week + I(week^2) + (week | id), dat,
+  REML = FALSE)
+
+# model without fixed quadratic time effect 
+lme3.1 <- lmer(hamd ~ week + (week + I(week^2) | id), dat,
+  REML = FALSE)
+
+# LRTs
+anova(lme3.0, lme3)
+anova(lme3.1, lme3)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Visualization of model predictions}
+  \begin{columns}
+    \begin{column}{8cm}
+      \includegraphics[scale=.5]{../figures/hdrs-pred}
+    \end{column}
+    \begin{column}{6cm}
+      \begin{lstlisting}
+xyplot(
+  hamd + predict(lme3)
+     ~ week | id,
+  data = dat,
+  type = c("p", "l", "g"),
+  pch = 16,
+  distribute.type = TRUE,
+  ylab = "HDRS score",
+  xlab = "Time (Week)")
+      \end{lstlisting}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Implied marginal covariance matrix}
+Predicted
+\begin{align*}
+  \mat{Z}_i \gmat{\hat\Sigma}_\upsilon \mat{Z}'_i +
+    \hat\sigma^2 \mat{I}_{n_i} &= 
+  \begin{pmatrix}
+    20.96 & 9.41 & 8.16 & 6.68 & 4.98 & 3.06 \\ 
+    9.41 & 23.86 & 15.57 & 16.08 & 14.88 & 11.97 \\ 
+    8.16 & 15.57 & 31.07 & 23.11 & 23.26 & 20.98 \\ 
+    6.68 & 16.08 & 23.11 & 38.31 & 30.12 & 30.09 \\ 
+    4.98 & 14.88 & 23.26 & 30.12 & 45.98 & 39.29 \\ 
+    3.06 & 11.97 & 20.98 & 30.09 & 39.29 & 59.11
+  \end{pmatrix}\\
+  %
+  \intertext{\color{black}Observed}
+  %
+  \widehat{Cov}(\vect{y}_i) &=
+  \begin{pmatrix}
+    20.55 & 10.11 & 10.14 & 10.09 & 7.19 & 6.28 \\ 
+    10.11 & 22.07 & 12.28 & 12.55 & 10.26 & 7.72 \\ 
+    10.14 & 12.28 & 30.09 & 25.13 & 24.63 & 18.38 \\ 
+    10.09 & 12.55 & 25.13 & 41.15 & 37.34 & 23.99 \\ 
+    7.19 & 10.26 & 24.63 & 37.34 & 48.59 & 30.51 \\ 
+    6.28 & 7.72 & 18.38 & 23.99 & 30.51 & 52.12 \\ 
+  \end{pmatrix}\\
+\end{align*}
+% \vspace{-1cm}
+% \begin{lstlisting}
+% getVarCov(lme3, type="marginal")  # predicted cov. matrix
+% 
+% var.d <- crossprod(getME(lme3,"Lambdat"))
+% Zt <- getME(lme3, "Zt")
+% vr <- sigma(lme3)^2
+% 
+% var.b <- vr*(t(Zt) %*% var.d %*% Zt)
+% sI <- vr * Diagonal(nrow(dat2))
+% var.y <- var.b + sI
+% 
+% \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}{Centering variables}
+  \begin{itemize}
+    \item If multiples of the time variables ($t$, $t^2$, $t^3$, etc.) are
+      entered into the regression equation, multicollinearity can become a
+      problem
+    \item For example, $t = 0, 1, 2, 3$ and $t^2 = 0, 1, 4, 9$ correlate almost
+      perfectly
+    \item By centering the variables, this problem can be diminished: $(t -
+      \bar{t}) = -1.5, -0.5, 0.5,  1.5$ and $(t - \bar{t})^2 = 2.25, 0.25, 0.25,
+      2.25$ are uncorrelated
+    \item By centering variables the interpretation of the intercept in a linear
+      model changes:
+  \begin{itemize}
+    \item Uncentered intercepts represent the difference to the first time 
+    point ($t = 0$)
+    \item Centered intercepts represent the difference after half of the 
+    time
+  \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Higher-order polynomials}
+  \begin{itemize}
+    \item Nonlinear time trends can be modelled in a flexibel and parsimonious
+      way by using higher-order polynomials
+    \item For example, saddle or reversal points in a time trend can be
+      described
+    \item Polynomials have the advantage that the regression model stays linear
+      in its parameters
+    \item They have the disadvantage that extrapolated values can quickly be
+      outside of a range that can still be interpreted in a meaningful way
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Cubic time trends}
+\begin{center}
+\includegraphics[width=9cm]{../figures/cubic}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Polynomial regression: Extrapolation}
+\begin{center}
+\includegraphics[width=9cm]{../figures/cubic-gone-bad}
+\end{center}
+\end{frame}
+
+\section{Vocal charades}
 
 \begin{frame}{Example: Growth curve model}
 This example from linguistics is taken from \citet{Winter2016}\\[2ex]
@@ -115,8 +422,9 @@ This example from linguistics is taken from \citet{Winter2016}\\[2ex]
 \end{frame}
 
 \begin{frame}[fragile]{Example: Growth curve model}
-100 observations of three variables (simulated data set)\\[2ex]
-  \begin{tabular}{lp{8cm}}
+  \begin{itemize}
+    \item 100 observations of three variables (simulated data set)\\[2ex]
+  \begin{tabular}{lp{10cm}}
       Variable & Description \\
     \hline
       \texttt{dyad} & different pairs of subjects playing the vocal charades game\\
@@ -126,10 +434,11 @@ This example from linguistics is taken from \citet{Winter2016}\\[2ex]
   \end{tabular}
 
   \vspace{1cm}
-  For better interpretation, \texttt{t} will be centered
+\item For better interpretation, \texttt{t} will be centered
   \begin{lstlisting}
 dat$t_c <- dat$t - mean(dat$t)
   \end{lstlisting}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Visualization of data}
@@ -151,7 +460,8 @@ xyplot(
 \end{frame}
 
 \begin{frame}[fragile]{Mixed-effects model with quadratic trend}
-  We will now consider a model with uncorrelated random effects
+  \begin{itemize}
+    \item We will now consider a model with uncorrelated random effects
   \[
     y_{ij} = \beta_0 + \beta_1 t_{ij} + \beta_2 t^2_{ij} + \upsilon_{0i} +
     \upsilon_{1i} t_{ij} + \upsilon_{2i} t^2_{ij} + \varepsilon_{ij}
@@ -176,12 +486,13 @@ with
     \text{ i.i.d.}
 \end{align*}
 %\vspace{1cm}
-  This model is fitted by
+  \item This model is fitted by
 \begin{lstlisting}
 gcm1 <- lmer(iconicity ~ t_c + I(t_c^2) +
   (1 | dyad) + (0 + t_c | dyad) + (0 + I(t_c^2) | dyad),
-  data=dat, REML=F)
+  data = dat, REML = F)
 \end{lstlisting}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Visualization of model predictions}
@@ -239,7 +550,7 @@ I(t_c^2)    -0.22558    0.02078  -10.86
 
 \begin{frame}{Plots from the article}
 \begin{center}
-\includegraphics[scale=.66]{../figures/icon-both}
+\includegraphics[scale=.8]{../figures/icon-both}
 \end{center}
 \end{frame}
 
