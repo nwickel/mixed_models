@@ -1,9 +1,7 @@
 \documentclass[aspectratio=169]{beamer}
-% \usepackage{pgfpages}
-% \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
+
 \usepackage{tikz}
 \usetikzlibrary{shapes, backgrounds, arrows, positioning}
-%\usepackage{pgfplots}
 \usepackage{listings}
 \usepackage[utf8,latin1]{inputenc}
 \usepackage[style = apa, backend = biber, natbib = true]{biblatex}
@@ -285,10 +283,11 @@ dat      <- na.omit(dat)     # drop missing values
 aggregate(hamd ~ week, dat, mean)
 aggregate(hamd ~ week, dat, sd)
 aggregate(hamd ~ week, dat, length)
-
-cor(reshape(dat[, c("hamd", "id", "week")], 
-            direction = "wide", timevar = "week")[, 2:7],
-    use = "pairwise.complete.obs")
+dat[, c("hamd", "id", "week")] |>
+  reshape(direction = "wide", timevar = "week") |>
+  dplyr::select(-id) |>
+  cor(use = "pairwise.complete.obs") |>
+  round(3)
   \end{lstlisting}
 \end{frame}
 
@@ -297,14 +296,14 @@ cor(reshape(dat[, c("hamd", "id", "week")],
 # week needs to be a factor when computing an ANOVA
 dat$week2 <- factor(dat$week)
 contrasts(dat$week2) <- "contr.sum"   # effect coding
-summary(aov(hamd ~ week2 + Error(id/week2), dat))
+summary(aov(hamd ~ week2 + Error(id + id:week2), dat))
 # --> ??
 
 library(ez)   # "SPSS"-style
 ezANOVA(data = dat, dv = hamd, wid = id, within = week2, type = 3)
 
 # check data
-ezDesign(data = dat, x = week, y = id, col = diag)
+ezDesign(data = dat, x = week2, y = id, col = diag)
 replications(hamd ~ week2 + id, dat)
   \end{lstlisting}
 \end{frame}
@@ -535,7 +534,7 @@ we can construct Wald tests analogously to the regular linear model with
       variance and covariance components
 
     \item Many authors principally discourage using Wald tests for random
-      effects \citep[e.\,g.,][p.~52]{HedekerGibbons06}
+      effects \citep[e.\,g.,][p.~52 or \texttt{?lme4::pvalues}]{Hedeker2006}
   \end{itemize}
 \end{frame}
 
@@ -617,9 +616,11 @@ we can construct Wald tests analogously to the regular linear model with
 \begin{frame}[fragile]{}
   \begin{block}{Exercise}
     \begin{itemize}
-      \item Expand the linear mixed-effects model two more than one factor
-      \item Add diagnosis (``endogenous`` vs.\ ``non-endogenous'') as additional
-        between factor
+      \item Expand the linear mixed-effects model to more than one factor:
+        \begin{itemize}
+          \item Add diagnosis (``endogenous`` vs.\ ``non-endogenous'') as
+            additional between factor
+        \end{itemize}
       \item Test if this factor interacts with \texttt{week} using a
         likelihood-ratio test
       \item Use parametric bootstrapping to get a sampling distribution for your
