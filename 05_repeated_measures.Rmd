@@ -18,7 +18,6 @@ mixed-effects models to repeated measures ANOVA.
 ### Exercise 1 {-}
 
 * Expand the linear mixed-effects model to more than one factor
-
   - Add diagnosis ("endogenous" vs. "non-endogenous") as additional between
     factor
 
