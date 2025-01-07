@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2024-12-16" />
+<meta name="date" content="2025-01-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -292,15 +292,17 @@ with
 \end{align*}\]</span></p></li>
 </ul>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb35-1"><a href="repeated-measurements.html#cb35-1" aria-hidden="true" tabindex="-1"></a>dat      <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/reisby.dat&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb35-2"><a href="repeated-measurements.html#cb35-2" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>id   <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>id)</span>
-<span id="cb35-3"><a href="repeated-measurements.html#cb35-3" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>diag <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>diag, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;nonen&quot;</span>, <span class="st">&quot;endog&quot;</span>))</span>
-<span id="cb35-4"><a href="repeated-measurements.html#cb35-4" aria-hidden="true" tabindex="-1"></a>dat      <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(dat)     <span class="co"># drop missing values</span></span>
-<span id="cb35-5"><a href="repeated-measurements.html#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-6"><a href="repeated-measurements.html#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Add diagnosis</span></span>
-<span id="cb35-7"><a href="repeated-measurements.html#cb35-7" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(hamd <span class="sc">~</span> week <span class="sc">+</span> diag <span class="sc">+</span> (week <span class="sc">|</span> id), dat, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb35-8"><a href="repeated-measurements.html#cb35-8" aria-hidden="true" tabindex="-1"></a>lme2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(hamd <span class="sc">~</span> week <span class="sc">*</span> diag <span class="sc">+</span> (week <span class="sc">|</span> id), dat, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb35-9"><a href="repeated-measurements.html#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lme1, lme2)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb35-1"><a href="repeated-measurements.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb35-2"><a href="repeated-measurements.html#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="repeated-measurements.html#cb35-3" aria-hidden="true" tabindex="-1"></a>dat      <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/reisby.dat&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb35-4"><a href="repeated-measurements.html#cb35-4" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>id   <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>id)</span>
+<span id="cb35-5"><a href="repeated-measurements.html#cb35-5" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>diag <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>diag, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;nonen&quot;</span>, <span class="st">&quot;endog&quot;</span>))</span>
+<span id="cb35-6"><a href="repeated-measurements.html#cb35-6" aria-hidden="true" tabindex="-1"></a>dat      <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(dat)     <span class="co"># drop missing values</span></span>
+<span id="cb35-7"><a href="repeated-measurements.html#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="repeated-measurements.html#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add diagnosis</span></span>
+<span id="cb35-9"><a href="repeated-measurements.html#cb35-9" aria-hidden="true" tabindex="-1"></a>lme1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(hamd <span class="sc">~</span> week <span class="sc">+</span> diag <span class="sc">+</span> (week <span class="sc">|</span> id), dat, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb35-10"><a href="repeated-measurements.html#cb35-10" aria-hidden="true" tabindex="-1"></a>lme2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(hamd <span class="sc">~</span> week <span class="sc">*</span> diag <span class="sc">+</span> (week <span class="sc">|</span> id), dat, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb35-11"><a href="repeated-measurements.html#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lme1, lme2)</span></code></pre></div>
 </details>
 <details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb36-1"><a href="repeated-measurements.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametric bootstrapping</span></span>
@@ -333,7 +335,7 @@ with
 <span id="cb38-8"><a href="repeated-measurements.html#cb38-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">28</span>), <span class="at">xlab =</span> <span class="st">&quot;Week&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;HDRS score&quot;</span>)</span>
 <span id="cb38-9"><a href="repeated-measurements.html#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pred1 <span class="sc">~</span> week, <span class="at">data =</span> <span class="fu">subset</span>(datm, datm<span class="sc">$</span>diag <span class="sc">==</span> <span class="st">&quot;nonen&quot;</span>), <span class="at">col =</span> colors[<span class="dv">1</span>])</span>
 <span id="cb38-10"><a href="repeated-measurements.html#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(pred1 <span class="sc">~</span> week, <span class="at">data =</span> <span class="fu">subset</span>(datm, datm<span class="sc">$</span>diag <span class="sc">==</span> <span class="st">&quot;endog&quot;</span>), <span class="at">col =</span> colors[<span class="dv">2</span>])</span>
-<span id="cb38-11"><a href="repeated-measurements.html#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Endogenous&quot;</span>, <span class="st">&quot;Non endogenous&quot;</span>), <span class="at">col =</span> colors,</span>
+<span id="cb38-11"><a href="repeated-measurements.html#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;bottomleft&quot;</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">&quot;Non endogenous&quot;</span>, <span class="st">&quot;Endogenous&quot;</span>), <span class="at">col =</span> colors,</span>
 <span id="cb38-12"><a href="repeated-measurements.html#cb38-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">pt.bg =</span> <span class="st">&quot;white&quot;</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>)</span></code></pre></div>
 </details>
 

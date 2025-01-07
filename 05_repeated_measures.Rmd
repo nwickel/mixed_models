@@ -48,6 +48,8 @@ mixed-effects models to repeated measures ANOVA.
   \end{align*}
 
 ```{r ex05.1, results = "hide", class.source = "fold-hide"}
+library(lme4)
+
 dat      <- read.table("data/reisby.dat", header = TRUE)
 dat$id   <- factor(dat$id)
 dat$diag <- factor(dat$diag, levels = c("nonen", "endog"))
@@ -89,7 +91,7 @@ plot(hamd ~ week, data = datm, col = colors[datm$diag],
      ylim = c(0, 28), xlab = "Week", ylab = "HDRS score")
 lines(pred1 ~ week, data = subset(datm, datm$diag == "nonen"), col = colors[1])
 lines(pred1 ~ week, data = subset(datm, datm$diag == "endog"), col = colors[2])
-legend("bottomleft", legend = c("Endogenous", "Non endogenous"), col = colors,
+legend("bottomleft", legend = c("Non endogenous", "Endogenous"), col = colors,
        pch = 21, lty = 1, pt.bg = "white", bty = "n")
 
 ```
