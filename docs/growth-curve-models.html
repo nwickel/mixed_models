@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2025-01-07" />
+<meta name="date" content="2025-01-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -219,7 +219,10 @@ div.csl-indent {
 <li class="chapter" data-level="6" data-path="growth-curve-models.html"><a href="growth-curve-models.html"><i class="fa fa-check"></i><b>6</b> Growth curve models</a>
 <ul>
 <li class="chapter" data-level="6.1" data-path="growth-curve-models.html"><a href="growth-curve-models.html#slides-5"><i class="fa fa-check"></i><b>6.1</b> Slides</a></li>
-<li class="chapter" data-level="6.2" data-path="growth-curve-models.html"><a href="growth-curve-models.html#exercises-5"><i class="fa fa-check"></i><b>6.2</b> Exercises</a></li>
+<li class="chapter" data-level="6.2" data-path="growth-curve-models.html"><a href="growth-curve-models.html#exercises-5"><i class="fa fa-check"></i><b>6.2</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="" data-path="growth-curve-models.html"><a href="growth-curve-models.html#exercise-1-5"><i class="fa fa-check"></i>Exercise 1</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="crossed-random-effects.html"><a href="crossed-random-effects.html"><i class="fa fa-check"></i><b>7</b> Crossed random effects</a>
 <ul>
@@ -249,25 +252,157 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="growth-curve-models" class="section level1 hasAnchor" number="6">
 <h1><span class="header-section-number">Chapter 6</span> Growth curve models<a href="growth-curve-models.html#growth-curve-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In this chapter, we extend the models we have looked at so far and include
+quadratic effects for individuals and on the population level.</p>
 <div id="slides-5" class="section level2 hasAnchor" number="6.1">
 <h2><span class="header-section-number">6.1</span> Slides<a href="growth-curve-models.html#slides-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>TODO</p>
-<!--
-```{=html}
 <object data="slides/06_growth_curve/06_growth_curve.pdf" type="application/pdf" width="100%" height="500px">
   <p>
     Unable to display PDF file. <a href="slides/06_growth_curve/06_growth_curve.pdf">Download</a> instead.
   </p>
 </object>
-```
--->
 </div>
 <div id="exercises-5" class="section level2 hasAnchor" number="6.2">
 <h2><span class="header-section-number">6.2</span> Exercises<a href="growth-curve-models.html#exercises-5" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="growth-curve-models.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Add exercises</span></span></code></pre></div>
+<div id="exercise-1-5" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 1<a href="growth-curve-models.html#exercise-1-5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The following exercise is strongly inspired by this chapter:
+<a href="https://embraceuncertaintybook.com/longitudinal.html#the-elstongrizzle-data" class="uri">https://embraceuncertaintybook.com/longitudinal.html#the-elstongrizzle-data</a>.</p>
+<ul>
+<li><p>Load the data set into R; data are from a dental
+study measuring the lengths of the ramus of the mandible (mm) in 20 boys at 8,
+8.5, 9, and 9.5 years of age</p></li>
+<li><p>Plot the individual data points for each subject either as a spaghetti plot
+and/or as a panel plot</p></li>
+<li><p>Fit a random slope model to the data; how would you interpret the correlation
+parameter in the model?</p></li>
+<li><p>Recenter your time variable, so that zero means ``8 years old’’</p></li>
+<li><p>Refit your random slope model; try to explain why and how the correlation
+parameter changes</p></li>
+<li><p>Look at the caterpillar plots for the random slope model with and without
+recentered time variable; why do they look different?</p></li>
+<li><p>Create a shrinkage plot plotting the individual intercept as a function of the
+individual slopes</p></li>
+<li><p>Add individual and quadratic time effects to your model; test this model
+against the random slope model</p></li>
+<li><p>Look at the profiles for the random effects for the quadratic model; what
+would you conclude?</p></li>
+</ul>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb39-1"><a href="growth-curve-models.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb39-2"><a href="growth-curve-models.html#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
+<span id="cb39-3"><a href="growth-curve-models.html#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="growth-curve-models.html#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Read and visualize data</span></span>
+<span id="cb39-5"><a href="growth-curve-models.html#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="growth-curve-models.html#cb39-6" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/elstongrizzle.dat&quot;</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb39-7"><a href="growth-curve-models.html#cb39-7" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>subject <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>subject)</span>
+<span id="cb39-8"><a href="growth-curve-models.html#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="growth-curve-models.html#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="fu">xyplot</span>(ramusht <span class="sc">~</span> age, dat, <span class="at">groups =</span> subject,</span>
+<span id="cb39-10"><a href="growth-curve-models.html#cb39-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">type =</span> <span class="fu">c</span>(<span class="st">&quot;b&quot;</span>, <span class="st">&quot;g&quot;</span>),</span>
+<span id="cb39-11"><a href="growth-curve-models.html#cb39-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">&quot;Age (yr)&quot;</span>,</span>
+<span id="cb39-12"><a href="growth-curve-models.html#cb39-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">ylab =</span> <span class="st">&quot;Ramus bone length (mm)&quot;</span>)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb40-1"><a href="growth-curve-models.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">xyplot</span>(ramusht <span class="sc">~</span> age <span class="sc">|</span> subject, dat,</span>
+<span id="cb40-2"><a href="growth-curve-models.html#cb40-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">type =</span> <span class="fu">c</span>(<span class="st">&quot;g&quot;</span>, <span class="st">&quot;p&quot;</span>, <span class="st">&quot;r&quot;</span>),</span>
+<span id="cb40-3"><a href="growth-curve-models.html#cb40-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">aspect =</span> <span class="st">&quot;xy&quot;</span>,</span>
+<span id="cb40-4"><a href="growth-curve-models.html#cb40-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">index.cond =</span> <span class="cf">function</span>(x,y) <span class="fu">coef</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x)) <span class="sc">%*%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">8</span>),</span>
+<span id="cb40-5"><a href="growth-curve-models.html#cb40-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">&quot;Age (yr)&quot;</span>,</span>
+<span id="cb40-6"><a href="growth-curve-models.html#cb40-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">ylab =</span> <span class="st">&quot;Ramus bone length (mm)&quot;</span>)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb41-1"><a href="growth-curve-models.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Anything quadratic?</span></span>
+<span id="cb41-2"><a href="growth-curve-models.html#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">xyplot</span>(ramusht <span class="sc">~</span> age <span class="sc">|</span> subject, dat,</span>
+<span id="cb41-3"><a href="growth-curve-models.html#cb41-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">type =</span> <span class="fu">c</span>(<span class="st">&quot;g&quot;</span>, <span class="st">&quot;p&quot;</span>, <span class="st">&quot;spline&quot;</span>),</span>
+<span id="cb41-4"><a href="growth-curve-models.html#cb41-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">aspect =</span> <span class="st">&quot;xy&quot;</span>,</span>
+<span id="cb41-5"><a href="growth-curve-models.html#cb41-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">index.cond =</span> <span class="cf">function</span>(x,y) <span class="fu">coef</span>(<span class="fu">lm</span>(y <span class="sc">~</span> x)) <span class="sc">%*%</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">8</span>),</span>
+<span id="cb41-6"><a href="growth-curve-models.html#cb41-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">&quot;Age (yr)&quot;</span>,</span>
+<span id="cb41-7"><a href="growth-curve-models.html#cb41-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">ylab =</span> <span class="st">&quot;Ramus bone length (mm)&quot;</span>)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb42-1"><a href="growth-curve-models.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Random slope model</span></span>
+<span id="cb42-2"><a href="growth-curve-models.html#cb42-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(ramusht <span class="sc">~</span> age <span class="sc">+</span> (age <span class="sc">|</span> subject), dat)</span>
+<span id="cb42-3"><a href="growth-curve-models.html#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span>
+<span id="cb42-4"><a href="growth-curve-models.html#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="growth-curve-models.html#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dotplot</span>(<span class="fu">ranef</span>(m1), <span class="at">scales =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="fu">list</span>(<span class="at">relation =</span> <span class="st">&quot;free&quot;</span>)))[[<span class="dv">1</span>]]</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb43-1"><a href="growth-curve-models.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Centering the time variable (at a value of interest)</span></span>
+<span id="cb43-2"><a href="growth-curve-models.html#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="growth-curve-models.html#cb43-3" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>time <span class="ot">&lt;-</span> dat<span class="sc">$</span>age <span class="sc">-</span> <span class="dv">8</span></span>
+<span id="cb43-4"><a href="growth-curve-models.html#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="growth-curve-models.html#cb43-5" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(ramusht <span class="sc">~</span> time <span class="sc">+</span> (time <span class="sc">|</span> subject), dat)</span>
+<span id="cb43-6"><a href="growth-curve-models.html#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span>
+<span id="cb43-7"><a href="growth-curve-models.html#cb43-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-8"><a href="growth-curve-models.html#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dotplot</span>(<span class="fu">ranef</span>(m2), <span class="at">scales =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="fu">list</span>(<span class="at">relation =</span> <span class="st">&quot;free&quot;</span>)))[[<span class="dv">1</span>]]</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb44-1"><a href="growth-curve-models.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shrinkage plot</span></span>
+<span id="cb44-2"><a href="growth-curve-models.html#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="growth-curve-models.html#cb44-3" aria-hidden="true" tabindex="-1"></a>df     <span class="ot">&lt;-</span> <span class="fu">coef</span>(<span class="fu">lmList</span>(ramusht <span class="sc">~</span> time <span class="sc">|</span> subject, dat))</span>
+<span id="cb44-4"><a href="growth-curve-models.html#cb44-4" aria-hidden="true" tabindex="-1"></a>fclow  <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="dv">50</span>)</span>
+<span id="cb44-5"><a href="growth-curve-models.html#cb44-5" aria-hidden="true" tabindex="-1"></a>fchigh <span class="ot">&lt;-</span> <span class="fu">subset</span>(df, <span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span> <span class="sc">&gt;</span> <span class="dv">50</span>)</span>
+<span id="cb44-6"><a href="growth-curve-models.html#cb44-6" aria-hidden="true" tabindex="-1"></a>cc1    <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">coef</span>(m2)<span class="sc">$</span>subject)</span>
+<span id="cb44-7"><a href="growth-curve-models.html#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cc1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>)</span>
+<span id="cb44-8"><a href="growth-curve-models.html#cb44-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-9"><a href="growth-curve-models.html#cb44-9" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">cbind</span>(df, cc1)</span>
+<span id="cb44-10"><a href="growth-curve-models.html#cb44-10" aria-hidden="true" tabindex="-1"></a>ff <span class="ot">&lt;-</span> <span class="fu">fixef</span>(m2)</span>
+<span id="cb44-11"><a href="growth-curve-models.html#cb44-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-12"><a href="growth-curve-models.html#cb44-12" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(df,</span>
+<span id="cb44-13"><a href="growth-curve-models.html#cb44-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xyplot</span>(<span class="st">`</span><span class="at">(Intercept)</span><span class="st">`</span> <span class="sc">~</span> time, <span class="at">aspect =</span> <span class="dv">1</span>,</span>
+<span id="cb44-14"><a href="growth-curve-models.html#cb44-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x1 =</span> B, <span class="at">y1 =</span> A,</span>
+<span id="cb44-15"><a href="growth-curve-models.html#cb44-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel =</span> <span class="cf">function</span>(x, y, x1, y1, subscripts, ...) {</span>
+<span id="cb44-16"><a href="growth-curve-models.html#cb44-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">panel.grid</span>(<span class="at">h =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">v =</span> <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb44-17"><a href="growth-curve-models.html#cb44-17" aria-hidden="true" tabindex="-1"></a>        x1 <span class="ot">&lt;-</span> x1[subscripts]</span>
+<span id="cb44-18"><a href="growth-curve-models.html#cb44-18" aria-hidden="true" tabindex="-1"></a>        y1 <span class="ot">&lt;-</span> y1[subscripts]</span>
+<span id="cb44-19"><a href="growth-curve-models.html#cb44-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">larrows</span>(x, y, x1, y1, <span class="at">type =</span> <span class="st">&quot;closed&quot;</span>, <span class="at">length =</span> <span class="fl">0.1</span>,</span>
+<span id="cb44-20"><a href="growth-curve-models.html#cb44-20" aria-hidden="true" tabindex="-1"></a>                <span class="at">angle =</span> <span class="dv">15</span>, ...)</span>
+<span id="cb44-21"><a href="growth-curve-models.html#cb44-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lpoints</span>(x, y,</span>
+<span id="cb44-22"><a href="growth-curve-models.html#cb44-22" aria-hidden="true" tabindex="-1"></a>                <span class="at">pch =</span> <span class="fu">trellis.par.get</span>(<span class="st">&quot;superpose.symbol&quot;</span>)<span class="sc">$</span>pch[<span class="dv">2</span>],</span>
+<span id="cb44-23"><a href="growth-curve-models.html#cb44-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="fu">trellis.par.get</span>(<span class="st">&quot;superpose.symbol&quot;</span>)<span class="sc">$</span>col[<span class="dv">2</span>])</span>
+<span id="cb44-24"><a href="growth-curve-models.html#cb44-24" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lpoints</span>(x1, y1,</span>
+<span id="cb44-25"><a href="growth-curve-models.html#cb44-25" aria-hidden="true" tabindex="-1"></a>                <span class="at">pch =</span> <span class="fu">trellis.par.get</span>(<span class="st">&quot;superpose.symbol&quot;</span>)<span class="sc">$</span>pch[<span class="dv">1</span>],</span>
+<span id="cb44-26"><a href="growth-curve-models.html#cb44-26" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="fu">trellis.par.get</span>(<span class="st">&quot;superpose.symbol&quot;</span>)<span class="sc">$</span>col[<span class="dv">1</span>])</span>
+<span id="cb44-27"><a href="growth-curve-models.html#cb44-27" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lpoints</span>(ff[<span class="dv">2</span>], ff[<span class="dv">1</span>], </span>
+<span id="cb44-28"><a href="growth-curve-models.html#cb44-28" aria-hidden="true" tabindex="-1"></a>                <span class="at">pch =</span> <span class="fu">trellis.par.get</span>(<span class="st">&quot;superpose.symbol&quot;</span>)<span class="sc">$</span>pch[<span class="dv">3</span>],</span>
+<span id="cb44-29"><a href="growth-curve-models.html#cb44-29" aria-hidden="true" tabindex="-1"></a>                <span class="at">col =</span> <span class="fu">trellis.par.get</span>(<span class="st">&quot;superpose.symbol&quot;</span>)<span class="sc">$</span>col[<span class="dv">3</span>])</span>
+<span id="cb44-30"><a href="growth-curve-models.html#cb44-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ltext</span>(fclow[,<span class="dv">2</span>], fclow[,<span class="dv">1</span>], <span class="fu">row.names</span>(fclow), <span class="at">adj =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">1.7</span>))</span>
+<span id="cb44-31"><a href="growth-curve-models.html#cb44-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ltext</span>(fchigh[,<span class="dv">2</span>], fchigh[,<span class="dv">1</span>], <span class="fu">row.names</span>(fchigh), <span class="at">adj =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="sc">-</span><span class="fl">0.6</span>))</span>
+<span id="cb44-32"><a href="growth-curve-models.html#cb44-32" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb44-33"><a href="growth-curve-models.html#cb44-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">key =</span> <span class="fu">list</span>(<span class="at">space =</span> <span class="st">&quot;top&quot;</span>, <span class="at">columns =</span> <span class="dv">3</span>,</span>
+<span id="cb44-34"><a href="growth-curve-models.html#cb44-34" aria-hidden="true" tabindex="-1"></a>               <span class="at">text =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;Mixed model&quot;</span>, <span class="st">&quot;Within-subject&quot;</span>, <span class="st">&quot;Population&quot;</span>)),</span>
+<span id="cb44-35"><a href="growth-curve-models.html#cb44-35" aria-hidden="true" tabindex="-1"></a>               <span class="at">points =</span> <span class="fu">list</span>(<span class="at">col =</span> <span class="fu">trellis.par.get</span>(<span class="st">&quot;superpose.symbol&quot;</span>)<span class="sc">$</span>col[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],</span>
+<span id="cb44-36"><a href="growth-curve-models.html#cb44-36" aria-hidden="true" tabindex="-1"></a>                             <span class="at">pch =</span> <span class="fu">trellis.par.get</span>(<span class="st">&quot;superpose.symbol&quot;</span>)<span class="sc">$</span>pch[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>]))</span>
+<span id="cb44-37"><a href="growth-curve-models.html#cb44-37" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb44-38"><a href="growth-curve-models.html#cb44-38" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb45-1"><a href="growth-curve-models.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fitting a quadratic trend</span></span>
+<span id="cb45-2"><a href="growth-curve-models.html#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="growth-curve-models.html#cb45-3" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(ramusht <span class="sc">~</span> time <span class="sc">+</span> <span class="fu">I</span>(time<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> (time <span class="sc">+</span> <span class="fu">I</span>(time<span class="sc">^</span><span class="dv">2</span>) <span class="sc">||</span> subject), dat)</span>
+<span id="cb45-4"><a href="growth-curve-models.html#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m3)</span>
+<span id="cb45-5"><a href="growth-curve-models.html#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="growth-curve-models.html#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dotplot</span>(<span class="fu">ranef</span>(m3), <span class="at">scales =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="fu">list</span>(<span class="at">relation =</span> <span class="st">&quot;free&quot;</span>)))[[<span class="dv">1</span>]]</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb46-1"><a href="growth-curve-models.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m2, m3)</span>
+<span id="cb46-2"><a href="growth-curve-models.html#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-3"><a href="growth-curve-models.html#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Profiles</span></span>
+<span id="cb46-4"><a href="growth-curve-models.html#cb46-4" aria-hidden="true" tabindex="-1"></a>pm3 <span class="ot">&lt;-</span> <span class="fu">profile</span>(m3, <span class="at">which =</span> <span class="st">&quot;theta_&quot;</span>)</span>
+<span id="cb46-5"><a href="growth-curve-models.html#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="growth-curve-models.html#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="fu">xyplot</span>(<span class="fu">log</span>(pm3))</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb47-1"><a href="growth-curve-models.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">densityplot</span>(<span class="fu">log</span>(pm3))</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb48-1"><a href="growth-curve-models.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">splom</span>(<span class="fu">log</span>(pm3))</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb49-1"><a href="growth-curve-models.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(pm3)</span></code></pre></div>
 </details>
 
+</div>
 </div>
 </div>
             </section>
