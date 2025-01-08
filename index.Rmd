@@ -79,6 +79,8 @@ Topics for next semester:
 
 This course is mostly built on the following books and papers:
 
+* @Alday2025
+
 * @Baayen2008
 
 * @Bates2015

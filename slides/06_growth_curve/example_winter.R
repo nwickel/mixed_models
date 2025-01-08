@@ -14,11 +14,14 @@
 #
 # input:  example2_dyads.csv
 # output: icon.pdf
+#         icon-pre.pdf
 #         icon-both.pdf
+#         icon-qqplot.pdf
+#         icon-residplot.pdf
 #
-# last mod: Oct/16/2024, NW
+# last mod: Jan/08/2025, NW
 
-# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/iwm/mixed_models/06_growth_curve")
+# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/iwm/mixed_models/slides/06_growth_curve")
 
 library(lme4) 
 library(lattice)
@@ -38,7 +41,7 @@ for (i in levels(dat$dyad)) {
 text(0, 10, "(a)")
 
 # using lattice
-pdf("icon.pdf", width=3.375, height=3.375, pointsize=10)
+pdf("../figures/icon.pdf", width=3.375, height=3.375, pointsize=10)
 #
 xyplot(iconicity ~ t, dat, groups=dyad, type="l", xlab="Time / Interaction round",
      ylab="Iconicity")
@@ -112,9 +115,19 @@ anova(gcm5, gcm6, gcm3)
 
 #--------------- (4.3) Check model assumptions ---------------
 
-hist(residuals(gcm3)) # good
-qqnorm(residuals(gcm3)); qqline(residuals(gcm3)) # o.k.
-plot(gcm3) # o.k.
+hist(residuals(gcm1))   # good
+
+pdf("../figures/icon-qqplot.pdf", width=4, height=4, pointsize=10)
+
+qqmath(gcm1)            # o.k.
+
+dev.off()
+
+pdf("../figures/icon-residplot.pdf", width=4, height=4, pointsize=10)
+
+plot(gcm1)              # o.k.
+
+dev.off()
 
 #--------------- (4.4) Test higher-order polynomials ---------------
 

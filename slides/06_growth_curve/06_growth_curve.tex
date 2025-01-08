@@ -80,11 +80,23 @@
 \titlepage
 \end{frame}
 
-\begin{frame}{Polynomial regression}
-  \begin{itemize}
+\begin{frame}{Quadratic time trends}
+  \begin{columns}
+    \begin{column}{.35\textwidth}
+    \begin{itemize}
     \item A lot of times the assumption of a linear time trend is too
       simple
     \item Change is not happening unbraked linearly but flattens out
+    \end{itemize}
+    \end{column}
+    \begin{column}{.65\textwidth}
+      \includegraphics[width=9cm]{../figures/quad}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Quadratic time trends}
+  \begin{itemize}
     \item Quadratic regression model
 \begin{align*}
   y_{ij} &= b_{0i} + b_{1i}\,t_{ij} + b_{2i}\,t^2_{ij} + \varepsilon_{ij}\\
@@ -97,12 +109,6 @@
     \item The intercept $t = -b_{1i}/(2 b_{2i})$ is the point in time when a
       positive (negative) trend becomes negative (postive)
   \end{itemize}
-\end{frame}
-
-\begin{frame}{Quadratic time trends}
-\begin{center}
-\includegraphics[width=9cm]{../figures/quad}
-\end{center}
 \end{frame}
 
 \begin{frame}{Outline}
@@ -170,10 +176,33 @@
 \end{columns}
 \end{frame}
 
+\begin{frame}{Predictions random slope model}
+  \begin{columns}
+    \begin{column}{.6\textwidth}
+    \includegraphics[scale=.5]{../figures/hdrs-ind_pred-randomslope}
+    \end{column}
+  \begin{column}{.4\textwidth}
+  \[
+    y_{ij} = \beta_0 + \beta_1 time + \upsilon_{0i} + \upsilon_{1i} time +
+    \varepsilon_{ij}
+  \]
+with
+\begin{align*}
+  \begin{pmatrix} \upsilon_{0i}\\ \upsilon_{1i} \end{pmatrix} &\overset{iid}\sim
+    N \left(\begin{pmatrix} 0\\ 0 \end{pmatrix}, \, \gmat{\Sigma}_\upsilon =
+      \begin{pmatrix}
+        \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0 \upsilon_1} \\
+        \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_1} \\
+      \end{pmatrix} \right)\\
+  \gvect{\varepsilon}_i &\overset{iid}\sim N(\vect{0}, \, \sigma^2 \mat{I}_{n_i})
+\end{align*}
+  \end{column}
+\end{columns}
+\end{frame}
 
 \begin{frame}[fragile]{Model with quadratic trend}
   \begin{itemize}
-    \item Model with quadratic individual and group trend
+    \item Model with quadratic individual and quadratic group trend
       \[
  y_{ij} = \beta_0 + \beta_1\,t_{ij} + \beta_2\,t^2_{ij} + \upsilon_{0i} +
       \upsilon_1\,t_{ij} + \upsilon_2\,t^2_{ij} + \varepsilon_{ij}
@@ -209,35 +238,15 @@ dat$diag <- factor(dat$diag, levels = c("nonen", "endog"))
 dat      <- na.omit(dat)     # drop missing values
 
 # random intercept model
-lme1 <- lmer(hamd ~ week + (1 | id), dat, REML = FALSE)
+lme1 <- lmer(hamd ~ week + (1 | id), data = dat, REML = FALSE)
 
 # random slope model
-lme2 <- lmer(hamd ~ week + (week | id), dat, REML = FALSE)
+lme2 <- lmer(hamd ~ week + (week | id), data = dat, REML = FALSE)
 
 # model with quadratic time trend
-lme3 <- lmer(hamd ~ week + I(week^2) + (week + I(week^2) | id), dat,
-  REML = FALSE)
+lme3 <- lmer(hamd ~ week + I(week^2) + (week + I(week^2) | id),
+             data = dat, REML = FALSE)
   \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{ML estimates of parameters}
-\begin{lstlisting}
-...
-Random effects:
- Groups   Name        Variance Std.Dev. Corr       
- id       (Intercept) 10.4402  3.2311              
-          week         6.6381  2.5764   -0.11      
-          I(week^2)    0.1937  0.4402   -0.08 -0.83
- Residual             10.5160  3.2428              
-Number of obs: 375, groups:  id, 66
-
-Fixed effects:
-            Estimate Std. Error t value
-(Intercept) 23.76025    0.55206  43.039
-week        -2.63258    0.47900  -5.496
-I(week^2)    0.05148    0.08835   0.583
-...
-\end{lstlisting}
 \end{frame}
 
 \begin{frame}{Model predictions}
@@ -263,26 +272,26 @@ $G^2(3) = 10.98$, $p = .012$
   \end{itemize}
 \end{frame}
 
+% \begin{frame}[fragile]{Model predictions}
+%   \begin{lstlisting}
+% # model without random quadratic time effect 
+% lme3.0 <- lmer(hamd ~ week + I(week^2) + (week | id), dat,
+%   REML = FALSE)
+% 
+% # model without fixed quadratic time effect 
+% lme3.1 <- lmer(hamd ~ week + (week + I(week^2) | id), dat,
+%   REML = FALSE)
+% 
+% # LRTs
+% anova(lme3.0, lme3)
+% anova(lme3.1, lme3)
+%   \end{lstlisting}
+% \end{frame}
+
 \begin{frame}[fragile]{Model predictions}
-  \begin{lstlisting}
-# model without random quadratic time effect 
-lme3.0 <- lmer(hamd ~ week + I(week^2) + (week | id), dat,
-  REML = FALSE)
-
-# model without fixed quadratic time effect 
-lme3.1 <- lmer(hamd ~ week + (week + I(week^2) | id), dat,
-  REML = FALSE)
-
-# LRTs
-anova(lme3.0, lme3)
-anova(lme3.1, lme3)
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Visualization of model predictions}
   \begin{columns}
     \begin{column}{8cm}
-      \includegraphics[scale=.5]{../figures/hdrs-pred}
+      \includegraphics[scale=.5]{../figures/hdrs-ind_pred-quad}
     \end{column}
     \begin{column}{6cm}
       \begin{lstlisting}
@@ -314,7 +323,7 @@ Predicted
     3.06 & 11.97 & 20.98 & 30.09 & 39.29 & 59.11
   \end{pmatrix}\\
   %
-  \intertext{\color{black}Observed}
+  \intertext{Observed}
   %
   \widehat{Cov}(\vect{y}_i) &=
   \begin{pmatrix}
@@ -341,7 +350,6 @@ Predicted
 % \end{lstlisting}
 \end{frame}
 
-
 \begin{frame}{Centering variables}
   \begin{itemize}
     \item If multiples of the time variables ($t$, $t^2$, $t^3$, etc.) are
@@ -361,6 +369,116 @@ Predicted
     time
   \end{itemize}
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Analysis with centered time variable}
+\begin{lstlisting}
+dat$week_c <- dat$week - mean(dat$week)
+cor(dat$week, dat$week^2)       # 0.96
+cor(dat$week_c, dat$week_c^2)   # 0.01
+
+# random slope model
+lme2c <- lmer(hamd ~ week_c + (week_c | id), data = dat, REML = FALSE)
+
+# model with quadratic time trend
+lme3c <- lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) | id),
+              data = dat, REML = FALSE)
+\end{lstlisting}
+  \begin{itemize}
+    \item When comparing the estimated parameters, it becomes obvious that not
+      only the intercept changes but the estimates for the (co)variances do as
+      well
+    \item Why?\pause
+      ~Be sure to make an informed choice when centering your
+      variables!
+  \end{itemize}
+  \nocite{Alday2025}
+\end{frame}
+
+\begin{frame}[fragile]{Investigating random effects structure}
+  \begin{itemize}
+    \item In order to get a better understanding of the necessary random effects
+      it might be a good idea to take a closer look at them
+    \item Two plots often used are the so-called caterpillar and shrinkage plots
+    \item Play around with different models and compare how, e.\,g., the
+      caterpillar plots change with and without covariances in the model!
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Investigating random effects structure}
+  {Caterpillar plot}
+  \vspace{-.4cm}
+    \begin{center}
+      \includegraphics[scale=.25]{../figures/hdrs-caterpillar}
+  \end{center}
+  \vspace{-.3cm}
+\begin{lstlisting}
+library(lattice)
+dotplot(ranef(lme3), scales = list( x = list(relation = "free")))$id
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Investigating random effects structure}
+  {Shrinkage plots}
+  \begin{columns}
+    \begin{column}{.35\textwidth}
+      \includegraphics[scale=.35]{../figures/hdrs_shrinkage_int-week}
+    \end{column}
+    \begin{column}{.35\textwidth}
+      \includegraphics[scale=.35]{../figures/hdrs_shrinkage_int-weeksq}
+    \end{column}
+    \begin{column}{.35\textwidth}
+      \includegraphics[scale=.35]{../figures/hdrs_shrinkage_week-weeksq}
+    \end{column}
+  \end{columns}
+\begin{lstlisting}
+# model without covariances
+lme4 <- lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) || id),
+             data = dat, REML = FALSE)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Investigating random effects structure}
+  \begin{itemize}
+    \item The shrinkage plots suggest that we do not need the quadratic effect
+      for each subject (on the population level it does not show anyway)
+    \item Let us dive a little deeper and look at the profiles for the random
+      effects
+    \item We see that the parameter for the individual quadratic effect
+      ($\sigma_3$) cannot be estimated sensibly
+  \end{itemize}
+\begin{lstlisting}
+pm4 <- profile(lme4, which = "theta_")
+
+xyplot(log(pm4))
+densityplot(log(pm4))
+splom(log(pm4))
+
+confint(pm4)
+# --> a model with the covariances will not even be estimated by the
+# profile function in R
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Intermediate conclusions}
+  \begin{itemize}
+    \item After closer investigation of the random effects structure, I am not
+      so sure that the story with the quadratic individual trends still holds
+    \item This is only important if I want to interpret the random effects
+    \item If I only include them for modeling dependency in my data, this is
+      not of so much relevance
+    \item In this case, I am (usually) conducting a more conservative test (more
+      on this next session)
+  \end{itemize}
+\begin{lstlisting}
+lme5 <- lmer(hamd ~ week_c + (week_c || id),
+             data = dat, REML = FALSE)
+lme6 <- lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) || id),
+             data = dat, REML = FALSE)
+anova(lme5, lme6)
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}{Higher-order polynomials}
@@ -392,12 +510,12 @@ Predicted
 
 \section{Vocal charades}
 
-\begin{frame}{Example: Growth curve model}
-This example from linguistics is taken from \citet{Winter2016}\\[2ex]
+\begin{frame}{Vocal charades \citep{Winter2016}}
+This (simulated) example from linguistics is taken from \citet{Winter2016}\\[2ex]
 \begin{itemize}
   \item Participants play a game of `vocal charades'
   \item At each round, a participant has to vocalize a meaning to the
-  partner (e.g., `ugly') without using language (e.g., through grunting or
+  partner (e.\,g., `ugly') without using language (e.\,g., through grunting or
   hissing)
   \item The partner has to guess the meaning of the vocalization
   \item This game is played repeatedly with the finding that over time, a
@@ -413,7 +531,7 @@ This example from linguistics is taken from \citet{Winter2016}\\[2ex]
   very different kinds of vocalizations
   \item Over time, they may converge on a more stable set of iconic
   vocalizations, that is vocalizations that resemble the intended referent
-  (e.g., a high-pitched sound for `attractive' and a low-pitched sound for
+  (e.\,g., a high-pitched sound for `attractive' and a low-pitched sound for
   `ugly')
   \item Finally, after even more time, the dyad may conventionalize to
   idiosyncratic patterns that deviate from iconicity and become
@@ -433,9 +551,12 @@ This example from linguistics is taken from \citet{Winter2016}\\[2ex]
      \hline
   \end{tabular}
 
-  \vspace{1cm}
+  \vspace{.5cm}
 \item For better interpretation, \texttt{t} will be centered
   \begin{lstlisting}
+dat <- read.csv("data/lzw003_supplementary-data/example2_dyads.csv")
+dat$dyad <- as.factor(dat$dyad)
+
 dat$t_c <- dat$t - mean(dat$t)
   \end{lstlisting}
   \end{itemize}
@@ -485,12 +606,12 @@ with
   \gvect{\varepsilon}_i &\sim N(\vect{0}, \, \sigma^2 \mat{I}_{n_i})
     \text{ i.i.d.}
 \end{align*}
-%\vspace{1cm}
+\vspace{-.8cm}
   \item This model is fitted by
 \begin{lstlisting}
 gcm1 <- lmer(iconicity ~ t_c + I(t_c^2) +
   (1 | dyad) + (0 + t_c | dyad) + (0 + I(t_c^2) | dyad),
-  data = dat, REML = F)
+  data = dat, REML = FALSE)
 \end{lstlisting}
   \end{itemize}
 \end{frame}
@@ -513,25 +634,25 @@ xyplot(
   \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{ML estimates of parameters}
-\begin{lstlisting}
-...
-Random effects:
- Groups   Name        Variance Std.Dev.
- dyad     (Intercept) 0.152845 0.39095 
- dyad.1   t_c         0.002595 0.05094 
- dyad.2   I(t_c^2)    0.003504 0.05920 
- Residual             0.429691 0.65551 
-Number of obs: 100, groups:  dyad, 10
-
-Fixed effects:
-            Estimate Std. Error t value
-(Intercept)  8.45761    0.15849   53.36
-t_c          0.35475    0.02793   12.70
-I(t_c^2)    -0.22558    0.02078  -10.86
-...
-\end{lstlisting}
-\end{frame}
+% \begin{frame}[fragile]{ML estimates of parameters}
+% \begin{lstlisting}
+% ...
+% Random effects:
+%  Groups   Name        Variance Std.Dev.
+%  dyad     (Intercept) 0.152845 0.39095 
+%  dyad.1   t_c         0.002595 0.05094 
+%  dyad.2   I(t_c^2)    0.003504 0.05920 
+%  Residual             0.429691 0.65551 
+% Number of obs: 100, groups:  dyad, 10
+% 
+% Fixed effects:
+%             Estimate Std. Error t value
+% (Intercept)  8.45761    0.15849   53.36
+% t_c          0.35475    0.02793   12.70
+% I(t_c^2)    -0.22558    0.02078  -10.86
+% ...
+% \end{lstlisting}
+% \end{frame}
 
 \begin{frame}{Interpretation of results}
 \begin{itemize}
@@ -541,34 +662,66 @@ I(t_c^2)    -0.22558    0.02078  -10.86
   ($\sigma_{\upsilon_{1i}} = 0.05$ and $\sigma_{\upsilon_{2i}} = 0.06$)
   \item The negative value for the quadratic term indicates the inverse
   U-shape
-  \item The point of reversal is $t = \bar t + \frac{-\hat\beta_1}{2*\hat\beta_2} =
-  5.5 + \frac{-.35}{2*(-.22)} = 6.29$ \item The model assumes that the
+  \item The point of reversal is $t = \bar t + \frac{-\hat\beta_1}{2\cdot\hat\beta_2} =
+  5.5 + \frac{-.35}{2\cdot(-.22)} = 6.29$ \item The model assumes that the
   random intercept and slopes are all
   uncorrelated
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Plots from the article}
-\begin{center}
-\includegraphics[scale=.8]{../figures/icon-both}
-\end{center}
+\begin{frame}[fragile]{Check model assumptions}
+\begin{lstlisting}
+hist(residuals(gcm1))   # o.k.
+qqmath(gcm1)            # o.k.
+plot(gcm1)              # o.k.
+\end{lstlisting}
+    \vspace{-.5cm}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \begin{center}
+      \includegraphics[scale=.55]{../figures/icon-qqplot}
+      \end{center}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \begin{center}
+      \includegraphics[scale=.55]{../figures/icon-residplot}
+      \end{center}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-% \begin{frame}[fragile]{}
-%   \begin{lstlisting}
-%   ##
-%   \end{lstlisting}
+% \begin{frame}{Plots from the article}
+% \begin{center}
+% \includegraphics[scale=.8]{../figures/icon-both}
+% \end{center}
 % \end{frame}
-% 
-% }
-% 
-% \begin{frame}[fragile]{}
-%   \begin{block}{Exercise}
-%     \begin{itemize}
-%       \item 
-%     \end{itemize}
-%   \end{block}
-% \end{frame}
+
+\begin{frame}[fragile]{}
+    \footnotesize
+  \begin{block}{Exercise\footnote{Inspired by
+    \url{https://embraceuncertaintybook.com/longitudinal.html\#the-elstongrizzle-data}}}
+    \begin{itemize}
+      \item Load the data set \texttt{elstongrizzle.dat} into R; data are from a
+        dental study measuring the lengths of the ramus of the mandible (mm) in
+        20 boys at 8, 8.5, 9, and 9.5 years of age
+      \item Plot the individual data points for each subject either as a
+        spaghetti plot and/or as a panel plot
+      \item Fit a random slope model to the data; how would you interpret the
+        correlation parameter in the model?
+      \item Recenter your time variable, so that zero means ``8 years old''
+      \item Refit your random slope model; try to explain why and how the
+        correlation parameter changes
+      \item Look at the caterpillar plots for the random slope model with and
+        without recentered time variable; why do they look different?
+      \item Create a shrinkage plot plotting the individual intercept as a
+        function of the individual slopes
+      \item Add individual and quadratic time effects to your model; test this
+        model against the random slope model
+      \item Look at the profiles for the random effects for the quadratic model;
+        what would you conclude?
+    \end{itemize}
+  \end{block}
+\end{frame}
 
 \appendix
 
