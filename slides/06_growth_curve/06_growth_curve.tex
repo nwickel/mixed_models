@@ -402,7 +402,15 @@ lme3c <- lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) | id),
     \item Two plots often used are the so-called caterpillar and shrinkage plots
     \item Play around with different models and compare how, e.\,g., the
       caterpillar plots change with and without covariances in the model!
+      \pause\vspace{.5cm}
+    \item We will refit our models with REML since it is better suited for
+      estimating the random effects!
   \end{itemize}
+\begin{lstlisting}
+lme3r <- 
+  lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) | id),
+       data = dat)
+\end{lstlisting}
 \end{frame}
 
 
@@ -415,7 +423,7 @@ lme3c <- lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) | id),
   \vspace{-.3cm}
 \begin{lstlisting}
 library(lattice)
-dotplot(ranef(lme3), scales = list( x = list(relation = "free")))$id
+dotplot(ranef(lme3r), scales = list( x = list(relation = "free")))$id
 \end{lstlisting}
 \end{frame}
 
@@ -433,34 +441,50 @@ dotplot(ranef(lme3), scales = list( x = list(relation = "free")))$id
       \includegraphics[scale=.35]{../figures/hdrs_shrinkage_week-weeksq}
     \end{column}
   \end{columns}
-\begin{lstlisting}
-# model without covariances
-lme4 <- lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) || id),
-             data = dat, REML = FALSE)
-\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{Investigating random effects structure}
   \begin{itemize}
-    \item The shrinkage plots suggest that we do not need the quadratic effect
-      for each subject (on the population level it does not show anyway)
+    \item The shrinkage plots suggest that we might not need the quadratic
+      effect
     \item Let us dive a little deeper and look at the profiles for the random
       effects
     \item We see that the parameter for the individual quadratic effect
       ($\sigma_3$) cannot be estimated sensibly
   \end{itemize}
 \begin{lstlisting}
-pm4 <- profile(lme4, which = "theta_")
+pm3 <- profile(lme3r, which = "theta_")
 
-xyplot(log(pm4))
-densityplot(log(pm4))
-splom(log(pm4))
-
-confint(pm4)
-# --> a model with the covariances will not even be estimated by the
-# profile function in R
+xyplot(pm3)
+densityplot(log(pm3))
+# --> does not show for this model
+splom(pm3)
+confint(pm3)
+# --> parameter estimation does not seem very stable (with uncentered
+# time and ML estimation it does not really work at all)
 \end{lstlisting}
 \end{frame}
+
+\begin{frame}[fragile]{Investigating random effects structure}
+  {Shrinkage plots}
+  \begin{columns}
+    \begin{column}{.35\textwidth}
+      \includegraphics[scale=.35]{../figures/hdrs_shrinkage_int-week_noncorr}
+    \end{column}
+    \begin{column}{.35\textwidth}
+      \includegraphics[scale=.35]{../figures/hdrs_shrinkage_int-weeksq_noncorr}
+    \end{column}
+    \begin{column}{.35\textwidth}
+      \includegraphics[scale=.35]{../figures/hdrs_shrinkage_week-weeksq_noncorr}
+    \end{column}
+  \end{columns}
+\begin{lstlisting}
+# model without covariances
+lme3nc <- lmer(hamd ~ week_c + I(week_c^2) +
+               (week_c + I(week_c^2) || id), data = dat)
+\end{lstlisting}
+\end{frame}
+
 
 \begin{frame}[fragile]{Intermediate conclusions}
   \begin{itemize}
@@ -471,13 +495,14 @@ confint(pm4)
       not of so much relevance
     \item In this case, I am (usually) conducting a more conservative test (more
       on this next session)
+    \item Comparing models without the covariance terms also suggests that the
+      quadratic time effect might not be necessary
   \end{itemize}
 \begin{lstlisting}
-lme5 <- lmer(hamd ~ week_c + (week_c || id),
-             data = dat, REML = FALSE)
-lme6 <- lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) || id),
-             data = dat, REML = FALSE)
-anova(lme5, lme6)
+lme2nc <- lmer(hamd ~ week_c + (week_c || id), data = dat, REML = FALSE)
+lme3nc <- lmer(hamd ~ week_c + I(week_c^2) +
+              (week_c + I(week_c^2) || id), data = dat, REML = FALSE)
+anova(lme2nc, lme3nc)
 \end{lstlisting}
 \end{frame}
 

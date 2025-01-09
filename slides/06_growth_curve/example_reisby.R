@@ -69,7 +69,7 @@ lme2c <- lmer(hamd ~ week_c + (week_c | id), dat, REML = FALSE)
 
 # model with quadratic time trend
 lme3c <- lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) | id), dat,
-             REML = FALSE)
+              REML = FALSE)
 
 pdf("../figures/hdrs-ind_pred-quad.pdf", height = 6, width = 6)
 
@@ -112,48 +112,47 @@ xyplot(hamd + predict(lme3.0) ~ week | id, data = dat,
 
 #--------------- (4) Check random effects structure ---------------
 
-pdf("../figures/hdrs-caterpillar.pdf", height = 8, width = 20)
+lme3reml <- lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) | id), dat)
 
-dotplot(ranef(lme4, condVar = TRUE),
-        scales = list(x = list(relation = "free")))[[1]]
-
-dev.off()
-
-pm3 <- profile(lme3.1)
+pm3 <- profile(lme3reml, which = "theta_")
 
 xyplot(pm3)
 densityplot(pm3)
 splom(pm3)
 
-lme4 <- lmer(hamd ~ week_c + (week_c + I(week_c^2) || id), dat, REML = FALSE)
+lme3noncorr <- lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) || id), dat)
 
-pm4 <- profile(lme4)
+pm3nc <- profile(lme3noncorr)
 
-xyplot(pm4)
-xyplot(log(pm4))
-xyplot(varianceProf(pm4))
+xyplot(pm3nc)
+xyplot(log(pm3nc))
+xyplot(varianceProf(pm3nc))
 
-densityplot(pm4)
-densityplot(log(pm4))
-densityplot(varianceProf(pm4))
+densityplot(pm3nc)
+densityplot(log(pm3nc))
+densityplot(varianceProf(pm3nc))
 
-splom(pm4)
-splom(log(pm4))
-splom(varianceProf(pm4))
+splom(pm3nc)
+splom(log(pm3nc))
+splom(varianceProf(pm3nc))
 
-confint(pm4)
+confint(pm3nc)
 
+pdf("../figures/hdrs-caterpillar.pdf", height = 8, width = 20)
+
+dotplot(ranef(lme3reml), scales = list(x = list(relation = "free")))[[1]]
+
+dev.off()
 
 # Shrinkage plots
 
-lme5 <- lmer(hamd ~ week_c + I(week_c^2) + (week_c + I(week_c^2) || id), dat, REML = FALSE)
-
 df     <- coef(lmList(hamd ~ week_c + I(week_c^2) | id, dat))
-cc1    <- as.data.frame(coef(lme5)$id)
+cc1    <- as.data.frame(coef(lme3reml)$id)
 names(cc1) <- c("A", "B", "C")
 
 df <- cbind(df, cc1)
-ff <- fixef(lme5)
+ff <- fixef(lme3reml)
+
 
 pdf("../figures/hdrs_shrinkage_int-week.pdf", height = 6, width = 6, pointsize = 10)
 
@@ -222,6 +221,114 @@ dev.off()
 
 
 pdf("../figures/hdrs_shrinkage_week-weeksq.pdf", height = 6, width = 6, pointsize = 10)
+
+with(df,
+  xyplot(week_c ~ `I(week_c^2)`, aspect = 1,
+    x1 = C, y1 = B,
+    panel = function(x, y, x1, y1, subscripts, ...) {
+        panel.grid(h = -1, v = -1)
+        x1 <- x1[subscripts]
+        y1 <- y1[subscripts]
+        larrows(x, y, x1, y1, type = "closed", length = 0.1, fill = "black",
+                angle = 15, ...)
+        lpoints(x, y,
+                pch = 16,
+                col = trellis.par.get("superpose.symbol")$col[2])
+        lpoints(x1, y1,
+                pch = 16,
+                col = trellis.par.get("superpose.symbol")$col[1])
+        lpoints(ff[3], ff[2], 
+                pch = 16,
+                col = trellis.par.get("superpose.symbol")$col[3])
+    },
+    xlab = expression(week_c^2),
+    ylab = "week_c",
+    key = list(space = "top", columns = 3,
+               text = list(c("Mixed model", "Within-subject", "Population")),
+               points = list(col = trellis.par.get("superpose.symbol")$col[1:3],
+                             pch = 16))
+  )
+)
+
+dev.off()
+
+# Shrinkage plots without covariances
+
+df     <- coef(lmList(hamd ~ week_c + I(week_c^2) | id, dat))
+cc1    <- as.data.frame(coef(lme3noncorr)$id)
+names(cc1) <- c("A", "B", "C")
+
+df <- cbind(df, cc1)
+ff <- fixef(lme3noncorr)
+
+
+pdf("../figures/hdrs_shrinkage_int-week_noncorr.pdf", height = 6, width = 6, pointsize = 10)
+
+with(df,
+  xyplot(`(Intercept)` ~ week_c, aspect = 1,
+    x1 = B, y1 = A,
+    panel = function(x, y, x1, y1, subscripts, ...) {
+        panel.grid(h = -1, v = -1)
+        x1 <- x1[subscripts]
+        y1 <- y1[subscripts]
+        larrows(x, y, x1, y1, type = "closed", length = 0.1, fill = "black",
+                angle = 15, ...)
+        lpoints(x, y,
+                pch = 16,
+                col = trellis.par.get("superpose.symbol")$col[2])
+        lpoints(x1, y1,
+                pch = 16,
+                col = trellis.par.get("superpose.symbol")$col[1])
+        lpoints(ff[2], ff[1], 
+                pch = 16,
+                col = trellis.par.get("superpose.symbol")$col[3])
+    },
+    xlab = "week_c",
+    ylab = "(Intercept)",
+    key = list(space = "top", columns = 3,
+               text = list(c("Mixed model", "Within-subject", "Population")),
+               points = list(col = trellis.par.get("superpose.symbol")$col[1:3],
+                             pch = 16))
+  )
+)
+
+dev.off()
+
+
+pdf("../figures/hdrs_shrinkage_int-weeksq_noncorr.pdf", height = 6, width = 6, pointsize = 10)
+
+with(df,
+  xyplot(`(Intercept)` ~ `I(week_c^2)`, aspect = 1,
+    x1 = C, y1 = A,
+    panel = function(x, y, x1, y1, subscripts, ...) {
+        panel.grid(h = -1, v = -1)
+        x1 <- x1[subscripts]
+        y1 <- y1[subscripts]
+        larrows(x, y, x1, y1, type = "closed", length = 0.1, fill = "black",
+                angle = 15, ...)
+        lpoints(x, y,
+                pch = 16,
+                col = trellis.par.get("superpose.symbol")$col[2])
+        lpoints(x1, y1,
+                pch = 16,
+                col = trellis.par.get("superpose.symbol")$col[1])
+        lpoints(ff[3], ff[1], 
+                pch = 16,
+                col = trellis.par.get("superpose.symbol")$col[3])
+    },
+    xlab = expression(week_c^2),
+    ylab = "(Intercept)",
+    key = list(space = "top", columns = 3,
+               text = list(c("Mixed model", "Within-subject", "Population")),
+               points = list(col = trellis.par.get("superpose.symbol")$col[1:3],
+                             pch = 16))
+  )
+)
+
+dev.off()
+
+
+pdf("../figures/hdrs_shrinkage_week-weeksq_noncorr.pdf", height = 6, width = 6, pointsize = 10)
 
 with(df,
   xyplot(week_c ~ `I(week_c^2)`, aspect = 1,
