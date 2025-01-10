@@ -2,16 +2,16 @@
 
 ## S3 methods in R
 
-I got the following question per e-mail this week:
+I got the following question via e-mail this week:
 
 > I used the function `corr_coef()` from the metan package to get a
 > visualization of a correlation matrix, like this
-
-```r
-correlations <- corr_coef(data)
-plot(correlations)
-```
-
+> 
+> ```r
+> correlations <- corr_coef(data)
+> plot(correlations)
+> ```
+> 
 > The plot now sorts the correlations in a way that I don't understand. I want
 > the original order. Do you know how to do this? And one more question: Is
 > there a way to only display the correlations that are siginificant?
