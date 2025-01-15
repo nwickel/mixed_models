@@ -23,8 +23,13 @@
 \setbeamercolor{bibliography entry author}{fg=iwmgray}
 \setbeamertemplate{bibliography item}{}
 
+
 \definecolor{iwmorange}{RGB}{255,105,0}
 \definecolor{iwmgray}{RGB}{67,79,79}
+\definecolor{iwmblue}{RGB}{60,180,220}
+\definecolor{iwmgreen}{RGB}{145,200,110}
+\definecolor{iwmpurple}{RGB}{120,0,75}
+
 \setbeamercolor{title}{fg=iwmorange}
 \setbeamercolor{frametitle}{fg=iwmorange}
 \setbeamercolor{structure}{fg=iwmorange}
@@ -32,39 +37,27 @@
 \setbeamercolor{author}{fg=iwmgray}
 \setbeamercolor{date}{fg=iwmgray}
 
-\title{Data simulation for linear mixed-effects models}
+\title{Crossed-random effects}
 \author{Nora Wickelmaier}
-\date{January 9, 2023}
-%\date{Last modified: \today}
+\date{Last modified: \today}
 
 \newcommand{\vect}[1]{\mathbf{#1}}
 \newcommand{\mat}[1]{\mathbf{#1}}
 \newcommand{\gvect}[1]{\boldsymbol{#1}}
 \newcommand{\gmat}[1]{\boldsymbol{#1}}
 
-\lstset{language=R,%
-  %backgroundcolor=\color{iwmgray!80!white},
-  basicstyle=\ttfamily\color{iwmorange},
-  frame=single,
-  commentstyle=\slshape\color{black},
-  keywordstyle=\bfseries\color{white},
-  identifierstyle=\color{white},
-  stringstyle=\color{green!85!black},
-  numbers=none,%left,numberstyle=\tiny,
-  basewidth={.5em, .4em},
-  showstringspaces=false,
-  emphstyle=\color{red!50!white}}
-
-\lstdefinestyle{plain}{language=R,
-  frame=none,
-  basicstyle=\ttfamily\color{iwmorange},
-  commentstyle=\slshape\color{iwmgray},
-  keywordstyle=\bfseries\color{iwmgray},
-  identifierstyle=\color{iwmgray},
-  stringstyle=\color{iwmgray},
-  numbers=none,
-  basewidth={.5em, .4em},
-  showstringspaces=false}
+\lstset{language = R,%
+  basicstyle = \ttfamily\color{iwmgray},
+  frame = single,
+  rulecolor = \color{iwmgray},
+  commentstyle = \slshape\color{iwmgreen},
+  keywordstyle = \bfseries\color{iwmgray},
+  identifierstyle = \color{iwmpurple},
+  stringstyle = \color{iwmblue},
+  numbers = none,%left,numberstyle = \tiny,
+  basewidth = {.5em, .4em},
+  showstringspaces = false,
+  emphstyle = \color{red!50!white}}
 
 \pgfmathdeclarefunction{gauss}{2}{%
   \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
@@ -188,8 +181,6 @@ With random intercepts for subject and item, and random slopes for
   \end{tabular}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-
 \begin{frame}[fragile]{Fixed effects}
   \begin{lstlisting}
 datsim <- expand.grid(subject = factor(c("s1", "s2", "s3")),
@@ -243,8 +234,6 @@ confint(lme1)
 ?convergence
   \end{lstlisting}
 \end{frame}
-
-}
 
 \begin{frame}{Visualization of data}
   \centering
@@ -355,7 +344,6 @@ $\gvect{\upsilon}_i$, and the design matrices $\mat{X}_i$ and $\mat{Z}_i$
 \end{equation*}
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
 
 \begin{frame}[fragile]{Simulate data using model matrices}
   \begin{lstlisting}
@@ -376,7 +364,6 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
   \end{lstlisting}
 \end{frame}
 
-}
 
 \begin{frame}[fragile]{}
   \begin{block}{Exercise}
@@ -526,7 +513,6 @@ datsim$rt2 <- X %*% beta + Z %*% theta + e
 \]
 \end{frame}
 
-{\setbeamercolor{background canvas}{bg=iwmgray!80!white}
 
 \begin{frame}[fragile]{From model to data}
   \begin{lstlisting}
@@ -578,18 +564,7 @@ with(dat, interaction.plot(A, B, RT, type = "b", pch = c(21, 16),
   \nocite{Wickelmaier2022}
 \end{frame}
 
-}
 
-% {\setbeamercolor{background canvas}{bg=iwmgray!80!white}
-% 
-% \begin{frame}[fragile]{}
-%   \begin{lstlisting}
-%   ##
-%   \end{lstlisting}
-% \end{frame}
-% 
-% }
-% 
 % \begin{frame}[fragile]{}
 %   \begin{block}{Exercise}
 %     \begin{itemize}
