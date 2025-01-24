@@ -237,12 +237,11 @@ dat$id   <- factor(dat$id)
 dat$diag <- factor(dat$diag, levels = c("nonen", "endog"))
 dat      <- na.omit(dat)     # drop missing values
 
+library(lme4)
 # random intercept model
 lme1 <- lmer(hamd ~ week + (1 | id), data = dat, REML = FALSE)
-
 # random slope model
 lme2 <- lmer(hamd ~ week + (week | id), data = dat, REML = FALSE)
-
 # model with quadratic time trend
 lme3 <- lmer(hamd ~ week + I(week^2) + (week + I(week^2) | id),
              data = dat, REML = FALSE)
@@ -456,12 +455,11 @@ dotplot(ranef(lme3r), scales = list( x = list(relation = "free")))$id
 pm3 <- profile(lme3r, which = "theta_")
 
 xyplot(pm3)
-densityplot(log(pm3))
-# --> does not show for this model
+densityplot(pm3) # --> does not show for this model
 splom(pm3)
 confint(pm3)
 # --> parameter estimation does not seem very stable (with uncentered
-# time and ML estimation it does not really work at all)
+# time and ML estimation it does not work at all)
 \end{lstlisting}
 \end{frame}
 
@@ -535,8 +533,8 @@ anova(lme2nc, lme3nc)
 
 \section{Vocal charades}
 
-\begin{frame}{Vocal charades \citep{Winter2016}}
-This (simulated) example from linguistics is taken from \citet{Winter2016}\\[2ex]
+\begin{frame}[fragile, allowframebreaks]{Vocal charades}
+This example from linguistics is taken from \citet{Winter2016}\\[2ex]
 \begin{itemize}
   \item Participants play a game of `vocal charades'
   \item At each round, a participant has to vocalize a meaning to the
@@ -546,12 +544,6 @@ This (simulated) example from linguistics is taken from \citet{Winter2016}\\[2ex
   \item This game is played repeatedly with the finding that over time, a
   dyad converges on a set of nonlinguistic vocalizations that assure a high
   degree of intelligibility between the two participants in the dyad
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{Example: Growth curve model}
-\begin{itemize}
   \item Initially, participants may be struggling with the task and explore
   very different kinds of vocalizations
   \item Over time, they may converge on a more stable set of iconic
@@ -561,11 +553,6 @@ This (simulated) example from linguistics is taken from \citet{Winter2016}\\[2ex
   \item Finally, after even more time, the dyad may conventionalize to
   idiosyncratic patterns that deviate from iconicity and become
   increasingly arbitrary
-\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Example: Growth curve model}
-  \begin{itemize}
     \item 100 observations of three variables (simulated data set)\\[2ex]
   \begin{tabular}{lp{10cm}}
       Variable & Description \\
@@ -575,15 +562,6 @@ This (simulated) example from linguistics is taken from \citet{Winter2016}\\[2ex
       \texttt{iconicity} & iconicity measure \\
      \hline
   \end{tabular}
-
-  \vspace{.5cm}
-\item For better interpretation, \texttt{t} will be centered
-  \begin{lstlisting}
-dat <- read.csv("data/lzw003_supplementary-data/example2_dyads.csv")
-dat$dyad <- as.factor(dat$dyad)
-
-dat$t_c <- dat$t - mean(dat$t)
-  \end{lstlisting}
   \end{itemize}
 \end{frame}
 
@@ -594,6 +572,11 @@ dat$t_c <- dat$t - mean(dat$t)
     \end{column}
     \begin{column}{.5\textwidth}
       \begin{lstlisting}
+dat <- 
+  read.csv("data/example2_dyads.csv")
+dat$dyad <- as.factor(dat$dyad)
+dat$t_c <- dat$t - mean(dat$t)
+
 xyplot(
   iconicity ~ t, dat,
   groups = dyad,
