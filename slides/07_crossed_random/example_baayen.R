@@ -9,9 +9,9 @@
 # output: 
 #
 # created: Jul/20/2018, NU
-# last mod: Jan/05/2023, NU
+# last mod: Jan/24/2025, NU
 
-#setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/regression/06_data_simulation/")
+#setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/iwm/mixed_models/slides/07_crossed_random/")
 
 library(lattice)
 library(lme4)
@@ -19,7 +19,7 @@ library(xtable)
 
 #--------------- (1) Read data ---------------
 
-dat0 <- read.table(text=
+dat0 <- read.table(text =
  "subj item soa rt int intsoa itemint subint subsoa res
   s1 w1 Long  466 522.2 0     -28.3 -26.2 0       -2.0 
   s1 w2 Long  520 522.2 0     14.2    -26.2 0       9.8 
@@ -39,7 +39,7 @@ dat0 <- read.table(text=
   s3 w1 Short 470 522.2 -19 -28.3 -3.5  1.5     -2.9 
   s3 w2 Short 511 522.2 -19 14.2    -3.5  1.5     -4.6 
   s3 w3 Short 528 522.2 -19 14.1    -3.5  1.5     13.2 "
-  , header=TRUE)
+  , header = TRUE, stringsAsFactors = TRUE)
 
 dat <- dat0[, 1:4]
 
@@ -67,9 +67,14 @@ sd(dat0$res)
 cor(dat0$subint, dat0$subsoa)
 
 # plot
-pdf("baayen_ex.pdf", width=7, height=3.375, pointsize=10)
-print(xyplot(rt ~ soa | subj, dat, group=item, type="b", auto.key=T, xlab="SOA",
-       ylab="Reaction time"))
+pdf("../figures/baayen_ex.pdf", width=7, height=3.375, pointsize=10)
+
+xyplot(rt ~ soa | subj, dat, group = item,
+       type = "b",
+       auto.key = list(space = "top", column = 3),
+       xlab = "SOA",
+       ylab = "Reaction time")
+
 dev.off()
 
 means <- aggregate(rt ~ soa, dat, mean)
