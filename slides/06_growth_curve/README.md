@@ -19,7 +19,7 @@ You can subscribe here: https://stat.ethz.ch/mailman/listinfo/r-sig-mixed-models
 ## Why are there no $$p$$ values?
 
 The problem are actually not the $$p$$ values but how to calculate the degrees
-of freedoms for linear mixed-effects models. You can find some pointers with
+of freedom for linear mixed-effects models. You can find some pointers with
 
 ```r
 ?lme4::pvalues
