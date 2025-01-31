@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2025-01-24" />
+<meta name="date" content="2025-01-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -227,7 +227,11 @@ div.csl-indent {
 <li class="chapter" data-level="7" data-path="crossed-random-effects.html"><a href="crossed-random-effects.html"><i class="fa fa-check"></i><b>7</b> Crossed random effects</a>
 <ul>
 <li class="chapter" data-level="7.1" data-path="crossed-random-effects.html"><a href="crossed-random-effects.html#slides-6"><i class="fa fa-check"></i><b>7.1</b> Slides</a></li>
-<li class="chapter" data-level="7.2" data-path="crossed-random-effects.html"><a href="crossed-random-effects.html#exercises-6"><i class="fa fa-check"></i><b>7.2</b> Exercises</a></li>
+<li class="chapter" data-level="7.2" data-path="crossed-random-effects.html"><a href="crossed-random-effects.html#exercises-6"><i class="fa fa-check"></i><b>7.2</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="" data-path="crossed-random-effects.html"><a href="crossed-random-effects.html#exercise-1-6"><i class="fa fa-check"></i>Exercise 1</a></li>
+<li class="chapter" data-level="" data-path="crossed-random-effects.html"><a href="crossed-random-effects.html#exercise-2-3"><i class="fa fa-check"></i>Exercise 2</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -262,10 +266,170 @@ div.csl-indent {
 </div>
 <div id="exercises-6" class="section level2 hasAnchor" number="7.2">
 <h2><span class="header-section-number">7.2</span> Exercises<a href="crossed-random-effects.html#exercises-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="exercise-1-6" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 1<a href="crossed-random-effects.html#exercise-1-6" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><p>Change the data simulation by <span class="citation">Baayen et al. (<a href="#ref-Baayen2008" role="doc-biblioref">2008</a>)</span> for <span class="math inline">\(N = 30\)</span> subjects
+instead of only 3</p></li>
+<li><p>You can use the following script and adjust it accordingly</p></li>
+<li><p>You can choose if you want to use model matrices or create the vectors
+“manually”</p></li>
+</ul>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="crossed-random-effects.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Add exercises</span></span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="crossed-random-effects.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
+<span id="cb50-2"><a href="crossed-random-effects.html#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb50-3"><a href="crossed-random-effects.html#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="crossed-random-effects.html#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------- (1) Create data frame ---------------</span></span>
+<span id="cb50-5"><a href="crossed-random-effects.html#cb50-5" aria-hidden="true" tabindex="-1"></a>datsim <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">subject =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;s1&quot;</span> , <span class="st">&quot;s2&quot;</span> , <span class="st">&quot;s3&quot;</span> )),</span>
+<span id="cb50-6"><a href="crossed-random-effects.html#cb50-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">item    =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;w1&quot;</span> , <span class="st">&quot;w2&quot;</span> , <span class="st">&quot;w3&quot;</span> )),</span>
+<span id="cb50-7"><a href="crossed-random-effects.html#cb50-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">soa     =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;long&quot;</span> , <span class="st">&quot;short&quot;</span> )))</span>
+<span id="cb50-8"><a href="crossed-random-effects.html#cb50-8" aria-hidden="true" tabindex="-1"></a>datsim <span class="ot">&lt;-</span> datsim <span class="sc">|&gt;</span> <span class="fu">sort_by</span>(<span class="sc">~</span> subject)</span>
+<span id="cb50-9"><a href="crossed-random-effects.html#cb50-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-10"><a href="crossed-random-effects.html#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------- (2) Define parameters ---------------</span></span>
+<span id="cb50-11"><a href="crossed-random-effects.html#cb50-11" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="fl">522.11</span></span>
+<span id="cb50-12"><a href="crossed-random-effects.html#cb50-12" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">18.89</span></span>
+<span id="cb50-13"><a href="crossed-random-effects.html#cb50-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-14"><a href="crossed-random-effects.html#cb50-14" aria-hidden="true" tabindex="-1"></a>sw  <span class="ot">&lt;-</span> <span class="fl">21.1</span></span>
+<span id="cb50-15"><a href="crossed-random-effects.html#cb50-15" aria-hidden="true" tabindex="-1"></a>sy0 <span class="ot">&lt;-</span> <span class="fl">23.89</span></span>
+<span id="cb50-16"><a href="crossed-random-effects.html#cb50-16" aria-hidden="true" tabindex="-1"></a>sy1 <span class="ot">&lt;-</span> <span class="dv">9</span></span>
+<span id="cb50-17"><a href="crossed-random-effects.html#cb50-17" aria-hidden="true" tabindex="-1"></a>ry  <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb50-18"><a href="crossed-random-effects.html#cb50-18" aria-hidden="true" tabindex="-1"></a>se  <span class="ot">&lt;-</span> <span class="fl">9.9</span></span>
+<span id="cb50-19"><a href="crossed-random-effects.html#cb50-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-20"><a href="crossed-random-effects.html#cb50-20" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------- (3) Create vectors and simulate data ---------------</span></span>
+<span id="cb50-21"><a href="crossed-random-effects.html#cb50-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Fixed effects</span></span>
+<span id="cb50-22"><a href="crossed-random-effects.html#cb50-22" aria-hidden="true" tabindex="-1"></a>b0 <span class="ot">&lt;-</span> <span class="fu">rep</span>(beta0, <span class="dv">18</span>)</span>
+<span id="cb50-23"><a href="crossed-random-effects.html#cb50-23" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, beta1), <span class="at">each =</span> <span class="dv">3</span>), <span class="dv">3</span>)</span>
+<span id="cb50-24"><a href="crossed-random-effects.html#cb50-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-25"><a href="crossed-random-effects.html#cb50-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw random effects</span></span>
+<span id="cb50-26"><a href="crossed-random-effects.html#cb50-26" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sw), <span class="dv">6</span>)</span>
+<span id="cb50-27"><a href="crossed-random-effects.html#cb50-27" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">18</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> se)</span>
+<span id="cb50-28"><a href="crossed-random-effects.html#cb50-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-29"><a href="crossed-random-effects.html#cb50-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Bivariate normal distribution</span></span>
+<span id="cb50-30"><a href="crossed-random-effects.html#cb50-30" aria-hidden="true" tabindex="-1"></a>sig <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(sy0<span class="sc">^</span><span class="dv">2</span>, ry <span class="sc">*</span> sy0 <span class="sc">*</span> sy1, ry <span class="sc">*</span> sy0 <span class="sc">*</span> sy1, sy1<span class="sc">^</span><span class="dv">2</span>), <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb50-31"><a href="crossed-random-effects.html#cb50-31" aria-hidden="true" tabindex="-1"></a>y01 <span class="ot">&lt;-</span> mvtnorm<span class="sc">::</span><span class="fu">rmvnorm</span>(<span class="dv">3</span>, <span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">sigma =</span> sig)</span>
+<span id="cb50-32"><a href="crossed-random-effects.html#cb50-32" aria-hidden="true" tabindex="-1"></a>y0 <span class="ot">&lt;-</span> <span class="fu">rep</span>(y01[,<span class="dv">1</span>], <span class="at">each =</span> <span class="dv">6</span>)</span>
+<span id="cb50-33"><a href="crossed-random-effects.html#cb50-33" aria-hidden="true" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">0</span>, y01[<span class="dv">1</span>,<span class="dv">2</span>],</span>
+<span id="cb50-34"><a href="crossed-random-effects.html#cb50-34" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>, y01[<span class="dv">2</span>,<span class="dv">2</span>],</span>
+<span id="cb50-35"><a href="crossed-random-effects.html#cb50-35" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>, y01[<span class="dv">3</span>,<span class="dv">2</span>]), <span class="at">each =</span> <span class="dv">3</span>)</span>
+<span id="cb50-36"><a href="crossed-random-effects.html#cb50-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-37"><a href="crossed-random-effects.html#cb50-37" aria-hidden="true" tabindex="-1"></a>datsim<span class="sc">$</span>rt <span class="ot">&lt;-</span> b0 <span class="sc">+</span> b1 <span class="sc">+</span> w <span class="sc">+</span> y0 <span class="sc">+</span> y1 <span class="sc">+</span> e</span>
+<span id="cb50-38"><a href="crossed-random-effects.html#cb50-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-39"><a href="crossed-random-effects.html#cb50-39" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------- (4) Simulate data using model matrices ---------------</span></span>
+<span id="cb50-40"><a href="crossed-random-effects.html#cb50-40" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>( <span class="sc">~</span> soa, datsim)</span>
+<span id="cb50-41"><a href="crossed-random-effects.html#cb50-41" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>( <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> item <span class="sc">+</span> subject <span class="sc">+</span> subject<span class="sc">:</span>soa, datsim,</span>
+<span id="cb50-42"><a href="crossed-random-effects.html#cb50-42" aria-hidden="true" tabindex="-1"></a>                  <span class="at">contrasts.arg =</span> <span class="fu">list</span>(<span class="at">subject =</span> <span class="fu">contrasts</span>(datsim<span class="sc">$</span>subject,</span>
+<span id="cb50-43"><a href="crossed-random-effects.html#cb50-43" aria-hidden="true" tabindex="-1"></a>                                                        <span class="at">contrasts =</span> <span class="cn">FALSE</span>)))</span>
+<span id="cb50-44"><a href="crossed-random-effects.html#cb50-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-45"><a href="crossed-random-effects.html#cb50-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Fixed effects</span></span>
+<span id="cb50-46"><a href="crossed-random-effects.html#cb50-46" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">c</span>(beta0, beta1)</span>
+<span id="cb50-47"><a href="crossed-random-effects.html#cb50-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Random effects</span></span>
+<span id="cb50-48"><a href="crossed-random-effects.html#cb50-48" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">w =</span> <span class="fu">unique</span>(w),</span>
+<span id="cb50-49"><a href="crossed-random-effects.html#cb50-49" aria-hidden="true" tabindex="-1"></a>       <span class="at">y0 =</span> y01[,<span class="dv">1</span>],</span>
+<span id="cb50-50"><a href="crossed-random-effects.html#cb50-50" aria-hidden="true" tabindex="-1"></a>       <span class="at">y1 =</span> y01[,<span class="dv">2</span>])</span>
+<span id="cb50-51"><a href="crossed-random-effects.html#cb50-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-52"><a href="crossed-random-effects.html#cb50-52" aria-hidden="true" tabindex="-1"></a>datsim<span class="sc">$</span>rt2 <span class="ot">&lt;-</span> X <span class="sc">%*%</span> beta <span class="sc">+</span> Z <span class="sc">%*%</span> u <span class="sc">+</span> e</span>
+<span id="cb50-53"><a href="crossed-random-effects.html#cb50-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-54"><a href="crossed-random-effects.html#cb50-54" aria-hidden="true" tabindex="-1"></a><span class="co">#--------------- (5) Visualize simulated data ---------------</span></span>
+<span id="cb50-55"><a href="crossed-random-effects.html#cb50-55" aria-hidden="true" tabindex="-1"></a><span class="fu">xyplot</span>(rt <span class="sc">~</span> soa <span class="sc">|</span> subject, datsim, <span class="at">group =</span> item, <span class="at">type =</span> <span class="st">&quot;b&quot;</span>, <span class="at">layout =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span></code></pre></div>
+</details>
+<p><img src="mixed_models_files/figure-html/ex07.1-1.png" width="672" /></p>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb51-1"><a href="crossed-random-effects.html#cb51-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb51-2"><a href="crossed-random-effects.html#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="crossed-random-effects.html#cb51-3" aria-hidden="true" tabindex="-1"></a>datsim <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">subject =</span> <span class="fu">factor</span>(<span class="fu">paste0</span>(<span class="st">&quot;s&quot;</span>, <span class="dv">1</span><span class="sc">:</span>n)),</span>
+<span id="cb51-4"><a href="crossed-random-effects.html#cb51-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">item    =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;w1&quot;</span> , <span class="st">&quot;w2&quot;</span> , <span class="st">&quot;w3&quot;</span> )),</span>
+<span id="cb51-5"><a href="crossed-random-effects.html#cb51-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">soa     =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;long&quot;</span> , <span class="st">&quot;short&quot;</span> )))</span>
+<span id="cb51-6"><a href="crossed-random-effects.html#cb51-6" aria-hidden="true" tabindex="-1"></a>datsim <span class="ot">&lt;-</span> datsim <span class="sc">|&gt;</span> <span class="fu">sort_by</span>(<span class="sc">~</span> subject)</span>
+<span id="cb51-7"><a href="crossed-random-effects.html#cb51-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-8"><a href="crossed-random-effects.html#cb51-8" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="fl">522.11</span></span>
+<span id="cb51-9"><a href="crossed-random-effects.html#cb51-9" aria-hidden="true" tabindex="-1"></a>beta1 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fl">18.89</span></span>
+<span id="cb51-10"><a href="crossed-random-effects.html#cb51-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-11"><a href="crossed-random-effects.html#cb51-11" aria-hidden="true" tabindex="-1"></a>sw  <span class="ot">&lt;-</span> <span class="fl">21.1</span></span>
+<span id="cb51-12"><a href="crossed-random-effects.html#cb51-12" aria-hidden="true" tabindex="-1"></a>sy0 <span class="ot">&lt;-</span> <span class="fl">23.89</span></span>
+<span id="cb51-13"><a href="crossed-random-effects.html#cb51-13" aria-hidden="true" tabindex="-1"></a>sy1 <span class="ot">&lt;-</span> <span class="dv">9</span></span>
+<span id="cb51-14"><a href="crossed-random-effects.html#cb51-14" aria-hidden="true" tabindex="-1"></a>ry  <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb51-15"><a href="crossed-random-effects.html#cb51-15" aria-hidden="true" tabindex="-1"></a>se  <span class="ot">&lt;-</span> <span class="fl">9.9</span></span>
+<span id="cb51-16"><a href="crossed-random-effects.html#cb51-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-17"><a href="crossed-random-effects.html#cb51-17" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> sw)</span>
+<span id="cb51-18"><a href="crossed-random-effects.html#cb51-18" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n <span class="sc">*</span> <span class="dv">6</span>, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> se)</span>
+<span id="cb51-19"><a href="crossed-random-effects.html#cb51-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-20"><a href="crossed-random-effects.html#cb51-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Bivariate normal distribution</span></span>
+<span id="cb51-21"><a href="crossed-random-effects.html#cb51-21" aria-hidden="true" tabindex="-1"></a>sig <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(sy0<span class="sc">^</span><span class="dv">2</span>, ry <span class="sc">*</span> sy0 <span class="sc">*</span> sy1, ry <span class="sc">*</span> sy0 <span class="sc">*</span> sy1, sy1<span class="sc">^</span><span class="dv">2</span>), <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb51-22"><a href="crossed-random-effects.html#cb51-22" aria-hidden="true" tabindex="-1"></a>y01 <span class="ot">&lt;-</span> mvtnorm<span class="sc">::</span><span class="fu">rmvnorm</span>(n, <span class="at">mean =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">sigma =</span> sig)</span>
+<span id="cb51-23"><a href="crossed-random-effects.html#cb51-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-24"><a href="crossed-random-effects.html#cb51-24" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">c</span>(beta0, beta1)</span>
+<span id="cb51-25"><a href="crossed-random-effects.html#cb51-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Random effects</span></span>
+<span id="cb51-26"><a href="crossed-random-effects.html#cb51-26" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">w =</span> w,</span>
+<span id="cb51-27"><a href="crossed-random-effects.html#cb51-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">y0 =</span> y01[,<span class="dv">1</span>],</span>
+<span id="cb51-28"><a href="crossed-random-effects.html#cb51-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">y1 =</span> y01[,<span class="dv">2</span>])</span>
+<span id="cb51-29"><a href="crossed-random-effects.html#cb51-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-30"><a href="crossed-random-effects.html#cb51-30" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>( <span class="sc">~</span> soa, datsim)</span>
+<span id="cb51-31"><a href="crossed-random-effects.html#cb51-31" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>( <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> item <span class="sc">+</span> subject <span class="sc">+</span> subject<span class="sc">:</span>soa, datsim,</span>
+<span id="cb51-32"><a href="crossed-random-effects.html#cb51-32" aria-hidden="true" tabindex="-1"></a>                  <span class="at">contrasts.arg =</span> <span class="fu">list</span>(<span class="at">subject =</span> <span class="fu">contrasts</span>(datsim<span class="sc">$</span>subject,</span>
+<span id="cb51-33"><a href="crossed-random-effects.html#cb51-33" aria-hidden="true" tabindex="-1"></a>                                                        <span class="at">contrasts =</span> <span class="cn">FALSE</span>)))</span>
+<span id="cb51-34"><a href="crossed-random-effects.html#cb51-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-35"><a href="crossed-random-effects.html#cb51-35" aria-hidden="true" tabindex="-1"></a>datsim<span class="sc">$</span>rt <span class="ot">&lt;-</span> X <span class="sc">%*%</span> beta <span class="sc">+</span> Z <span class="sc">%*%</span> u <span class="sc">+</span> e</span>
+<span id="cb51-36"><a href="crossed-random-effects.html#cb51-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-37"><a href="crossed-random-effects.html#cb51-37" aria-hidden="true" tabindex="-1"></a><span class="fu">xyplot</span>(rt <span class="sc">~</span> soa <span class="sc">|</span> subject, datsim, <span class="at">group =</span> item, <span class="at">type =</span> <span class="st">&quot;b&quot;</span>, <span class="at">layout=</span><span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>))</span></code></pre></div>
+</details>
+</div>
+<div id="exercise-2-3" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 2<a href="crossed-random-effects.html#exercise-2-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Fit the following models to the healing data by <span class="citation">Aungle &amp; Langer (<a href="#ref-Aungle2023" role="doc-biblioref">2023</a>)</span></li>
+</ul>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="crossed-random-effects.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/healing.RData&quot;</span>)</span>
+<span id="cb52-2"><a href="crossed-random-effects.html#cb52-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> DFmodel</span>
+<span id="cb52-3"><a href="crossed-random-effects.html#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="crossed-random-effects.html#cb52-4" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Healing <span class="sc">~</span> Condition <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> ResponseId), dat)</span>
+<span id="cb52-5"><a href="crossed-random-effects.html#cb52-5" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Healing <span class="sc">~</span> Condition <span class="sc">+</span> (Condition <span class="sc">|</span> Subject) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> ResponseId), dat)</span>
+<span id="cb52-6"><a href="crossed-random-effects.html#cb52-6" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Healing <span class="sc">~</span> Condition <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject) <span class="sc">+</span></span>
+<span id="cb52-7"><a href="crossed-random-effects.html#cb52-7" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">0</span> <span class="sc">+</span> <span class="fu">dummy</span>(Condition, <span class="st">&quot;28&quot;</span>) <span class="sc">|</span> Subject) <span class="sc">+</span></span>
+<span id="cb52-8"><a href="crossed-random-effects.html#cb52-8" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">0</span> <span class="sc">+</span> <span class="fu">dummy</span>(Condition, <span class="st">&quot;56&quot;</span>) <span class="sc">|</span> Subject) <span class="sc">+</span></span>
+<span id="cb52-9"><a href="crossed-random-effects.html#cb52-9" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">1</span> <span class="sc">|</span> ResponseId), dat)</span></code></pre></div>
+</details>
+<ul>
+<li><p>Profile the models with <code>profile(&lt;model&gt;)</code></p></li>
+<li><p>Use the functions <code>xyplot()</code>, <code>densityplot()</code>, <code>splom()</code> from the lattice
+package to take a closer look at the estimated random parameters</p></li>
+<li><p>Compare the three models with likelihood ratio tests</p></li>
+<li><p>What is the best model in your opinion?</p></li>
+</ul>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb53-1"><a href="crossed-random-effects.html#cb53-1" aria-hidden="true" tabindex="-1"></a>pm1 <span class="ot">&lt;-</span> <span class="fu">profile</span>(m1)</span>
+<span id="cb53-2"><a href="crossed-random-effects.html#cb53-2" aria-hidden="true" tabindex="-1"></a>pm2 <span class="ot">&lt;-</span> <span class="fu">profile</span>(m2)</span>
+<span id="cb53-3"><a href="crossed-random-effects.html#cb53-3" aria-hidden="true" tabindex="-1"></a>pm3 <span class="ot">&lt;-</span> <span class="fu">profile</span>(m3)</span>
+<span id="cb53-4"><a href="crossed-random-effects.html#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="crossed-random-effects.html#cb53-5" aria-hidden="true" tabindex="-1"></a>ci1 <span class="ot">&lt;-</span> <span class="fu">confint</span>(pm1)</span>
+<span id="cb53-6"><a href="crossed-random-effects.html#cb53-6" aria-hidden="true" tabindex="-1"></a>ci2 <span class="ot">&lt;-</span> <span class="fu">confint</span>(pm2)</span>
+<span id="cb53-7"><a href="crossed-random-effects.html#cb53-7" aria-hidden="true" tabindex="-1"></a>ci3 <span class="ot">&lt;-</span> <span class="fu">confint</span>(pm3)</span>
+<span id="cb53-8"><a href="crossed-random-effects.html#cb53-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-9"><a href="crossed-random-effects.html#cb53-9" aria-hidden="true" tabindex="-1"></a>xy1 <span class="ot">&lt;-</span> ci1[<span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span>, <span class="st">&quot;Condition28&quot;</span>, <span class="st">&quot;Condition56&quot;</span>), ]</span>
+<span id="cb53-10"><a href="crossed-random-effects.html#cb53-10" aria-hidden="true" tabindex="-1"></a>xy2 <span class="ot">&lt;-</span> ci2[<span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span>, <span class="st">&quot;Condition28&quot;</span>, <span class="st">&quot;Condition56&quot;</span>), ]</span>
+<span id="cb53-11"><a href="crossed-random-effects.html#cb53-11" aria-hidden="true" tabindex="-1"></a>xy3 <span class="ot">&lt;-</span> ci3[<span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span>, <span class="st">&quot;Condition28&quot;</span>, <span class="st">&quot;Condition56&quot;</span>), ]</span>
+<span id="cb53-12"><a href="crossed-random-effects.html#cb53-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-13"><a href="crossed-random-effects.html#cb53-13" aria-hidden="true" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">par =</span> <span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span>, <span class="st">&quot;Condition28&quot;</span>, <span class="st">&quot;Condition56&quot;</span>),</span>
+<span id="cb53-14"><a href="crossed-random-effects.html#cb53-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">model =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;m1&quot;</span>, <span class="st">&quot;m2&quot;</span>, <span class="st">&quot;m3&quot;</span>), <span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb53-15"><a href="crossed-random-effects.html#cb53-15" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ci =</span> <span class="fu">c</span>(xy1[, <span class="dv">1</span>], xy2[, <span class="dv">1</span>], xy3[, <span class="dv">1</span>], xy1[, <span class="dv">2</span>], xy2[, <span class="dv">2</span>], xy3[, <span class="dv">2</span>])</span>
+<span id="cb53-16"><a href="crossed-random-effects.html#cb53-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb53-17"><a href="crossed-random-effects.html#cb53-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-18"><a href="crossed-random-effects.html#cb53-18" aria-hidden="true" tabindex="-1"></a><span class="fu">dotplot</span>(par <span class="sc">~</span> ci, dp[dp<span class="sc">$</span>model <span class="sc">!=</span> <span class="st">&quot;m3&quot;</span>,], <span class="at">groups =</span> model, <span class="at">auto.key =</span> T, <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb54-1"><a href="crossed-random-effects.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dotplot</span>(model <span class="sc">~</span> ci <span class="sc">|</span> par, dp, <span class="at">groups =</span> model, <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="at">layout =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="at">pch =</span> <span class="dv">16</span>)</span></code></pre></div>
 </details>
 
+</div>
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-Aungle2023" class="csl-entry">
+Aungle, P. &amp; Langer, E. (2023). Physical healing as a function of perceived time. <em>Scientific Reports</em>, <em>13</em>(1), 22432. <a href="https://doi.org/10.1038/s41598-023-50009-3">https://doi.org/10.1038/s41598-023-50009-3</a>
+</div>
+<div id="ref-Baayen2008" class="csl-entry">
+Baayen, R. H., Davidson, D. J. &amp; Bates, D. M. (2008). Mixed-effects modeling with crossed random effects for subjects and items. <em>Journal of Memory and Language</em>, <em>59</em>(4), 390–412. <a href="https://doi.org/10.1016/j.jml.2007.12.005">https://doi.org/10.1016/j.jml.2007.12.005</a>
 </div>
 </div>
             </section>

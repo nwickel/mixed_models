@@ -15,7 +15,7 @@
 
 ### Exercise 1 {-}
 
-* Change the data simulation by Baayen2008 for $N = 30$ subjects
+* Change the data simulation by @Baayen2008 for $N = 30$ subjects
   instead of only 3
 
 * You can use the following script and adjust it accordingly
@@ -128,6 +128,9 @@ xyplot(rt ~ soa | subject, datsim, group = item, type = "b", layout=c(5, 6))
 * Fit the following models to the healing data by @Aungle2023
 
 ```{r ex07.3}
+load("data/healing.RData")
+dat <- DFmodel
+
 m1 <- lmer(Healing ~ Condition + (1 | Subject) + (1 | ResponseId), dat)
 m2 <- lmer(Healing ~ Condition + (Condition | Subject) + (1 | ResponseId), dat)
 m3 <- lmer(Healing ~ Condition + (1 | Subject) +
@@ -146,7 +149,7 @@ m3 <- lmer(Healing ~ Condition + (1 | Subject) +
 * What is the best model in your opinion?
 
 
-```{r ex07.4, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+```{r ex07.4, cache = TRUE, results = "hide", class.source = "fold-hide", fig.show = "hide"}
 pm1 <- profile(m1)
 pm2 <- profile(m2)
 pm3 <- profile(m3)
