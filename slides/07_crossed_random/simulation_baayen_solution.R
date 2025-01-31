@@ -28,16 +28,16 @@ y01 <- mvtnorm::rmvnorm(n, mean = c(0, 0), sigma = sig)
 
 beta <- c(beta0, beta1)
 # Random effects
-theta <- c(w = w,
-          y0 = y01[,1],
-          y1 = y01[,2])
+u <- c(w = w,
+       y0 = y01[,1],
+       y1 = y01[,2])
 
 X <- model.matrix( ~ soa, datsim)
 Z <- model.matrix( ~ 0 + item + subject + subject:soa, datsim,
                   contrasts.arg=list( subject=contrasts(datsim$subject,
                                                         contrasts=FALSE)))
 
-datsim$rt <- X %*% beta + Z %*% theta + e
+datsim$rt <- X %*% beta + Z %*% u + e
 
 xyplot(rt ~ soa | subject, datsim, group=item, type="b", layout=c(5,6))
 
