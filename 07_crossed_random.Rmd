@@ -156,7 +156,7 @@ pm3 <- profile(m3)
 
 xyplot(pm1, which = "theta_")
 xyplot(pm2, which = "theta_")
-xyplot(pm2, which = "theta_")
+xyplot(pm3, which = "theta_")
 
 densityplot(pm1, which = "theta_")
 densityplot(pm2, which = "theta_")
