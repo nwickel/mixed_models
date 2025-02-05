@@ -137,7 +137,6 @@ m3 <- lmer(Healing ~ Condition + (1 | Subject) +
            (0 + dummy(Condition, "28") | Subject) +
            (0 + dummy(Condition, "56") | Subject) +
            (1 | ResponseId), dat)
-m4 <- lmer(Healing ~ Condition + (Condition | Subject) + (Condition | ResponseId), dat)
 ```
 
 * Profile the models with `profile(<model>)`
