@@ -11,7 +11,13 @@ dat$ResponseId <- factor(dat$ResponseId)
 
 # Visualize data
 
-xyplot(Healing ~ Condition | Subject, dat, groups = ResponseId, type = "l")
+xyplot(Healing ~ Condition | Subject, dat, groups = ResponseId, type = "a")
+
+xyplot(Healing ~ Condition | Subject + ResponseId, dat,
+       strip = FALSE,
+       type = c("g", "a"),
+       scales = list(cex = 0.7))
+
 
 vioplot::vioplot(Healing ~ Condition, dat, col = c("#3CB4DC", "#91C86E", "#FF6900"))
 stripchart(Healing ~ Condition, dat,
@@ -84,7 +90,8 @@ dotplot(par ~ ci, dp[dp$model != "m3",], groups = model, auto.key = T, xlab = ""
 
 pdf("slides/figures/heal_ci.pdf", width = 3.375, height = 4.5)
 
-dotplot(model ~ ci | par, dp, groups = model, xlab = "", layout = c(1, 3), pch = 16)
+dotplot(model ~ ci | par, dp, groups = model, xlab = "",
+        layout = c(1, 3), pch = "|", type = "b", cex = 1)
 
 dev.off()
 
