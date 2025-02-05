@@ -387,8 +387,7 @@ instead of only 3</p></li>
 <span id="cb52-6"><a href="crossed-random-effects.html#cb52-6" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Healing <span class="sc">~</span> Condition <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject) <span class="sc">+</span></span>
 <span id="cb52-7"><a href="crossed-random-effects.html#cb52-7" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">0</span> <span class="sc">+</span> <span class="fu">dummy</span>(Condition, <span class="st">&quot;28&quot;</span>) <span class="sc">|</span> Subject) <span class="sc">+</span></span>
 <span id="cb52-8"><a href="crossed-random-effects.html#cb52-8" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">0</span> <span class="sc">+</span> <span class="fu">dummy</span>(Condition, <span class="st">&quot;56&quot;</span>) <span class="sc">|</span> Subject) <span class="sc">+</span></span>
-<span id="cb52-9"><a href="crossed-random-effects.html#cb52-9" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">1</span> <span class="sc">|</span> ResponseId), dat)</span>
-<span id="cb52-10"><a href="crossed-random-effects.html#cb52-10" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Healing <span class="sc">~</span> Condition <span class="sc">+</span> (Condition <span class="sc">|</span> Subject) <span class="sc">+</span> (Condition <span class="sc">|</span> ResponseId), dat)</span></code></pre></div>
+<span id="cb52-9"><a href="crossed-random-effects.html#cb52-9" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">1</span> <span class="sc">|</span> ResponseId), dat)</span></code></pre></div>
 </details>
 <ul>
 <li><p>Profile the models with <code>profile(&lt;model&gt;)</code></p></li>
