@@ -1,0 +1,20 @@
+# Within designs
+
+## Slides
+
+TODO
+
+<!--
+```{=html}
+<object data="slides/07_crossed_random/07_crossed_random.pdf" type="application/pdf" width="100%" height="500px">
+  <p>
+    Unable to display PDF file. <a href="slides/07_crossed_random/07_crossed_random.pdf">Download</a> instead.
+  </p>
+</object>
+```
+-->
+
+## Exercises
+
+TODO
+
