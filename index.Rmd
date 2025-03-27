@@ -27,11 +27,9 @@ The data sets used in the examples and exercises can be downloaded
 ## Desirable background knowledge {-}
 
 Alle examples in this course are worked out in [R](https://www.r-project.org/).
-Introductory knowledge in R is therefore a prerequisite. If you want to freshen
-up your R knowledge a bit, you can go through the exercises provided here:
-https://nwickel.github.io/R_intro/. Apart from this, I will assume that you have
-some kind of workflow how to use R with a text editor (e.g.,
-[Vim](https://www.vim.org/)) or an IDE (e.g.,
+Introductory knowledge in R is therefore a prerequisite. Apart from this, I will
+assume that you have some kind of workflow how to use R with a text editor
+(e.g., [Vim](https://www.vim.org/)) or an IDE (e.g.,
 [RStudio](https://posit.co/downloads/)).
 
 It is further assumed that you have attended at least one introductory
@@ -43,8 +41,7 @@ testing. Some background in regression analysis is helpful, but we will cover
 the basics in this course.
 
 If you feel like these concepts could be a bit more "present" in your head, you
-can go through the [first
-chapter](https://vasishth.github.io/Freq_CogSci/some-important-facts-about-distributions.html)
+can go through the [first chapter](https://vasishth.github.io/Freq_CogSci/some-important-facts-about-distributions.html)
 in the online book by @Vasishth2022. There will be time to ask questions about
 the concepts in the sessions, but we will not have time to go through all of
 them together.
