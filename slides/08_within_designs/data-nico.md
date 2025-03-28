@@ -14,10 +14,10 @@ freedom (alpha = .05, n = 3,592).
 
 ## Participants
 
-A total of 898 UK participants ($M_age = 42$, $SD = 14$; 50.6% female; 36% with
-a high-school diploma or equivalent, 62% with a Bachelor’s degree or higher)
-were recruited via the online platform Prolific. Participants were randomly
-assigned to one of the five context conditions, with approximately 180
+A total of 898 UK participants ($M_{age} = 42$, $SD = 14$; 50.6% female; 36%
+with a high-school diploma or equivalent, 62% with a Bachelor’s degree or
+higher) were recruited via the online platform Prolific. Participants were
+randomly assigned to one of the five context conditions, with approximately 180
 individuals per group.
 
 ## Procedure
