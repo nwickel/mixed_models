@@ -1,0 +1,343 @@
+\documentclass[aspectratio=169]{beamer}
+% \usepackage{pgfpages}
+% \pgfpagesuselayout{4 on 1}[a4paper,landscape,border shrink=5mm]
+\usepackage{tikz}
+\usetikzlibrary{shapes, backgrounds, arrows, positioning}
+%\usepackage{pgfplots}
+\usepackage{listings}
+\usepackage[utf8,latin1]{inputenc}
+\usepackage[style = apa, backend = biber, natbib = true]{biblatex}
+\addbibresource{../../literature/lit.bib}
+
+\makeatletter \def\newblock{\beamer@newblock} \makeatother  
+
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{section in toc}[circle]
+\mode<beamer>{\setbeamercolor{math text displayed}{fg=iwmgray}}
+\setbeamercolor{block body}{bg=iwmorange!50!white}
+\setbeamercolor{block title}{fg=white, bg=iwmorange}
+
+% Definitions for biblatex
+\setbeamercolor{bibliography entry note}{fg=iwmgray}
+\setbeamercolor{bibliography entry author}{fg=iwmgray}
+\setbeamertemplate{bibliography item}{}
+
+
+\definecolor{iwmorange}{RGB}{255,105,0}
+\definecolor{iwmgray}{RGB}{67,79,79}
+\definecolor{iwmblue}{RGB}{60,180,220}
+\definecolor{iwmgreen}{RGB}{145,200,110}
+\definecolor{iwmpurple}{RGB}{120,0,75}
+
+\setbeamercolor{title}{fg=iwmorange}
+\setbeamercolor{frametitle}{fg=iwmorange}
+\setbeamercolor{structure}{fg=iwmorange}
+\setbeamercolor{normal text}{fg=iwmgray}
+\setbeamercolor{author}{fg=iwmgray}
+\setbeamercolor{date}{fg=iwmgray}
+
+\title{Random effects for within designs}
+\author{Nora Wickelmaier}
+\date{Last modified: \today}
+
+\newcommand{\vect}[1]{\mathbf{#1}}
+\newcommand{\mat}[1]{\mathbf{#1}}
+\newcommand{\gvect}[1]{\boldsymbol{#1}}
+\newcommand{\gmat}[1]{\boldsymbol{#1}}
+
+\lstset{language = R,%
+  basicstyle = \ttfamily\color{iwmgray},
+  frame = single,
+  rulecolor = \color{iwmgray},
+  commentstyle = \slshape\color{iwmgreen},
+  keywordstyle = \bfseries\color{iwmgray},
+  identifierstyle = \color{iwmpurple},
+  stringstyle = \color{iwmblue},
+  numbers = none,%left,numberstyle = \tiny,
+  basewidth = {.5em, .4em},
+  showstringspaces = false,
+  emphstyle = \color{red!50!white}}
+
+\pgfmathdeclarefunction{gauss}{2}{%
+  \pgfmathparse{1/(#2*sqrt(2*pi))*exp(-((x-#1)^2)/(2*#2^2))}%
+}
+
+\AtBeginSection[]{
+  \frame{
+    \tableofcontents[sectionstyle=show/hide, subsectionstyle=show/show/hide]}}
+
+\setbeamertemplate{headline}{
+ \begin{beamercolorbox}{section in head}
+   \vskip5pt\insertsectionnavigationhorizontal{\paperwidth}{}{}\vskip2pt
+ \end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}{\vskip-2pt\hfill\insertframenumber$\;$\vskip2pt}
+
+\begin{document}
+
+\begin{frame}{}
+\thispagestyle{empty}
+\titlepage
+\end{frame}
+
+% \begin{frame}{Outline}
+% \tableofcontents
+% \end{frame}
+
+\begin{frame}[<+->]{Selection of random effects}
+  \begin{itemize}
+    \item How to choose an appropriate random effects structure for a
+      mixed-effects model is widely discussed in the literature
+      \citep[e.\,g.,][]{Barr2013, Gelman2024, Bates2018}
+    \item A prominent view is, that the random effects structure needs to
+      represent the experimental design
+    \item Leaving out random slopes for the subjects implies that there are no
+      individual effects for subjects
+    \item Hence, it is assumed that the experimental manipulation has the same
+      effect for every subject
+  \end{itemize}
+\end{frame}
+
+\section{Physical healing}
+
+\begin{frame}[<+->]{Physical healing}{\citep{Aungle2023}}
+  \begin{center}
+  \begin{tabular}{l|cccc}
+    \hline
+    Condition & Mean  & SD    & $N_{subjects}$ & $N_{ratings}$ \\
+    \hline
+    14-min    & 6.17  & 2.59  & 32             &  800 \\
+    28-min    & 6.43  & 2.54  & 33             &  825 \\
+    56-min    & 7.30  & 2.25  & 32             &  800 \\
+    \hline
+  \end{tabular}
+  \end{center}
+  \begin{itemize}
+    \item How perceived time influences physical healing
+    \item They used cupping to induce bruises on 33 subjects, then took a
+      picture, waited for 28\,min and took another picture
+    \item Subjects participated in all three conditions over a two week period
+    \item Subjective time was manipulated to feel like 14, 28, or 56\,min
+    \item Pre and post pictures were presented to 25 raters (amount of healing
+      with 0~=~not at all healed, 5~=~somewhat healed, 10~=~completely healed)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[<+->]{Possible models}{\citep{Aungle2023}}
+  \footnotesize
+  \begin{itemize}
+    \item Model with random intercepts for subjects and random intercepts for
+      raters
+  \[
+    y_{ij} = \beta_0 + \beta_1 Condition_{28} + \beta_2 Condition_{56} +
+      \omega_{0j} + \upsilon_{0i} + \varepsilon_{ij} 
+  \]
+\small
+      with $\upsilon_{0i} \sim N(0, \sigma_{\upsilon}^2)$,
+      $\omega_{0j} \sim N(0, \sigma_{\omega}^2)$, $\varepsilon_{ij} \sim N(0,
+  \sigma_{\varepsilon}^2)$, all i.i.d. 
+    \item Model with random slopes for subjects and random intercepts for
+      raters
+  \[
+    y_{ij} = \beta_0 + \beta_1 Condition_{28} + \beta_2 Condition_{56} +
+      \omega_{0j} + \upsilon_{0i} + \upsilon_{1i} Condition_{28} +
+      \upsilon_{2i} Condition_{56} + \varepsilon_{ij} 
+  \]
+\small
+with $\gvect{\upsilon} \sim N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} = 
+    \begin{pmatrix}
+      \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0\upsilon_1}  & \sigma_{\upsilon_0\upsilon_2}\\
+      \sigma_{\upsilon_0\upsilon_1} & \sigma^2_{\upsilon_1}  & \sigma_{\upsilon_1\upsilon_2}\\
+      \sigma_{\upsilon_0\upsilon_2} & \sigma_{\upsilon_1\upsilon_2} & \sigma^2_{\upsilon_2} \\
+    \end{pmatrix}\right)$,
+      $\omega_{0j} \sim N(0, \sigma_{\omega}^2)$, $\varepsilon_{ij} \sim N(0,
+  \sigma_{\varepsilon}^2)$, all i.i.d. 
+    \item Model with random slope for subjects and random intercepts for
+      raters, zero correlations
+  \[
+    y_{ij} = \beta_0 + \beta_1 Condition_{28} + \beta_2 Condition_{56} +
+      \omega_{0j} + \upsilon_{0i} + \upsilon_{1i} Condition_{28} +
+      \upsilon_{2i} Condition_{56} + \varepsilon_{ij} 
+  \]
+\small
+with $\gvect{\upsilon} \sim N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} = 
+    \begin{pmatrix}
+      \sigma^2_{\upsilon_0} & 0  & 0\\
+      0 & \sigma^2_{\upsilon_1}  & 0\\
+      0 & 0 & \sigma^2_{\upsilon_2} \\
+    \end{pmatrix}\right)$,
+      $\omega_{0j} \sim N(0, \sigma_{\omega}^2)$, $\varepsilon_{ij} \sim N(0,
+  \sigma_{\varepsilon}^2)$, all i.i.d. 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Model comparisons}{\citep{Aungle2023}}
+  \begin{columns}
+    \begin{column}{.69\textwidth}
+\begin{lstlisting}
+library("lme4")
+load("data/healing.RData")
+
+m1 <- lmer(Healing ~ Condition +
+  (1 | Subject) + (1 | ResponseId), dat)
+m2 <- lmer(Healing ~ Condition +
+  (Condition | Subject) + (1 | ResponseId), dat)
+m3 <- lmer(Healing ~ Condition +
+  (1 | Subject) +
+  (0 + dummy(Condition, "28") | Subject) +
+  (0 + dummy(Condition, "56") | Subject) +
+  (1 | ResponseId), dat)
+\end{lstlisting}
+    \end{column}
+    \begin{column}{.35\textwidth}
+      \includegraphics[scale=.6]{../figures/heal_ci}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Different random effects}
+  {Random intercept model}
+  \begin{itemize}
+    \item What is the difference between these 3 models?
+  \end{itemize}
+\begin{lstlisting}
+lapply(coef(m1), head, n = 3)
+# $Subject
+#        (Intercept) Condition28 Condition56
+# 111191    5.759678   0.2272593    1.047163
+# 117694    7.245319   0.2272593    1.047163
+# 141451    4.276601   0.2272593    1.047163
+# 
+# $ResponseId
+#                   (Intercept) Condition28 Condition56
+# R_1DZrj0mXFNlzerG    3.160095   0.2272593    1.047163
+# R_1F99W1Qnk3uLGTg    5.440917   0.2272593    1.047163
+# R_1I4p00HhjngCBwT    3.914327   0.2272593    1.047163
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Different random effects}
+  {Random slope model}
+  \begin{itemize}
+    \item What is the difference between these 3 models?
+  \end{itemize}
+\begin{lstlisting}
+lapply(coef(m2), head, n = 3)
+# $Subject
+#        (Intercept) Condition28 Condition56
+# 111191    4.517425   0.9372819   4.0356794
+# 117694    7.480483  -0.1545164   0.7669798
+# 141451    3.717059   1.2029451   1.6695395
+# 
+# $ResponseId
+#                   (Intercept) Condition28 Condition56
+# R_1DZrj0mXFNlzerG    3.115764   0.2462495    1.089368
+# R_1F99W1Qnk3uLGTg    5.415579   0.2462495    1.089368
+# R_1I4p00HhjngCBwT    3.876277   0.2462495    1.089368
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Different random effects}
+  {Random slope model without correlations}
+  \begin{itemize}
+    \item What is the difference between these 3 models?
+  \end{itemize}
+\begin{lstlisting}
+lapply(coef(m3), head, n = 3)
+# $Subject
+#        dummyCond28 dummyCond56 (Intercept) Condition28 Condition56
+# 111191   0.5508955   2.8897054    4.596686   0.2390194    1.083531
+# 117694  -0.3384845  -0.2573444    7.455698   0.2390194    1.083531
+# 141451   0.8596727   0.4654271    3.768399   0.2390194    1.083531
+# 
+# $ResponseId
+#                   (Intercept) Condition28 Condition56
+# R_1DZrj0mXFNlzerG    3.123060   0.2390194    1.083531
+# R_1F99W1Qnk3uLGTg    5.422826   0.2390194    1.083531
+# R_1I4p00HhjngCBwT    3.883556   0.2390194    1.083531
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[<+->]{Summary}
+  \begin{itemize}
+    \item When we use mixed-effects model to fit data, we need to make an
+      informed choice about the random effects we include into the model
+    \item Complex random effect structures can lead to convergence problems and
+      variance terms for random slopes are not always easy to estimate
+    \item The random effects structure strongly influences the confidence
+      intervals for the fixed effects which we are often interested in
+    \item This is especially relevant in a confirmatory setting
+    \item For some critical discussion of the healing paper and their choice of
+      random effects see \citet{Gelman2024} and Gelman's blog post and
+      discussion here:
+      \url{https://statmodeling.stat.columbia.edu/2025/01/23/slopes/}
+  \end{itemize}
+\end{frame}
+
+\section[AIES]{Perceived trustworthiness of AI expert systems}
+
+\begin{frame}[fragile]{Perceived trustworthiness of AI expert systems}
+  Independent variables
+  \begin{itemize}
+    \item Participant ($N = 898$)
+    \item Partner (AI vs.\ hu, within)
+    \item Stakes (HS vs.\ LS, within)
+    \item Context (edu vs.\ fin vs.\ law vs.\ med vs.\ psy, between)
+  \end{itemize}
+  Dependent variables
+  \begin{itemize}
+    \item Perceived trustworthiness (9 items, 7-point scale, averaged)
+    \item Perceived risk (1 item, 7-point scale, from ``None at all'' to
+      ``Maximally'')
+  \end{itemize}
+  \begin{lstlisting}
+dat <- read.table("data/data-nico.csv", sep = ",", header = TRUE,
+                  stringsAsFactors = TRUE)
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[<+->]{Choose a mixed-effects model}
+  \begin{itemize}
+    \item Let us look at perceived trustworthiness
+    \item Hypothesis: Depending on the context, people will trust a human
+      expert more when the stakes are high
+    \item Draw a hypothesis plot
+    \item What mixed-effects model is suited to test this hypothesis?
+    \item Which random effects are needed to represent the experimental design?
+    \item How many parameters does this model have?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Testing three-way interaction}
+  \begin{lstlisting}
+m0 <- lmer(Trustworthiness ~ (Context + Partner + Stakes)^2 +
+           (1 + Partner + Stakes | Participant), data = dat)
+
+m1 <- lmer(Trustworthiness ~ Context * Partner * Stakes +
+           (1 + Partner + Stakes | Participant), data = dat)
+
+# Test interaction with Likelihood Ratio Test
+anova(m0, m1)
+  \end{lstlisting}
+  \pause
+  \begin{itemize}
+    \item Calculate the confidence intervals for Model \texttt{m1} and compare
+      them to a model with only random intercepts for \texttt{Participant}
+    \item What would you expect based on the results we looked at for
+      \citet{Aungle2023}?
+  \end{itemize}
+\end{frame}
+
+\appendix
+
+%\begin{frame}[allowframebreaks]{References}
+\begin{frame}{References}
+  %\renewcommand{\bibfont}{\footnotesize}
+  \printbibliography
+  %\vfill
+\end{frame}
+
+\end{document}
+
