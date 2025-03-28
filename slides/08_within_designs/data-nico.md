@@ -70,9 +70,6 @@ single-item 7-point scale ("None at all" to "Maximally")."
 
 # Results
 
-Hier noch preliminär und noch nicht abgesegent ein Teil der Analyses und
-Results: 
- 
 ## Linear Mixed-Effects Models (LMMs) for Trustworthiness and Risk
 
 To test H1 and H2, we conducted two linear mixed-effects models predicting
