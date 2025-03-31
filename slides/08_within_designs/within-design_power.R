@@ -34,8 +34,8 @@ sim_cis <- function(form1, form2, data, params, test_par, nsim = 100) {
 nsubj <- 10
 nitem <- 5
 
-pdf("within-design_int-vs-slp.pdf", width = 8.5, height = 3.375, pointsize = 10)
-par(mfrow = c(1, 3), mai = c(.4, .4, .3, .1), mgp = c(2.4, 1, 0))
+#pdf("within-design_int-vs-slp.pdf", width = 8.5, height = 3.375, pointsize = 10)
+#par(mfrow = c(1, 3), mai = c(.4, .4, .3, .1), mgp = c(2.4, 1, 0))
 
 #----- 2x2 within design ------------------------------------------------------
 
@@ -71,6 +71,10 @@ for (nsubj in ns) {
 
 }
 
+pdf("slides/figures/nico_power_2x2design_1obs.pdf",
+    width = 3.375, height = 3.375, pointsize = 10)
+par(mai = c(.6, .6, .2, .1), mgp = c(2.4, 1, 0))
+
 plot(pwr_int ~ ns, type = "o", ylim = 0:1, xlab = "N", ylab = "Power",
      main = "2x2 within design: 1 obs per cell", pch = 21, bg = "white")
 points(pwr_slp ~ ns, type = "o", col = "darkgreen", lty = 2, pch = 21,
@@ -81,6 +85,8 @@ abline(h = .8, col = "gray", lty = 3)
 legend("bottomright", c("random intercept", "random slope"),
        col = c("black", "darkgreen"),
        lty = 1:2, bty = "n", pch = 21, pt.bg = "white")
+
+dev.off()
 
 #----- 2x2 within design with items -------------------------------------------
 
@@ -118,6 +124,9 @@ for (nsubj in ns) {
 
 }
 
+pdf("slides/figures/nico_power_2x2design_5obs.pdf",
+    width = 3.375, height = 3.375, pointsize = 10)
+par(mai = c(.6, .6, .2, .1), mgp = c(2.4, 1, 0))
 plot(pwr_int ~ ns, type = "o", ylim = 0:1, xlab = "N", ylab = "Power",
      main = "2x2 within design: 5 obs per cell", pch = 21, bg = "white")
 points(pwr_slp ~ ns, type = "o", col = "darkgreen", lty = 2, pch = 21,
@@ -128,7 +137,7 @@ abline(h = .8, col = "gray", lty = 3)
 legend("bottomright", c("random intercept", "random slope"),
        col = c("black", "darkgreen"),
        lty = 1:2, bty = "n", pch = 21, pt.bg = "white")
-
+dev.off()
 
 #----- 2x2 within design aggregated over items --------------------------------
 
@@ -180,5 +189,5 @@ legend("bottomright", c("random intercept", "random slope"),
        col = c("black", "darkgreen"),
        lty = 1:2, bty = "n", pch = 21, pt.bg = "white")
 
-dev.off()
+#dev.off()
 

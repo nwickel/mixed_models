@@ -63,9 +63,9 @@ xyplot(Trustworthiness + Risk ~ Partner | Stakes, data = dat,
 
 #------ Fit LMM ---------------------------------------------------------------
 
-m0 <- lmer(Trustworthiness ~ (Context + Partner + Stakes)^2 +
+m0 <- lmer(Risk ~ (Context + Partner + Stakes)^2 +
            (1 + Partner + Stakes | Participant), data = dat)
-m1 <- lmer(Trustworthiness ~ Context * Partner * Stakes +
+m1 <- lmer(Risk ~ Context * Partner * Stakes +
            (1 + Partner + Stakes | Participant), data = dat)
 summary(m1)
 
@@ -79,7 +79,7 @@ qqmath(m1, pch = dat$Partner, col = dat$Context)
 
 #------ Investigate random effects --------------------------------------------
 
-dotplot(ranef(m3, condVar = TRUE),
+dotplot(ranef(m1, condVar = TRUE),
         scales = list(x = list(relation = "free")))[[1]]
 
 pm1 <- profile(m1)
@@ -90,12 +90,12 @@ splom(pm1, which = "theta_")
 confint(pm1)
 
 ## Simplify model
-m2 <- lmer(Trustworthiness ~ Context * Partner * Stakes +
+m2 <- lmer(Risk ~ Context * Partner * Stakes +
            (1 | Participant) +
            (0 + dummy(Partner) | Participant) +
            (0 + dummy(Stakes) | Participant),
          data = dat)
-# --> what happens to the variance term for Stakes?
+# --> what happens to the variance term for Stakes for Trustworthiness?
 
 pm2 <- profile(m2)
 
@@ -105,7 +105,7 @@ splom(pm2, which = "theta_")
 confint(pm2)
 
 
-m3 <- lmer(Trustworthiness ~ Context * Partner * Stakes +
+m3 <- lmer(Risk ~ Context * Partner * Stakes +
            (1 | Participant) +
            (0 + dummy(Partner) | Participant),
          data = dat)
@@ -132,7 +132,7 @@ dotplot(model ~ `2.5 %` + `97.5 %` | par, ci)
 
 ## Random intercept model
 
-m4 <- lmer(Trustworthiness ~ Context * Partner * Stakes + (1 | Participant),
+m4 <- lmer(Risk ~ Context * Partner * Stakes + (1 | Participant),
          data = dat)
 
 pm4 <- profile(m4)
@@ -142,35 +142,68 @@ densityplot(pm4, which = "theta_")
 splom(pm4, which = "theta_")
 confint(pm4)
 
-
+# interaction
 ci <- rbind(confint(pm1, "Contextmed:Partnerhu:StakesLS"),
             confint(pm2, "Contextmed:Partnerhu:StakesLS"),
             confint(pm3, "Contextmed:Partnerhu:StakesLS"),
             confint(pm4, "Contextmed:Partnerhu:StakesLS")) |> as.data.frame()
 
-ci$model <- c("m1", "m2", "m3", "m4")
+ci$model <- factor(c("random slopes", "zero correlations", "no slope for stakes",
+                     "random intercept"),
+                   levels = c("random slopes", "zero correlations",
+                              "no slope for stakes", "random intercept"))
 
-dotplot(model ~ `2.5 %` + `97.5 %`, ci)
-
-dat_ci <- reshape(ci, direction = "long", varying = 1:2, v.names = "ci",
+dat_ci1 <- reshape(ci, direction = "long", varying = 1:2, v.names = "ci",
                   timevar = "bound", times = c("2.5%", "97.5%"))
 
-dotplot(model ~ ci, dat_ci, pch = "|", type = "b", groups = model, xlab = "")
+dat_ci1$par <- "Contextmed:Partnerhu:StakesLS"
+
+# pdf("slides/figures/nico_cis_data-risk_ia.pdf", width = 4.8, height = 4, pointsize = 10)
+# dotplot(model ~ ci, dat_ci1, pch = "|", type = "b", groups = model, xlab = "",
+#         main = "Contextmed:Partnerhu:StakesLS")
+# dev.off()
 # CI smaller, since it is a confidence interval for the fixed effect???
+
+# main effect for partner
+ci <- rbind(confint(pm1, "Partnerhu"),
+            confint(pm2, "Partnerhu"),
+            confint(pm3, "Partnerhu"),
+            confint(pm4, "Partnerhu")) |> as.data.frame()
+
+ci$model <- factor(c("random slopes", "zero correlations", "no slope for stakes",
+                     "random intercept"),
+                   levels = c("random slopes", "zero correlations",
+                              "no slope for stakes", "random intercept"))
+
+dat_ci2 <- reshape(ci, direction = "long", varying = 1:2, v.names = "ci",
+                  timevar = "bound", times = c("2.5%", "97.5%"))
+
+dat_ci2$par <- "Partnerhu"
+
+# pdf("slides/figures/nico_cis_data-risk_me.pdf", width = 4.8, height = 4, pointsize = 10)
+# dotplot(model ~ ci, dat_ci2, pch = "|", type = "b", groups = model, xlab = "",
+#         main = "Partnerhu")
+# dev.off()
+
+pdf("slides/figures/nico_cis_data-risk.pdf", width = 7.5, height = 4, pointsize = 10)
+dotplot(model ~ ci | par, rbind(dat_ci1, dat_ci2),
+        pch = "|", type = "b", groups = model, xlab = "",
+        scales = list(x = list(relation = "free")))
+dev.off()
 
 #------ Separate models for between groups ------------------------------------
 
 # Context: medicine
-med1 <- lmer(Trustworthiness ~ Partner * Stakes + (1 | Participant),
+med1 <- lmer(Risk ~ Partner * Stakes + (1 | Participant),
              data = dat, subset = Context == "med")
 
-med2 <- lmer(Trustworthiness ~ Partner * Stakes +
+med2 <- lmer(Risk ~ Partner * Stakes +
              (1 | Participant) +
              (0 + dummy(Partner) | Participant) +
              (0 + dummy(Stakes) | Participant),
              data = dat, subset = Context == "med")
 
-med3 <- lmer(Trustworthiness ~ Partner * Stakes +
+med3 <- lmer(Risk ~ Partner * Stakes +
              (1 + Partner + Stakes | Participant),
              data = dat, subset = Context == "med")
 
@@ -192,16 +225,16 @@ dotplot(model ~ ci, dat_ci, pch = "|", type = "b", groups = model, xlab = "")
 
 
 # Context: psychology
-psy1 <- lmer(Trustworthiness ~ Partner * Stakes + (1 | Participant),
+psy1 <- lmer(Risk ~ Partner * Stakes + (1 | Participant),
              data = dat, subset = Context == "psy")
 
-psy2 <- lmer(Trustworthiness ~ Partner * Stakes +
+psy2 <- lmer(Risk ~ Partner * Stakes +
              (1 | Participant) +
              (0 + dummy(Partner) | Participant) +
              (0 + dummy(Stakes) | Participant),
              data = dat, subset = Context == "psy")
 
-psy3 <- lmer(Trustworthiness ~ Partner * Stakes +
+psy3 <- lmer(Risk ~ Partner * Stakes +
              (1 + Partner + Stakes | Participant),
              data = dat, subset = Context == "psy")
 
@@ -225,19 +258,19 @@ dotplot(model ~ ci, dat_ci, pch = "|", type = "b", groups = model, xlab = "")
 #------ Separate models for between groups - ANOVA ----------------------------
 
 # Context: medicine
-a1 <- aov(Trustworthiness ~ Partner * Stakes + Error(Participant),
+a1 <- aov(Risk ~ Partner * Stakes + Error(Participant),
         data = subset(dat, Context == "med"))
 
-a2 <- aov(Trustworthiness ~ Partner * Stakes +
+a2 <- aov(Risk ~ Partner * Stakes +
           Error(Participant + Participant:Partner + Participant:Stakes),
         data = subset(dat, Context == "med"))
 
 
 # Context: psychology
-a1 <- aov(Trustworthiness ~ Partner * Stakes + Error(Participant),
+a1 <- aov(Risk ~ Partner * Stakes + Error(Participant),
         data = subset(dat, Context == "psy"))
 
-a2 <- aov(Trustworthiness ~ Partner * Stakes +
+a2 <- aov(Risk ~ Partner * Stakes +
           Error(Participant + Participant:Partner + Participant:Stakes),
         data = subset(dat, Context == "psy"))
 

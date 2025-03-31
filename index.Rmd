@@ -67,7 +67,7 @@ need more support or materials, just let me know.
 
 | Date       | Topic                                    |
 | ---------- | ---------------------------------------- |
-| 14.04.2025 | Within-subject designs                   |
+| 14.04.2025 | Random effects for within-subject designs|
 | 28.04.2025 | Contrast coding                          |
 | 12.05.2025 | Generalized linear mixed-effects model   |
 | 26.05.2025 | Multilevel models                        |

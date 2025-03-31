@@ -37,7 +37,7 @@
 \setbeamercolor{author}{fg=iwmgray}
 \setbeamercolor{date}{fg=iwmgray}
 
-\title{Random effects for within designs}
+\title{Random effects for within-subject designs}
 \author{Nora Wickelmaier}
 \date{Last modified: \today}
 
@@ -262,7 +262,7 @@ lapply(coef(m3), head, n = 3)
 
 \begin{frame}[<+->]{Summary}
   \begin{itemize}
-    \item When we use mixed-effects model to fit data, we need to make an
+    \item When we use mixed-effects models to fit data, we need to make an
       informed choice about the random effects we include into the model
     \item Complex random effect structures can lead to convergence problems and
       variance terms for random slopes are not always easy to estimate
@@ -276,9 +276,9 @@ lapply(coef(m3), head, n = 3)
   \end{itemize}
 \end{frame}
 
-\section[AIES]{Perceived trustworthiness of AI expert systems}
+\section[AIES]{Perceived risk of AI expert systems}
 
-\begin{frame}[fragile]{Perceived trustworthiness of AI expert systems}
+\begin{frame}[fragile]{Perceived risk of AI expert systems}
   Independent variables
   \begin{itemize}
     \item Participant ($N = 898$)
@@ -288,9 +288,9 @@ lapply(coef(m3), head, n = 3)
   \end{itemize}
   Dependent variables
   \begin{itemize}
-    \item Perceived trustworthiness (9 items, 7-point scale, averaged)
     \item Perceived risk (1 item, 7-point scale, from ``None at all'' to
       ``Maximally'')
+    \item Perceived trustworthiness (9 items, 7-point scale, averaged)
   \end{itemize}
   \begin{lstlisting}
 dat <- read.table("data/data-nico.csv", sep = ",", header = TRUE,
@@ -300,9 +300,11 @@ dat <- read.table("data/data-nico.csv", sep = ",", header = TRUE,
 
 \begin{frame}[<+->]{Choose a mixed-effects model}
   \begin{itemize}
-    \item Let us look at perceived trustworthiness
-    \item Hypothesis: Depending on the context, people will trust a human
-      expert more when the stakes are high
+    \item Let us look at perceived risk
+    \item Hypothesis: Depending on the context, people will perceive higher risk
+      from an AI expert sytem when the stakes are high
+% we hypothesize that stakes (low vs. high) involved significantly
+% influences perceived risk in certain contexts (H2)
     \item Draw a hypothesis plot
     \item What mixed-effects model is suited to test this hypothesis?
     \item Which random effects are needed to represent the experimental design?
@@ -312,13 +314,13 @@ dat <- read.table("data/data-nico.csv", sep = ",", header = TRUE,
 
 \begin{frame}[fragile]{Testing three-way interaction}
   \begin{lstlisting}
-m0 <- lmer(Trustworthiness ~ (Context + Partner + Stakes)^2 +
+m0 <- lmer(Risk ~ (Context + Partner + Stakes)^2 +
            (1 + Partner + Stakes | Participant), data = dat)
 
-m1 <- lmer(Trustworthiness ~ Context * Partner * Stakes +
+m1 <- lmer(Risk ~ Context * Partner * Stakes +
            (1 + Partner + Stakes | Participant), data = dat)
 
-# Test interaction with Likelihood Ratio Test
+# Test interaction with Likelihood-ratio Test
 anova(m0, m1)
   \end{lstlisting}
   \pause
@@ -327,6 +329,139 @@ anova(m0, m1)
       them to a model with only random intercepts for \texttt{Participant}
     \item What would you expect based on the results we looked at for
       \citet{Aungle2023}?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Confidence intervals for three way interaction}
+  \begin{center}
+    \includegraphics[scale=.7]{../figures/nico_cis_data-risk}
+  \end{center}
+\end{frame}
+
+\section{Simulations}
+
+\begin{frame}[<+->]{Selection of random effects}
+  \begin{itemize}
+    \item What is the difference between the two designs we looked at?
+    \item Maybe it's just one of the data sets behaving weird?
+    \item Let's check and simulate some data \dots
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{$2\times 2$ within design}
+  \[
+    y = \beta_0 + \beta_1 a_2 + \beta_2 b_2 + \beta_3 a_2b_2 +
+        \upsilon_0 + \upsilon_1 a_2 + \upsilon_2 b_2 + \varepsilon
+  \]
+  with $\gvect{\upsilon} \sim N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} = 
+    \begin{pmatrix}
+      \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0\upsilon_1}  & \sigma_{\upsilon_0\upsilon_2}\\
+      \sigma_{\upsilon_0\upsilon_1} & \sigma^2_{\upsilon_1}  & \sigma_{\upsilon_1\upsilon_2}\\
+      \sigma_{\upsilon_0\upsilon_2} & \sigma_{\upsilon_1\upsilon_2} & \sigma^2_{\upsilon_2} \\
+    \end{pmatrix}\right)$, $\varepsilon_{ij} \sim N(0, \sigma_{\varepsilon}^2)$,
+    all i.i.d.
+    \vspace{.5cm}
+  \small
+  \begin{lstlisting}
+dat <- expand.grid(A = factor(c("a1", "a2")), B = factor(c("b1", "b2")),
+                   id = factor(1:10))
+
+beta  <- c(3, .5, .5, 1)
+sp    <- c(1, .8, .6)
+r     <- -.5
+S     <- r * sp %o% sp; diag(S) <- sp^2
+se    <- 1
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{$2\times 2$ within design}
+  \footnotesize
+  \begin{lstlisting}
+Lt    <- chol(S) / se
+theta <- t(Lt)[lower.tri(Lt, diag = TRUE)]
+
+cis <- replicate(100, {
+  y <- simulate(~ A * B + (A + B | id),
+                newdata = dat,
+                newparams = list(beta = beta, theta = theta, sigma = se))$sim_1
+  m0 <- lmer(y ~ A * B + (1 | id), dat)
+  m1 <- lmer(y ~ A * B + (A + B | id), dat)
+  matrix(c(confint(m0, par = "Aa2:Bb2", method = "Wald") |> as.numeric(),
+           confint(m1, par = "Aa2:Bb2", method = "Wald") |> as.numeric()),
+         nrow = 2, byrow = TRUE)
+  }, simplify = FALSE
+)
+dat_ci <- as.data.frame(do.call(rbind, cis))
+names(dat_ci) <- c("lb", "ub")
+dat_ci$model <- factor(c("random intercept", "random slope"))
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}{$2\times 2$ within design}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \includegraphics[scale=.8]{../figures/nico_cis_2x2design_1obs}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \includegraphics[scale=.8]{../figures/nico_power_2x2design_1obs}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{$2\times 2$ within design with several items}
+  \small
+  \[
+    y = \beta_0 + \beta_1 a_2 + \beta_2 b_2 + \beta_3 a_2b_2 +
+        \upsilon_0 + \upsilon_1 a_2 + \upsilon_2 b_2 + \upsilon_3 a_2b_2 +
+        \omega_0 + \varepsilon
+  \]
+  with $\gvect{\upsilon} \sim N\left(\gvect{0}, \gmat{\Sigma}_{\upsilon} = 
+    \begin{pmatrix}
+      \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0\upsilon_1}  & \sigma_{\upsilon_0\upsilon_2} & \sigma_{\upsilon_0\upsilon_3}\\
+      \sigma_{\upsilon_0\upsilon_1} & \sigma^2_{\upsilon_1}  & \sigma_{\upsilon_1\upsilon_2} & \sigma_{\upsilon_1\upsilon_3}\\
+      \sigma_{\upsilon_0\upsilon_2} & \sigma_{\upsilon_1\upsilon_2} & \sigma^2_{\upsilon_2}  & \sigma_{\upsilon_2\upsilon_3}\\
+      \sigma_{\upsilon_0\upsilon_3} & \sigma_{\upsilon_1\upsilon_3} & \sigma_{\upsilon_2\upsilon_3}  & \sigma^2_{\upsilon_3}\\
+    \end{pmatrix}\right)$,
+    $\omega_{0} \sim N(0, \sigma_{\omega}^2)$,
+    $\varepsilon_{ij} \sim N(0, \sigma_{\varepsilon}^2)$
+    \vspace{.5cm}
+    \begin{lstlisting}
+dat <- expand.grid(A = factor(c("a1", "a2")), B = factor(c("b1", "b2")),
+                   item = factor(1:5), id = factor(1:10))
+beta   <- c(3, .5, .5, 1)
+sp     <- c(1, .8, .6)
+r      <- -.5
+se     <- 1
+S      <- r * sp %o% sp; diag(S) <- sp^2
+sw     <- 1
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{$2\times 2$ within design with several items}
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \includegraphics[scale=.8]{../figures/nico_cis_2x2design_5obs}
+    \end{column}
+    \begin{column}{.5\textwidth}
+      \includegraphics[scale=.8]{../figures/nico_power_2x2design_5obs}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[<+->]{Summary}
+  \begin{itemize}
+    \item The discussion ``Keep it maximal'' \citep{Barr2013} vs.\
+      ``Parsimonious mixed models'' \citep{Bates2018} is even more complicated
+      than it looks (as always)
+    \item I still think that the random effects structure should represent the
+      experimental design, since this aligns with thinking about the structure
+      of the random effects as the data generating process
+    \item If you want to interpret the random effects or even test hypotheses
+      about them, you need to be careful if the estimates are good enough,
+      however
+    \item And always: Do not go through the motions, try to understand the
+      model that you fit and what its structure implies
   \end{itemize}
 \end{frame}
 

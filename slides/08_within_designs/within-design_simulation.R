@@ -36,7 +36,7 @@ plot_cis <- function(data) {
   )
   abline(v = c(0, unique(data$true_par)), lty = c(3, 1))
   legend("topleft", c("random intercept", "random slope"), lty = 1,
-         col = c("black", "blue"), lwd = 3, bty = "n")
+         col = c("black", "blue"), lwd = 3, bty = "n", cex = .9)
 }
 
 ###############################################################################
@@ -66,7 +66,11 @@ dat_ci <- sim_cis("y ~ A * B + (1 | id)",
                   params = list(beta = beta, theta = theta, sigma = se),
                   test_par = "Aa2:Bb2")
 
+pdf("slides/figures/nico_cis_2x2design_1obs.pdf",
+    width = 3.375, height = 3.375, pointsize = 10)
+par(mai = c(.6, .6, .2, .1), mgp = c(2.4, 1, 0))
 plot_cis(dat_ci)
+dev.off()
 
 # Power
 mean(dat_ci$lb[dat_ci$model == "random intercept"] > 0)
@@ -126,7 +130,11 @@ dat_ci <- sim_cis("y ~ A * B + (1 | id) + (1 | item)",
                   params = list(beta = beta, theta = theta2, sigma = se),
                   test_par = "Aa2:Bb2")
 
+pdf("slides/figures/nico_cis_2x2design_5obs.pdf",
+    width = 3.375, height = 3.375, pointsize = 10)
+par(mai = c(.6, .6, .2, .1), mgp = c(2.4, 1, 0))
 plot_cis(dat_ci)
+dev.off()
 
 # Power
 mean(dat_ci$lb[dat_ci$model == "random intercept"] > 0)

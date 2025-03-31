@@ -1,3 +1,27 @@
+# Hypothesis
+
+These varying context-dependent influences demonstrate that trust and risk
+formation are likely based on distinct evaluative processes. It is therefore
+difficult to generalize findings from single-context studies to other domains.
+Moreover, each context can encompass varying levels of perceived risk depending
+on the stakes involved. For instance, while educational decisions may appear
+low-stakes in general, scenarios such as preparing for a final exam that
+determines timely graduation and future job prospects can substantially heighten
+the perceived risk and pressure. We therefore hypothesize that (a) context
+(e.g., medical, legal, financial, etc.) and (b) interaction partner (human or
+AI) significantly predict perceived trustworthiness and perceived risk (H1). 
+
+Furthermore, we hypothesize that stakes (low vs. high) involved significantly
+influences perceived risk in certain contexts (H2). 
+
+We are also interested in the relative importance of these two predictors. While
+stakes clearly amplify perceived risk, it remains unclear whether they exert
+more or less influence than the context in which an AIES is embedded. Thus, we
+ask: 
+
+Does context matter more in shaping perceptions of trustworthiness and risk than
+the involved stakes? (RQ3)
+
 # Methods
 
 ## Study Design
