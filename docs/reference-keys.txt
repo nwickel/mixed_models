@@ -20,7 +20,7 @@ exercises-5
 crossed-random-effects
 slides-6
 exercises-6
-within-designs
+random-effects-for-within-subject-designs
 slides-7
 exercises-7
 contrast-coding

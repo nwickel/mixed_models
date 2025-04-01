@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2025-03-27" />
+<meta name="date" content="2025-04-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -240,7 +240,11 @@ div.csl-indent {
 <li class="chapter" data-level="8" data-path="within-designs.html"><a href="within-designs.html"><i class="fa fa-check"></i><b>8</b> Within designs</a>
 <ul>
 <li class="chapter" data-level="8.1" data-path="within-designs.html"><a href="within-designs.html#slides-7"><i class="fa fa-check"></i><b>8.1</b> Slides</a></li>
-<li class="chapter" data-level="8.2" data-path="within-designs.html"><a href="within-designs.html#exercises-7"><i class="fa fa-check"></i><b>8.2</b> Exercises</a></li>
+<li class="chapter" data-level="8.2" data-path="within-designs.html"><a href="within-designs.html#exercises-7"><i class="fa fa-check"></i><b>8.2</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="" data-path="within-designs.html"><a href="within-designs.html#exercise-1-7"><i class="fa fa-check"></i>Exercise 1</a></li>
+<li class="chapter" data-level="" data-path="within-designs.html"><a href="within-designs.html#exercise-2-4"><i class="fa fa-check"></i>Exercise 2</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="contrast-coding.html"><a href="contrast-coding.html"><i class="fa fa-check"></i><b>9</b> Contrast coding</a>
 <ul>
@@ -297,21 +301,164 @@ div.csl-indent {
 <h1><span class="header-section-number">Chapter 8</span> Within designs<a href="within-designs.html#within-designs" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="slides-7" class="section level2 hasAnchor" number="8.1">
 <h2><span class="header-section-number">8.1</span> Slides<a href="within-designs.html#slides-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>TODO</p>
-<!--
-```{=html}
-<object data="slides/07_crossed_random/07_crossed_random.pdf" type="application/pdf" width="100%" height="500px">
+<object data="slides/08_within_designs/08_within_designs.pdf" type="application/pdf" width="100%" height="500px">
   <p>
-    Unable to display PDF file. <a href="slides/07_crossed_random/07_crossed_random.pdf">Download</a> instead.
+    Unable to display PDF file. <a href="slides/08_within_designs/08_within_designs.pdf">Download</a> instead.
   </p>
 </object>
-```
--->
 </div>
 <div id="exercises-7" class="section level2 hasAnchor" number="8.2">
 <h2><span class="header-section-number">8.2</span> Exercises<a href="within-designs.html#exercises-7" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>TODO</p>
+<div id="exercise-1-7" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 1<a href="within-designs.html#exercise-1-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Recreate the data simulations presented on the slides</li>
+<li>Plot the confidence intervals for a 2x2 within-design for one observation per
+subject per cell and for 5 observations per subject per cell (cf. slides 20
+and 22)</li>
+<li>How do the possible random effects for these models differ?</li>
+<li>Calculate the power for the different designs from your simulated data</li>
+</ul>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="within-designs.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb63-2"><a href="within-designs.html#cb63-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="within-designs.html#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="do">###############################################################################</span></span>
+<span id="cb63-4"><a href="within-designs.html#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-5"><a href="within-designs.html#cb63-5" aria-hidden="true" tabindex="-1"></a>sim_cis <span class="ot">&lt;-</span> <span class="cf">function</span>(form1, form2, data, params, test_par, <span class="at">nsim =</span> <span class="dv">100</span>) {</span>
+<span id="cb63-6"><a href="within-designs.html#cb63-6" aria-hidden="true" tabindex="-1"></a>  cis <span class="ot">&lt;-</span> <span class="fu">replicate</span>(nsim, {</span>
+<span id="cb63-7"><a href="within-designs.html#cb63-7" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">simulate</span>(<span class="fu">formula</span>(<span class="fu">gsub</span>(<span class="st">&quot;^y&quot;</span>, <span class="st">&quot;&quot;</span>, form2)),</span>
+<span id="cb63-8"><a href="within-designs.html#cb63-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">newdata =</span> data,</span>
+<span id="cb63-9"><a href="within-designs.html#cb63-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">newparams =</span> params)<span class="sc">$</span>sim_1</span>
+<span id="cb63-10"><a href="within-designs.html#cb63-10" aria-hidden="true" tabindex="-1"></a>    m0 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(<span class="fu">formula</span>(form1), dat)</span>
+<span id="cb63-11"><a href="within-designs.html#cb63-11" aria-hidden="true" tabindex="-1"></a>    m1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(<span class="fu">formula</span>(form2), dat)</span>
+<span id="cb63-12"><a href="within-designs.html#cb63-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fu">confint</span>(m0, <span class="at">par =</span> test_par, <span class="at">method =</span> <span class="st">&quot;Wald&quot;</span>) <span class="sc">|&gt;</span> <span class="fu">as.numeric</span>(),</span>
+<span id="cb63-13"><a href="within-designs.html#cb63-13" aria-hidden="true" tabindex="-1"></a>             <span class="fu">confint</span>(m1, <span class="at">par =</span> test_par, <span class="at">method =</span> <span class="st">&quot;Wald&quot;</span>) <span class="sc">|&gt;</span> <span class="fu">as.numeric</span>()),</span>
+<span id="cb63-14"><a href="within-designs.html#cb63-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb63-15"><a href="within-designs.html#cb63-15" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">simplify =</span> <span class="cn">FALSE</span></span>
+<span id="cb63-16"><a href="within-designs.html#cb63-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb63-17"><a href="within-designs.html#cb63-17" aria-hidden="true" tabindex="-1"></a>  dat_ci <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">do.call</span>(rbind, cis))</span>
+<span id="cb63-18"><a href="within-designs.html#cb63-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(dat_ci) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;lb&quot;</span>, <span class="st">&quot;ub&quot;</span>)</span>
+<span id="cb63-19"><a href="within-designs.html#cb63-19" aria-hidden="true" tabindex="-1"></a>  dat_ci<span class="sc">$</span>true_par <span class="ot">&lt;-</span> <span class="fu">tail</span>(params<span class="sc">$</span>beta, <span class="dv">1</span>)</span>
+<span id="cb63-20"><a href="within-designs.html#cb63-20" aria-hidden="true" tabindex="-1"></a>  dat_ci<span class="sc">$</span>model <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;random intercept&quot;</span>, <span class="st">&quot;random slope&quot;</span>))</span>
+<span id="cb63-21"><a href="within-designs.html#cb63-21" aria-hidden="true" tabindex="-1"></a>  dat_ci</span>
+<span id="cb63-22"><a href="within-designs.html#cb63-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb63-23"><a href="within-designs.html#cb63-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-24"><a href="within-designs.html#cb63-24" aria-hidden="true" tabindex="-1"></a>plot_cis <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb63-25"><a href="within-designs.html#cb63-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="fu">I</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)) <span class="sc">~</span> lb, data, <span class="at">type =</span> <span class="st">&quot;n&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>),</span>
+<span id="cb63-26"><a href="within-designs.html#cb63-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb63-27"><a href="within-designs.html#cb63-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrows</span>(data<span class="sc">$</span>lb, <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data), data<span class="sc">$</span>ub, <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data),</span>
+<span id="cb63-28"><a href="within-designs.html#cb63-28" aria-hidden="true" tabindex="-1"></a>         <span class="at">code =</span> <span class="dv">3</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">length =</span> <span class="fl">0.05</span>,</span>
+<span id="cb63-29"><a href="within-designs.html#cb63-29" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;gray&quot;</span>, <span class="st">&quot;lightblue&quot;</span>)[data<span class="sc">$</span>model])</span>
+<span id="cb63-30"><a href="within-designs.html#cb63-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(</span>
+<span id="cb63-31"><a href="within-designs.html#cb63-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aggregate</span>(<span class="fu">cbind</span>(lb, ub) <span class="sc">~</span> model, data, mean),</span>
+<span id="cb63-32"><a href="within-designs.html#cb63-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrows</span>(lb, <span class="fu">c</span>(<span class="fu">nrow</span>(data) <span class="sc">/</span> <span class="dv">2</span>, <span class="fu">nrow</span>(data) <span class="sc">/</span> <span class="dv">2</span> <span class="sc">+</span> <span class="dv">2</span>),</span>
+<span id="cb63-33"><a href="within-designs.html#cb63-33" aria-hidden="true" tabindex="-1"></a>           ub, <span class="fu">c</span>(<span class="fu">nrow</span>(data) <span class="sc">/</span> <span class="dv">2</span>, <span class="fu">nrow</span>(data) <span class="sc">/</span> <span class="dv">2</span> <span class="sc">+</span> <span class="dv">2</span>),</span>
+<span id="cb63-34"><a href="within-designs.html#cb63-34" aria-hidden="true" tabindex="-1"></a>           <span class="at">code =</span> <span class="dv">3</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">length =</span> <span class="fl">0.05</span>,</span>
+<span id="cb63-35"><a href="within-designs.html#cb63-35" aria-hidden="true" tabindex="-1"></a>           <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="at">lwd =</span> <span class="dv">3</span>)</span>
+<span id="cb63-36"><a href="within-designs.html#cb63-36" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb63-37"><a href="within-designs.html#cb63-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">unique</span>(data<span class="sc">$</span>true_par)), <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span>
+<span id="cb63-38"><a href="within-designs.html#cb63-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;random intercept&quot;</span>, <span class="st">&quot;random slope&quot;</span>), <span class="at">lty =</span> <span class="dv">1</span>,</span>
+<span id="cb63-39"><a href="within-designs.html#cb63-39" aria-hidden="true" tabindex="-1"></a>         <span class="at">col =</span> <span class="fu">c</span>(<span class="st">&quot;black&quot;</span>, <span class="st">&quot;blue&quot;</span>), <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">bty =</span> <span class="st">&quot;n&quot;</span>, <span class="at">cex =</span> .<span class="dv">9</span>)</span>
+<span id="cb63-40"><a href="within-designs.html#cb63-40" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb63-41"><a href="within-designs.html#cb63-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-42"><a href="within-designs.html#cb63-42" aria-hidden="true" tabindex="-1"></a><span class="do">###############################################################################</span></span>
+<span id="cb63-43"><a href="within-designs.html#cb63-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-44"><a href="within-designs.html#cb63-44" aria-hidden="true" tabindex="-1"></a>nsubj <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb63-45"><a href="within-designs.html#cb63-45" aria-hidden="true" tabindex="-1"></a>nitem <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb63-46"><a href="within-designs.html#cb63-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-47"><a href="within-designs.html#cb63-47" aria-hidden="true" tabindex="-1"></a><span class="co">#----- 2x2 within design ------------------------------------------------------</span></span>
+<span id="cb63-48"><a href="within-designs.html#cb63-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-49"><a href="within-designs.html#cb63-49" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">A =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;a1&quot;</span>, <span class="st">&quot;a2&quot;</span>)),</span>
+<span id="cb63-50"><a href="within-designs.html#cb63-50" aria-hidden="true" tabindex="-1"></a>                   <span class="at">B =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;b1&quot;</span>, <span class="st">&quot;b2&quot;</span>)),</span>
+<span id="cb63-51"><a href="within-designs.html#cb63-51" aria-hidden="true" tabindex="-1"></a>                   <span class="at">id =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>nsubj))</span>
+<span id="cb63-52"><a href="within-designs.html#cb63-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-53"><a href="within-designs.html#cb63-53" aria-hidden="true" tabindex="-1"></a><span class="co"># y = mu + a2 + b2 + a2b2 + p + pa + pb + e</span></span>
+<span id="cb63-54"><a href="within-designs.html#cb63-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-55"><a href="within-designs.html#cb63-55" aria-hidden="true" tabindex="-1"></a>beta  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, .<span class="dv">5</span>, .<span class="dv">5</span>, <span class="dv">1</span>)</span>
+<span id="cb63-56"><a href="within-designs.html#cb63-56" aria-hidden="true" tabindex="-1"></a>sp    <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, .<span class="dv">8</span>, .<span class="dv">6</span>)</span>
+<span id="cb63-57"><a href="within-designs.html#cb63-57" aria-hidden="true" tabindex="-1"></a>r     <span class="ot">&lt;-</span> <span class="sc">-</span>.<span class="dv">5</span></span>
+<span id="cb63-58"><a href="within-designs.html#cb63-58" aria-hidden="true" tabindex="-1"></a>se    <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb63-59"><a href="within-designs.html#cb63-59" aria-hidden="true" tabindex="-1"></a>S     <span class="ot">&lt;-</span> r <span class="sc">*</span> sp <span class="sc">%o%</span> sp; <span class="fu">diag</span>(S) <span class="ot">&lt;-</span> sp<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb63-60"><a href="within-designs.html#cb63-60" aria-hidden="true" tabindex="-1"></a>Lt    <span class="ot">&lt;-</span> <span class="fu">chol</span>(S) <span class="sc">/</span> se</span>
+<span id="cb63-61"><a href="within-designs.html#cb63-61" aria-hidden="true" tabindex="-1"></a>theta <span class="ot">&lt;-</span> <span class="fu">t</span>(Lt)[<span class="fu">lower.tri</span>(Lt, <span class="at">diag =</span> <span class="cn">TRUE</span>)]</span>
+<span id="cb63-62"><a href="within-designs.html#cb63-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-63"><a href="within-designs.html#cb63-63" aria-hidden="true" tabindex="-1"></a>dat_ci <span class="ot">&lt;-</span> <span class="fu">sim_cis</span>(<span class="st">&quot;y ~ A * B + (1 | id)&quot;</span>,</span>
+<span id="cb63-64"><a href="within-designs.html#cb63-64" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;y ~ A * B + (A + B | id)&quot;</span>,</span>
+<span id="cb63-65"><a href="within-designs.html#cb63-65" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> dat,</span>
+<span id="cb63-66"><a href="within-designs.html#cb63-66" aria-hidden="true" tabindex="-1"></a>                  <span class="at">params =</span> <span class="fu">list</span>(<span class="at">beta =</span> beta, <span class="at">theta =</span> theta, <span class="at">sigma =</span> se),</span>
+<span id="cb63-67"><a href="within-designs.html#cb63-67" aria-hidden="true" tabindex="-1"></a>                  <span class="at">test_par =</span> <span class="st">&quot;Aa2:Bb2&quot;</span>)</span>
+<span id="cb63-68"><a href="within-designs.html#cb63-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-69"><a href="within-designs.html#cb63-69" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">&quot;slides/figures/nico_cis_2x2design_1obs.pdf&quot;</span>,</span>
+<span id="cb63-70"><a href="within-designs.html#cb63-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">3.375</span>, <span class="at">height =</span> <span class="fl">3.375</span>, <span class="at">pointsize =</span> <span class="dv">10</span>)</span>
+<span id="cb63-71"><a href="within-designs.html#cb63-71" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mai =</span> <span class="fu">c</span>(.<span class="dv">6</span>, .<span class="dv">6</span>, .<span class="dv">2</span>, .<span class="dv">1</span>), <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.4</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb63-72"><a href="within-designs.html#cb63-72" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_cis</span>(dat_ci)</span>
+<span id="cb63-73"><a href="within-designs.html#cb63-73" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+</details>
+<pre><code>## png 
+##   2</code></pre>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="within-designs.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Power</span></span>
+<span id="cb65-2"><a href="within-designs.html#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(dat_ci<span class="sc">$</span>lb[dat_ci<span class="sc">$</span>model <span class="sc">==</span> <span class="st">&quot;random intercept&quot;</span>] <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div>
+</details>
+<pre><code>## [1] 0.28</code></pre>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="within-designs.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(dat_ci<span class="sc">$</span>lb[dat_ci<span class="sc">$</span>model <span class="sc">==</span> <span class="st">&quot;random slope&quot;</span>] <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div>
+</details>
+<pre><code>## [1] 0.45</code></pre>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="within-designs.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co">#----- crossed random effects -------------------------------------------------</span></span>
+<span id="cb69-2"><a href="within-designs.html#cb69-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-3"><a href="within-designs.html#cb69-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">A =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;a1&quot;</span>, <span class="st">&quot;a2&quot;</span>)),</span>
+<span id="cb69-4"><a href="within-designs.html#cb69-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">B =</span> <span class="fu">factor</span>(<span class="fu">c</span>(<span class="st">&quot;b1&quot;</span>, <span class="st">&quot;b2&quot;</span>)),</span>
+<span id="cb69-5"><a href="within-designs.html#cb69-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">item =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>nitem),</span>
+<span id="cb69-6"><a href="within-designs.html#cb69-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">id =</span> <span class="fu">factor</span>(<span class="dv">1</span><span class="sc">:</span>nsubj))</span>
+<span id="cb69-7"><a href="within-designs.html#cb69-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-8"><a href="within-designs.html#cb69-8" aria-hidden="true" tabindex="-1"></a><span class="co"># y = mu + a2 + b2 + a2b2 + p + pa + pb + papb + w + e</span></span>
+<span id="cb69-9"><a href="within-designs.html#cb69-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-10"><a href="within-designs.html#cb69-10" aria-hidden="true" tabindex="-1"></a>sp     <span class="ot">&lt;-</span> <span class="fu">c</span>(.<span class="dv">4</span>, .<span class="dv">8</span>, .<span class="dv">6</span>, .<span class="dv">4</span>)</span>
+<span id="cb69-11"><a href="within-designs.html#cb69-11" aria-hidden="true" tabindex="-1"></a>r      <span class="ot">&lt;-</span> <span class="sc">-</span>.<span class="dv">2</span></span>
+<span id="cb69-12"><a href="within-designs.html#cb69-12" aria-hidden="true" tabindex="-1"></a>S      <span class="ot">&lt;-</span> r <span class="sc">*</span> sp <span class="sc">%o%</span> sp; <span class="fu">diag</span>(S) <span class="ot">&lt;-</span> sp<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb69-13"><a href="within-designs.html#cb69-13" aria-hidden="true" tabindex="-1"></a>Lt     <span class="ot">&lt;-</span> <span class="fu">chol</span>(S) <span class="sc">/</span> se</span>
+<span id="cb69-14"><a href="within-designs.html#cb69-14" aria-hidden="true" tabindex="-1"></a>theta  <span class="ot">&lt;-</span> <span class="fu">t</span>(Lt)[<span class="fu">lower.tri</span>(Lt, <span class="at">diag =</span> <span class="cn">TRUE</span>)]</span>
+<span id="cb69-15"><a href="within-designs.html#cb69-15" aria-hidden="true" tabindex="-1"></a>sw     <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb69-16"><a href="within-designs.html#cb69-16" aria-hidden="true" tabindex="-1"></a>theta2 <span class="ot">&lt;-</span> <span class="fu">c</span>(theta, sw <span class="sc">/</span> se)</span>
+<span id="cb69-17"><a href="within-designs.html#cb69-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-18"><a href="within-designs.html#cb69-18" aria-hidden="true" tabindex="-1"></a>dat_ci <span class="ot">&lt;-</span> <span class="fu">sim_cis</span>(<span class="st">&quot;y ~ A * B + (1 | id) + (1 | item)&quot;</span>,</span>
+<span id="cb69-19"><a href="within-designs.html#cb69-19" aria-hidden="true" tabindex="-1"></a>                  <span class="st">&quot;y ~ A * B + (A * B | id) + (1 | item)&quot;</span>,</span>
+<span id="cb69-20"><a href="within-designs.html#cb69-20" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> dat,</span>
+<span id="cb69-21"><a href="within-designs.html#cb69-21" aria-hidden="true" tabindex="-1"></a>                  <span class="at">params =</span> <span class="fu">list</span>(<span class="at">beta =</span> beta, <span class="at">theta =</span> theta2, <span class="at">sigma =</span> se),</span>
+<span id="cb69-22"><a href="within-designs.html#cb69-22" aria-hidden="true" tabindex="-1"></a>                  <span class="at">test_par =</span> <span class="st">&quot;Aa2:Bb2&quot;</span>)</span>
+<span id="cb69-23"><a href="within-designs.html#cb69-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-24"><a href="within-designs.html#cb69-24" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">&quot;slides/figures/nico_cis_2x2design_5obs.pdf&quot;</span>,</span>
+<span id="cb69-25"><a href="within-designs.html#cb69-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">3.375</span>, <span class="at">height =</span> <span class="fl">3.375</span>, <span class="at">pointsize =</span> <span class="dv">10</span>)</span>
+<span id="cb69-26"><a href="within-designs.html#cb69-26" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mai =</span> <span class="fu">c</span>(.<span class="dv">6</span>, .<span class="dv">6</span>, .<span class="dv">2</span>, .<span class="dv">1</span>), <span class="at">mgp =</span> <span class="fu">c</span>(<span class="fl">2.4</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb69-27"><a href="within-designs.html#cb69-27" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_cis</span>(dat_ci)</span>
+<span id="cb69-28"><a href="within-designs.html#cb69-28" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+</details>
+<pre><code>## png 
+##   2</code></pre>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="within-designs.html#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Power</span></span>
+<span id="cb71-2"><a href="within-designs.html#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(dat_ci<span class="sc">$</span>lb[dat_ci<span class="sc">$</span>model <span class="sc">==</span> <span class="st">&quot;random intercept&quot;</span>] <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div>
+</details>
+<pre><code>## [1] 0.87</code></pre>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="within-designs.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(dat_ci<span class="sc">$</span>lb[dat_ci<span class="sc">$</span>model <span class="sc">==</span> <span class="st">&quot;random slope&quot;</span>] <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div>
+</details>
+<pre><code>## [1] 0.84</code></pre>
+</div>
+<div id="exercise-2-4" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 2<a href="within-designs.html#exercise-2-4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Adjust the data simulation for a design with a single within factor with three
+levels</li>
+<li>Look again at one model with three observations per subject (one observation
+per cell) and 15 observations per subject (5 observations per cell)</li>
+<li>How do the possible random effects for these models differ?</li>
+</ul>
+<p><img src="mixed_models_files/figure-html/ex08.2-1.png" width="672" /><img src="mixed_models_files/figure-html/ex08.2-2.png" width="672" /></p>
 
+</div>
 </div>
 </div>
             </section>

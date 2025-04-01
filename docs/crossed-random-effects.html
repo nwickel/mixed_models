@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2025-03-27" />
+<meta name="date" content="2025-04-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="growth-curve-models.html"/>
-<link rel="next" href="within-designs.html"/>
+<link rel="next" href="random-effects-for-within-subject-designs.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -237,10 +237,14 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="crossed-random-effects.html"><a href="crossed-random-effects.html#exercise-2-3"><i class="fa fa-check"></i>Exercise 2</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="within-designs.html"><a href="within-designs.html"><i class="fa fa-check"></i><b>8</b> Within designs</a>
+<li class="chapter" data-level="8" data-path="random-effects-for-within-subject-designs.html"><a href="random-effects-for-within-subject-designs.html"><i class="fa fa-check"></i><b>8</b> Random effects for within-subject designs</a>
 <ul>
-<li class="chapter" data-level="8.1" data-path="within-designs.html"><a href="within-designs.html#slides-7"><i class="fa fa-check"></i><b>8.1</b> Slides</a></li>
-<li class="chapter" data-level="8.2" data-path="within-designs.html"><a href="within-designs.html#exercises-7"><i class="fa fa-check"></i><b>8.2</b> Exercises</a></li>
+<li class="chapter" data-level="8.1" data-path="random-effects-for-within-subject-designs.html"><a href="random-effects-for-within-subject-designs.html#slides-7"><i class="fa fa-check"></i><b>8.1</b> Slides</a></li>
+<li class="chapter" data-level="8.2" data-path="random-effects-for-within-subject-designs.html"><a href="random-effects-for-within-subject-designs.html#exercises-7"><i class="fa fa-check"></i><b>8.2</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="" data-path="random-effects-for-within-subject-designs.html"><a href="random-effects-for-within-subject-designs.html#exercise-1-7"><i class="fa fa-check"></i>Exercise 1</a></li>
+<li class="chapter" data-level="" data-path="random-effects-for-within-subject-designs.html"><a href="random-effects-for-within-subject-designs.html#exercise-2-4"><i class="fa fa-check"></i>Exercise 2</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="contrast-coding.html"><a href="contrast-coding.html"><i class="fa fa-check"></i><b>9</b> Contrast coding</a>
 <ul>
@@ -419,14 +423,13 @@ instead of only 3</p></li>
 </ul>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="crossed-random-effects.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/healing.RData&quot;</span>)</span>
-<span id="cb52-2"><a href="crossed-random-effects.html#cb52-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> DFmodel</span>
-<span id="cb52-3"><a href="crossed-random-effects.html#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-4"><a href="crossed-random-effects.html#cb52-4" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Healing <span class="sc">~</span> Condition <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> ResponseId), dat)</span>
-<span id="cb52-5"><a href="crossed-random-effects.html#cb52-5" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Healing <span class="sc">~</span> Condition <span class="sc">+</span> (Condition <span class="sc">|</span> Subject) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> ResponseId), dat)</span>
-<span id="cb52-6"><a href="crossed-random-effects.html#cb52-6" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Healing <span class="sc">~</span> Condition <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject) <span class="sc">+</span></span>
-<span id="cb52-7"><a href="crossed-random-effects.html#cb52-7" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">0</span> <span class="sc">+</span> <span class="fu">dummy</span>(Condition, <span class="st">&quot;28&quot;</span>) <span class="sc">|</span> Subject) <span class="sc">+</span></span>
-<span id="cb52-8"><a href="crossed-random-effects.html#cb52-8" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">0</span> <span class="sc">+</span> <span class="fu">dummy</span>(Condition, <span class="st">&quot;56&quot;</span>) <span class="sc">|</span> Subject) <span class="sc">+</span></span>
-<span id="cb52-9"><a href="crossed-random-effects.html#cb52-9" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">1</span> <span class="sc">|</span> ResponseId), dat)</span></code></pre></div>
+<span id="cb52-2"><a href="crossed-random-effects.html#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="crossed-random-effects.html#cb52-3" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Healing <span class="sc">~</span> Condition <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> ResponseId), dat)</span>
+<span id="cb52-4"><a href="crossed-random-effects.html#cb52-4" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Healing <span class="sc">~</span> Condition <span class="sc">+</span> (Condition <span class="sc">|</span> Subject) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> ResponseId), dat)</span>
+<span id="cb52-5"><a href="crossed-random-effects.html#cb52-5" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Healing <span class="sc">~</span> Condition <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Subject) <span class="sc">+</span></span>
+<span id="cb52-6"><a href="crossed-random-effects.html#cb52-6" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">0</span> <span class="sc">+</span> <span class="fu">dummy</span>(Condition, <span class="st">&quot;28&quot;</span>) <span class="sc">|</span> Subject) <span class="sc">+</span></span>
+<span id="cb52-7"><a href="crossed-random-effects.html#cb52-7" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">0</span> <span class="sc">+</span> <span class="fu">dummy</span>(Condition, <span class="st">&quot;56&quot;</span>) <span class="sc">|</span> Subject) <span class="sc">+</span></span>
+<span id="cb52-8"><a href="crossed-random-effects.html#cb52-8" aria-hidden="true" tabindex="-1"></a>           (<span class="dv">1</span> <span class="sc">|</span> ResponseId), dat)</span></code></pre></div>
 </details>
 <ul>
 <li><p>Profile the models with <code>profile(&lt;model&gt;)</code></p></li>
@@ -488,7 +491,7 @@ Baayen, R. H., Davidson, D. J. &amp; Bates, D. M. (2008). Mixed-effects modeling
         </div>
       </div>
 <a href="growth-curve-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="within-designs.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="random-effects-for-within-subject-designs.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

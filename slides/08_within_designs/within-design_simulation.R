@@ -191,3 +191,33 @@ plot_cis(dat_ci)
 mean(dat_ci$lb[dat_ci$model == "random intercept"] > 0)
 mean(dat_ci$lb[dat_ci$model == "random slope"] > 0)
 
+#----- crossed random effects -------------------------------------------------
+
+dat <- expand.grid(A = factor(c("a1", "a2", "a3")),
+                   item = factor(1:nitem),
+                   id = factor(1:nsubj))
+
+# y = mu + a2 + a3 + p + pa + w + e
+
+beta   <- c(3, .5, 1)
+se     <- 1
+sp     <- c(1, .8, .6)
+r      <- -.2
+S      <- r * sp %o% sp; diag(S) <- sp^2
+Lt     <- chol(S) / se
+theta  <- t(Lt)[lower.tri(Lt, diag = TRUE)]
+sw     <- 1
+theta2 <- c(theta, sw / se)
+
+dat_ci <- sim_cis("y ~ A + (1 | id) + (1 | item)",
+                  "y ~ A + (A | id) + (1 | item)",
+                  data = dat,
+                  params = list(beta = beta, theta = theta2, sigma = se),
+                  test_par = "Aa3")
+
+plot_cis(dat_ci)
+
+# Power
+mean(dat_ci$lb[dat_ci$model == "random intercept"] > 0)
+mean(dat_ci$lb[dat_ci$model == "random slope"] > 0)
+

@@ -263,7 +263,7 @@ lapply(coef(m3), head, n = 3)
 \begin{frame}[<+->]{Summary}
   \begin{itemize}
     \item When we use mixed-effects models to fit data, we need to make an
-      informed choice about the random effects we include into the model
+      informed choice about the random effects we include in the model
     \item Complex random effect structures can lead to convergence problems and
       variance terms for random slopes are not always easy to estimate
     \item The random effects structure strongly influences the confidence
@@ -301,14 +301,16 @@ dat <- read.table("data/data-nico.csv", sep = ",", header = TRUE,
 \begin{frame}[<+->]{Choose a mixed-effects model}
   \begin{itemize}
     \item Let us look at perceived risk
-    \item Hypothesis: Depending on the context, people will perceive higher risk
-      from an AI expert sytem when the stakes are high
-% we hypothesize that stakes (low vs. high) involved significantly
-% influences perceived risk in certain contexts (H2)
+    \item Hypothesis: In certain contexts, people will perceive the risk to
+      consult an AI expert sytem as much higher compared to a human expert when
+      stakes are high
+      % we hypothesize that stakes (low vs. high) involved significantly
+      % influences perceived risk in certain contexts (H2)
     \item Draw a hypothesis plot
     \item What mixed-effects model is suited to test this hypothesis?
-    \item Which random effects are needed to represent the experimental design?
     \item How many parameters does this model have?
+    \item Which parameter do we need to look at in order to test the hypothesis?
+    \item Which random effects are needed to represent the experimental design?
   \end{itemize}
 \end{frame}
 
