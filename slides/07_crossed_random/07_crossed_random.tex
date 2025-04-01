@@ -588,7 +588,6 @@ datsim$rt2 <- X %*% beta + Z %*% u + e
   \vspace{.5cm}
 \begin{lstlisting}
 load("data/healing.RData")
-dat <- DFmodel
 
 m1 <- lmer(Healing ~ Condition + (1 | Subject) + (1 | ResponseId), dat)
 \end{lstlisting}

@@ -129,7 +129,6 @@ xyplot(rt ~ soa | subject, datsim, group = item, type = "b", layout=c(5, 6))
 
 ```{r ex07.3}
 load("data/healing.RData")
-dat <- DFmodel
 
 m1 <- lmer(Healing ~ Condition + (1 | Subject) + (1 | ResponseId), dat)
 m2 <- lmer(Healing ~ Condition + (Condition | Subject) + (1 | ResponseId), dat)
