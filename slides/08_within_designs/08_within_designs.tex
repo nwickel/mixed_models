@@ -185,9 +185,8 @@ m1 <- lmer(Healing ~ Condition +
 m2 <- lmer(Healing ~ Condition +
   (Condition | Subject) + (1 | ResponseId), dat)
 m3 <- lmer(Healing ~ Condition +
-  (1 | Subject) +
-  (0 + dummy(Condition, "28") | Subject) +
-  (0 + dummy(Condition, "56") | Subject) +
+  (dummy(Condition, "28") +
+   dummy(Condition, "56") || Subject) +
   (1 | ResponseId), dat)
 \end{lstlisting}
     \end{column}

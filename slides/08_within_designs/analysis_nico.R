@@ -68,8 +68,10 @@ m0 <- lmer(Risk ~ (Context + Partner + Stakes)^2 +
 m1 <- lmer(Risk ~ Context * Partner * Stakes +
            (1 + Partner + Stakes | Participant), data = dat)
 summary(m1)
-
 anova(m0, m1)
+
+rePCA(m1)
+# --> does not look generate
 
 #------ Check assumptions -----------------------------------------------------
 
