@@ -53,27 +53,27 @@ need more support or materials, just let me know.
 
 ### WS 2024/25 {-}
 
-| Date       | Topic                                    |
-| ---------- | ---------------------------------------- |
-| 28.10.2024 | Simple and multiple regression           |
-| 11.11.2024 | Generalized linear models                |
-| 25.11.2024 | Pre/post measurements                    |
-| 09.12.2024 | Longitudinal data                        |
-| 13.01.2025 | Repeated measures                        |
-| 27.01.2025 | Growth curve models                      |
-| 10.02.2025 | Crossed random effects                   |
+| Chapter | Date       | Topic                                    |
+|:------- |:---------- |:---------------------------------------- |
+|       1 | 28.10.2024 | Simple and multiple regression           |
+|       2 | 11.11.2024 | Generalized linear models                |
+|       3 | 25.11.2024 | Pre/post measurements                    |
+|       4 | 09.12.2024 | Longitudinal data                        |
+|       5 | 13.01.2025 | Repeated measures                        |
+|       6 | 27.01.2025 | Growth curve models                      |
+|       7 | 10.02.2025 | Crossed random effects                   |
 
 ### SS 2025 {-}
 
-| Date       | Topic                                    |
-| ---------- | ---------------------------------------- |
-| 14.04.2025 | Random effects for within-subject designs|
-| 28.04.2025 | Contrast coding                          |
-| 12.05.2025 | Generalized linear mixed-effects model   |
-| 26.05.2025 | Multilevel models                        |
-| 23.06.2025 | Data simulation in R                     |
-| 07.07.2025 | Power simulation longitudinal data       |
-| 21.07.2025 | Power simulation (G)LMM within design    |
+| Chapter  | Date       | Topic                                    |
+|:-------- |:---------- |:---------------------------------------- |
+|        8 | 14.04.2025 | Random effects for within-subject designs|
+|        9 | 28.04.2025 | Contrast coding                          |
+|       10 | 12.05.2025 | Generalized linear mixed-effects model   |
+|       11 | 26.05.2025 | Multilevel models                        |
+|       12 | 23.06.2025 | Data simulation in R                     |
+|       13 | 07.07.2025 | Power simulation longitudinal data       |
+|       14 | 21.07.2025 | Power simulation (G)LMM within design    |
 
 
 ## Literature {-}
