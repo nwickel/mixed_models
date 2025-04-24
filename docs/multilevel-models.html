@@ -258,7 +258,10 @@ div.csl-indent {
 <li class="chapter" data-level="10" data-path="multilevel-models.html"><a href="multilevel-models.html"><i class="fa fa-check"></i><b>10</b> Multilevel models</a>
 <ul>
 <li class="chapter" data-level="10.1" data-path="multilevel-models.html"><a href="multilevel-models.html#slides-9"><i class="fa fa-check"></i><b>10.1</b> Slides</a></li>
-<li class="chapter" data-level="10.2" data-path="multilevel-models.html"><a href="multilevel-models.html#exercises-9"><i class="fa fa-check"></i><b>10.2</b> Exercises</a></li>
+<li class="chapter" data-level="10.2" data-path="multilevel-models.html"><a href="multilevel-models.html#exercises-9"><i class="fa fa-check"></i><b>10.2</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="" data-path="multilevel-models.html"><a href="multilevel-models.html#exercise-1-9"><i class="fa fa-check"></i>Exercise 1</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html"><i class="fa fa-check"></i><b>11</b> Generalized linear mixed-effects models</a>
 <ul>
@@ -305,21 +308,73 @@ div.csl-indent {
 <h1><span class="header-section-number">Chapter 10</span> Multilevel models<a href="multilevel-models.html#multilevel-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="slides-9" class="section level2 hasAnchor" number="10.1">
 <h2><span class="header-section-number">10.1</span> Slides<a href="multilevel-models.html#slides-9" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>TODO</p>
-<!--
-```{=html}
-<object data="slides/07_crossed_random/07_crossed_random.pdf" type="application/pdf" width="100%" height="500px">
+<object data="slides/10_multilevel/10_multilevel.pdf" type="application/pdf" width="100%" height="500px">
   <p>
-    Unable to display PDF file. <a href="slides/07_crossed_random/07_crossed_random.pdf">Download</a> instead.
+    Unable to display PDF file. <a href="slides/10_multilevel/10_multilevel.pdf">Download</a> instead.
   </p>
 </object>
-```
--->
 </div>
 <div id="exercises-9" class="section level2 hasAnchor" number="10.2">
 <h2><span class="header-section-number">10.2</span> Exercises<a href="multilevel-models.html#exercises-9" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>TODO</p>
+<div id="exercise-1-9" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 1<a href="multilevel-models.html#exercise-1-9" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><p>Load the <code>jsp</code> data set from the <code>faraway</code> package</p></li>
+<li><p>For simplicity, let us just consider the first measurement for each pupil
+(select a subset of the data for <code>year == 0</code>)</p></li>
+<li><p>Fit the following model to the <code>jsp</code> data set</p>
+<p><span class="math display">\[\begin{align*}
+\text{(Level 1)} \quad y_{ij} &amp;= b_{0i} + b_{1i}\,gcraven_{ij} + b_{2i}\,social_{ij} + \varepsilon_{ij}\\
+\text{(Level 2)} \quad b_{0i} &amp;= \beta_0 + \beta_3\,mraven_i + \upsilon_{0i} \\
+                 \quad b_{1i} &amp;= \beta_1 + \beta_4\,mraven_i + \upsilon_{1i}\\
+                 \quad b_{2i} &amp;= \beta_2\\
+\text{(2) in (1)} \quad y_{ij} &amp;= \beta_{0} + \beta_{1}\,gcraven_{ij} + \beta_{2}\,social_{ij} + \beta_{3}\,mraven_i\\
+                            &amp;~~~ + \beta_{4}\,(gcraven_{ij} \times mraven_{i})\\
+                            &amp;~~~ + \upsilon_{0i} + \upsilon_{1i}\,gcraven_{ij} + \varepsilon_{ij}
+\end{align*}\]</span>
+with <span class="math inline">\(\boldsymbol\upsilon \sim N(\boldsymbol 0, \boldsymbol{\Sigma}_\upsilon)\)</span> i.i.d.,
+<span class="math inline">\(\varepsilon_{ij} \sim N(0, \sigma^2)\)</span> i.i.d.</p></li>
+<li><p>Profile the model with <code>profile(&lt;model&gt;)</code></p></li>
+<li><p>Use the functions <code>xyplot()</code>, <code>densityplot()</code>, <code>splom()</code> from the lattice
+package to take a closer look at the estimated random parameters</p></li>
+<li><p>What’s your conclusion about the correlation parameter?</p></li>
+</ul>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb66-1"><a href="multilevel-models.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb66-2"><a href="multilevel-models.html#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
+<span id="cb66-3"><a href="multilevel-models.html#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="multilevel-models.html#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;jsp&quot;</span>, <span class="at">package =</span> <span class="st">&quot;faraway&quot;</span>)</span>
+<span id="cb66-5"><a href="multilevel-models.html#cb66-5" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">subset</span>(jsp, year <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb66-6"><a href="multilevel-models.html#cb66-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-7"><a href="multilevel-models.html#cb66-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Centering around grand mean</span></span>
+<span id="cb66-8"><a href="multilevel-models.html#cb66-8" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>craven <span class="ot">&lt;-</span> dat<span class="sc">$</span>raven <span class="sc">-</span> <span class="fu">mean</span>(dat<span class="sc">$</span>raven)</span>
+<span id="cb66-9"><a href="multilevel-models.html#cb66-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-10"><a href="multilevel-models.html#cb66-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Centering around group mean for each school</span></span>
+<span id="cb66-11"><a href="multilevel-models.html#cb66-11" aria-hidden="true" tabindex="-1"></a><span class="do">## add mean raven score per school</span></span>
+<span id="cb66-12"><a href="multilevel-models.html#cb66-12" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>mraven <span class="ot">&lt;-</span> <span class="fu">with</span>(dat, <span class="fu">ave</span>(raven, school))</span>
+<span id="cb66-13"><a href="multilevel-models.html#cb66-13" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>mraven <span class="ot">&lt;-</span> dat<span class="sc">$</span>mraven <span class="sc">-</span> <span class="fu">mean</span>(dat<span class="sc">$</span>mraven)</span>
+<span id="cb66-14"><a href="multilevel-models.html#cb66-14" aria-hidden="true" tabindex="-1"></a><span class="do">## center raven score: mean = 0 for each school</span></span>
+<span id="cb66-15"><a href="multilevel-models.html#cb66-15" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>gcraven <span class="ot">&lt;-</span> dat<span class="sc">$</span>craven <span class="sc">-</span> dat<span class="sc">$</span>mraven</span>
+<span id="cb66-16"><a href="multilevel-models.html#cb66-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-17"><a href="multilevel-models.html#cb66-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit model</span></span>
+<span id="cb66-18"><a href="multilevel-models.html#cb66-18" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lmer</span>(math <span class="sc">~</span> mraven <span class="sc">*</span> gcraven <span class="sc">+</span> social <span class="sc">+</span> (gcraven <span class="sc">|</span> school),</span>
+<span id="cb66-19"><a href="multilevel-models.html#cb66-19" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> dat, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb66-20"><a href="multilevel-models.html#cb66-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-21"><a href="multilevel-models.html#cb66-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-22"><a href="multilevel-models.html#cb66-22" aria-hidden="true" tabindex="-1"></a>pm <span class="ot">&lt;-</span> <span class="fu">profile</span>(m)</span>
+<span id="cb66-23"><a href="multilevel-models.html#cb66-23" aria-hidden="true" tabindex="-1"></a><span class="fu">xyplot</span>(pm)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb67-1"><a href="multilevel-models.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co">#densityplot(pm)</span></span>
+<span id="cb67-2"><a href="multilevel-models.html#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">splom</span>(pm, <span class="at">which =</span> <span class="st">&quot;theta_&quot;</span>)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb68-1"><a href="multilevel-models.html#cb68-1" aria-hidden="true" tabindex="-1"></a>m_zcor <span class="ot">&lt;-</span> <span class="fu">lmer</span>(math <span class="sc">~</span> mraven <span class="sc">*</span> gcraven <span class="sc">+</span> social <span class="sc">+</span> (gcraven <span class="sc">||</span> school),</span>
+<span id="cb68-2"><a href="multilevel-models.html#cb68-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> dat, <span class="at">REML =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb68-3"><a href="multilevel-models.html#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_zcor, m)</span></code></pre></div>
+</details>
 
+</div>
 </div>
 </div>
             </section>

@@ -2,19 +2,73 @@
 
 ## Slides
 
-TODO
-
-<!--
 ```{=html}
-<object data="slides/07_crossed_random/07_crossed_random.pdf" type="application/pdf" width="100%" height="500px">
+<object data="slides/10_multilevel/10_multilevel.pdf" type="application/pdf" width="100%" height="500px">
   <p>
-    Unable to display PDF file. <a href="slides/07_crossed_random/07_crossed_random.pdf">Download</a> instead.
+    Unable to display PDF file. <a href="slides/10_multilevel/10_multilevel.pdf">Download</a> instead.
   </p>
 </object>
 ```
--->
 
 ## Exercises
 
-TODO
+### Exercise 1 {-}
+
+* Load the `jsp` data set from the `faraway` package
+
+* For simplicity, let us just consider the first measurement for each pupil
+  (select a subset of the data for `year == 0`)
+
+* Fit the following model to the `jsp` data set
+
+  \begin{align*}
+  \text{(Level 1)} \quad y_{ij} &= b_{0i} + b_{1i}\,gcraven_{ij} + b_{2i}\,social_{ij} + \varepsilon_{ij}\\
+  \text{(Level 2)} \quad b_{0i} &= \beta_0 + \beta_3\,mraven_i + \upsilon_{0i} \\
+                   \quad b_{1i} &= \beta_1 + \beta_4\,mraven_i + \upsilon_{1i}\\
+                   \quad b_{2i} &= \beta_2\\
+  \text{(2) in (1)} \quad y_{ij} &= \beta_{0} + \beta_{1}\,gcraven_{ij} + \beta_{2}\,social_{ij} + \beta_{3}\,mraven_i\\
+                              &~~~ + \beta_{4}\,(gcraven_{ij} \times mraven_{i})\\
+                              &~~~ + \upsilon_{0i} + \upsilon_{1i}\,gcraven_{ij} + \varepsilon_{ij}
+  \end{align*}
+  with $\boldsymbol\upsilon \sim N(\boldsymbol 0, \boldsymbol{\Sigma}_\upsilon)$ i.i.d.,
+  $\varepsilon_{ij} \sim N(0, \sigma^2)$ i.i.d.
+
+* Profile the model with `profile(<model>)`
+
+* Use the functions `xyplot()`, `densityplot()`, `splom()` from the lattice
+  package to take a closer look at the estimated random parameters
+
+* What's your conclusion about the correlation parameter?
+
+```{r ex10.1, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+library(lme4)
+library(lattice)
+
+data("jsp", package = "faraway")
+dat <- subset(jsp, year == 0)
+
+# Centering around grand mean
+dat$craven <- dat$raven - mean(dat$raven)
+
+# Centering around group mean for each school
+## add mean raven score per school
+dat$mraven <- with(dat, ave(raven, school))
+dat$mraven <- dat$mraven - mean(dat$mraven)
+## center raven score: mean = 0 for each school
+dat$gcraven <- dat$craven - dat$mraven
+
+# Fit model
+m <- lmer(math ~ mraven * gcraven + social + (gcraven | school),
+          data = dat, REML = FALSE)
+
+
+pm <- profile(m)
+xyplot(pm)
+#densityplot(pm)
+splom(pm, which = "theta_")
+
+m_zcor <- lmer(math ~ mraven * gcraven + social + (gcraven || school),
+               data = dat, REML = FALSE)
+anova(m_zcor, m)
+```
 

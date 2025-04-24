@@ -95,14 +95,14 @@ head(jsp)
 \begin{frame}{Junior School Project}
   A data frame with 3236 observations on the following 9 variables\\~\\
 
-  \begin{tabular}{lp{8cm}}
+  \begin{tabular}{lp{11cm}}
     \hline
      \texttt{school} & 50 schools code 1--50 \\
      \texttt{class} & a factor with levels `1' `2' `3' `4' \\
      \texttt{gender} & a factor with levels `boy' `girl' \\
-     \texttt{social} & class of the father I=1; II=2; III nonmanual=3; III
-          manual=4; IV=5; V=6; Long-term unemployed=7; Not currently
-          employed=8; Father absent=9 \\
+     \texttt{social} & class of the father I = 1; II = 2; III nonmanual = 3;
+     III manual = 4; IV = 5; V = 6; Long-term unemployed = 7;
+     Not currently employed = 8; Father absent = 9 \\
      \texttt{raven} & test score \\
      \texttt{id} & student id coded 1--1402 \\
      \texttt{english} & score on English \\
@@ -116,7 +116,7 @@ head(jsp)
 
 \begin{frame}[fragile]{Nested structure of data}
   \begin{lstlisting}
-data(jsp)
+data("jsp")
 str(jsp)
 xtabs( ~ school + class, data = jsp, sparse = TRUE)
 
@@ -242,10 +242,10 @@ abline(v = mean(dat$craven), col = "darkblue", lwd = 4)
 
 \begin{frame}[fragile]{Visualization of data -- Schools}
   \begin{columns}
-    \begin{column}{.5\textwidth}
-      \includegraphics[scale=.4]{../figures/jsp_lattice1}
+    \begin{column}{.6\textwidth}
+      \includegraphics[scale=.44]{../figures/jsp_lattice1}
     \end{column}
-    \begin{column}{.5\textwidth}
+    \begin{column}{.4\textwidth}
 \begin{lstlisting}
 lattice::xyplot(
   math ~ gcraven | school,
@@ -261,14 +261,12 @@ lattice::xyplot(
 
 \begin{frame}[fragile]{Visualization of data -- Classes}
   \begin{center}
-      \includegraphics[scale=.34]{../figures/jsp_lattice2}
+      \includegraphics[scale=.38]{../figures/jsp_lattice2}
   \end{center}
 \begin{lstlisting}
-lattice::xyplot(
-  math ~ gcraven | school:class, data = dat,
-  xlab = "Raven Score", ylab = "Math Score",
-  type = c("p", "g", "r")
-  )
+lattice::xyplot(math ~ gcraven | school:class, data = dat,
+                xlab = "Raven Score", ylab = "Math Score",
+                type = c("p", "g", "r"))
 \end{lstlisting}
 
 \end{frame}

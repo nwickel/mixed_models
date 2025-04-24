@@ -13,17 +13,17 @@
 #         jsp_lattice2.pdf
 #         jsp_scatter.pdf
 #
-# last mod: Oct/16/2024, NW
+# last mod: 2025-04-24, NW
 
 library(faraway)
 library(lattice)
 library(lme4)
 
-# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/mixed_models/07_multilevel/")
+# setwd("C:/Users/nwickelmaier/Nextcloud/Documents/teaching/iwm/mixed_models/")
 
-#--------------- (1) Inspect data ---------------
+#--------------- (1) Inspect data ---------------------------------------------
 
-data(jsp)
+data("jsp")
 str(jsp)
 xtabs( ~ school + class, jsp, sparse=T)
 
@@ -37,37 +37,37 @@ table(jsp$year)
 dat <- jsp[jsp$year == 0, ]
 # --> for simplicity, let's just consider the first measurement
 
-#--------------- (2) Descriptive statistics and plots ---------------
+#--------------- (2) Descriptive statistics and plots -------------------------
 
 plot(math ~ social, jsp,
-  xlab="Social Class",
-  ylab="Math Score")
+  xlab = "Social Class",
+  ylab = "Math Score")
 
 # Plots for slides
-pdf("../figures/jsp_box1.pdf", height=3.375, width=3.375, pointsize=10)
+pdf("slides/figures/jsp_box1.pdf", height = 3.375, width = 3.375, pointsize = 10)
 
-par(mai=c(.6,.6,.1,.1), mgp=c(2.4,1,0))
-plot(math ~ social, jsp, xlab="Social Class", ylab="Math Score")
+par(mai = c(.6, .6, .1, .1), mgp = c(2.4, 1, 0))
+plot(math ~ social, jsp, xlab = "Social Class", ylab = "Math Score")
 
 dev.off()
 
-pdf("../figures/jsp_box2.pdf", height=3.375, width=3.375, pointsize=10)
+pdf("slides/figures/jsp_box2.pdf", height = 3.375, width = 3.375, pointsize = 10)
 
-par(mai=c(.6,.6,.1,.1), mgp=c(2.4,1,0))
+par(mai = c(.6, .6, .1, .1), mgp=c(2.4, 1, 0))
 plot(math ~ gender, jsp, xlab="Gender", ylab="Math Score")
 
 dev.off()
 
-pdf("../figures/jsp_scatter.pdf", height=3.375, width=3.375, pointsize=10)
+pdf("slides/figures/jsp_scatter.pdf", height = 3.375, width = 3.375, pointsize = 10)
 
-par(mai=c(.6,.6,.1,.1), mgp=c(2.4,1,0))
-plot(jitter(math) ~ jitter(raven), dat, cex=.5, 
-  xlab="Raven Score", ylab="Math Score", 
-  xlim=c(0, 36), col="gray")
+par(mai = c(.6, .6, .1, .1), mgp=c(2.4, 1, 0))
+plot(jitter(math) ~ jitter(raven), dat, cex = .5, 
+  xlab = "Raven Score", ylab = "Math Score", 
+  xlim = c(0, 36), col = "gray")
 
 dev.off()
 
-#--------------- (3) Centering of variables ---------------
+#--------------- (3) Centering of variables -----------------------------------
 
 # Centering around grand mean
 dat$craven <- dat$raven - mean(dat$raven)
@@ -76,12 +76,11 @@ lm1 <- lm(math ~ raven, dat)
 lm2 <- lm(math ~ craven, dat)
 
 # Visualization
-plot(jitter(math) ~ jitter(raven), dat, cex=.7, 
-  xlab="Raven score", ylab="Math score", 
-  xlim=c(0, 36), col="gray")
-abline(v = 0, h = coef(lm1)[1], col="darkgray")
-abline(v = mean(dat$raven), h = coef(lm2)[1],
-  col="darkgray")
+plot(jitter(math) ~ jitter(raven), dat, cex = .7, 
+  xlab = "Raven score", ylab = "Math score", 
+  xlim = c(0, 36), col = "gray")
+abline(v = 0, h = coef(lm1)[1], col = "darkgray")
+abline(v = mean(dat$raven), h = coef(lm2)[1], col = "darkgray")
 abline(lm1)
 
 # Centering around group mean for each school
@@ -95,58 +94,59 @@ aggregate(craven ~ school, dat, mean)
 aggregate(gcraven ~ school, dat, mean)
 
 # Visualization
-plot(jitter(math) ~ jitter(craven), dat, cex=.7, 
-  xlab="Centered raven score", ylab="Math score", 
-  col="gray")
-abline(v = unique(dat$mraven), col="lightblue")
-abline(v = mean(dat$craven), col="blue", lwd=2)
+plot(jitter(math) ~ jitter(craven), dat, cex = .7, 
+  xlab = "Centered raven score", ylab = "Math score", 
+  col = "gray")
+abline(v = unique(dat$mraven), col = "lightblue")
+abline(v = mean(dat$craven), col = "blue", lwd = 2)
 
 plot(math ~ gcraven, jsp,
-  xlab="Raven Score",
-  ylab="Math Score")
+  xlab = "Raven Score",
+  ylab = "Math Score")
 
-pdf("../figures/jsp_lattice1.pdf")
+pdf("slides/figures/jsp_lattice1.pdf")
 
-xyplot(math ~ gcraven | school, data=dat, xlab="School-centered Raven Score", 
-       ylab="Math Score", type=c("p", "g", "r"))
-
-dev.off()
-
-pdf("../figures/jsp_lattice2.pdf", width=15, height=5)
-
-xyplot(math ~ gcraven | school:class, data=dat, xlab="School-centered Raven Score", 
-       ylab="Math Score", type=c("p", "g", "r"), layout=c(31, 3))
+xyplot(math ~ gcraven | school, data=dat, xlab = "School-centered Raven Score",
+       ylab = "Math Score", type = c("p", "g", "r"))
 
 dev.off()
 
+pdf("slides/figures/jsp_lattice2.pdf", width=15, height=5)
 
-#--------------- (4) Random intercept model ---------------
+xyplot(math ~ gcraven | school:class, data = dat,
+       xlab = "School-centered Raven Score", 
+       ylab = "Math Score",
+       type = c("p", "g", "r"),
+       layout = c(31, 3))
 
-lme1 <- lmer(math ~ craven*social + (1 | school) + 
-  (1 | school:class), dat, REML=F)
+dev.off()
+
+#--------------- (4) Random intercept model -----------------------------------
+
+lme1 <- lmer(math ~ craven*social + (1 | school) + (1 | school:class), dat,
+             REML = FALSE)
 
 # significance tests
-confint(lme1, method="Wald")
+confint(lme1, method = "Wald")
 
 # model diagnostics
 plot(lme1)
-qqnorm(resid(lme1)); qqline(resid(lme1))
+qqmath(lme1)
 
-#--------------- (5) Multilevel model ---------------
+#--------------- (5) Multilevel model -----------------------------------------
 
 lme2 <- lmer(math ~ mraven*gcraven + gcraven + 
-  (gcraven | school), dat, REML=F)
+  (gcraven | school), dat, REML = FALSE)
 
 lme3 <- lmer(math ~ mraven*gcraven + gcraven + social +
-  (gcraven | school), dat, REML=F)
+  (gcraven | school), dat, REML = FALSE)
 
 lme4 <- lmer(math ~ mraven*gcraven + gcraven*social + 
-  (gcraven | school), dat, REML=F)
+  (gcraven | school), dat, REML = FALSE)
 
 anova(lme2, lme3, lme4)
 
 summary(lme3)
 confint(lme3)
-
 
 
