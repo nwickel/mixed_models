@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 10 Generalized linear mixed-effects models | Course on Mixed-effects Models</title>
-  <meta name="description" content="Chapter 10 Generalized linear mixed-effects models | Course on Mixed-effects Models" />
+  <title>Chapter 11 Generalized linear mixed-effects models | Course on Mixed-effects Models</title>
+  <meta name="description" content="Chapter 11 Generalized linear mixed-effects models | Course on Mixed-effects Models" />
   <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 10 Generalized linear mixed-effects models | Course on Mixed-effects Models" />
+  <meta property="og:title" content="Chapter 11 Generalized linear mixed-effects models | Course on Mixed-effects Models" />
   <meta property="og:type" content="book" />
   
   
   <meta name="github-repo" content="https://github.com/nwickel/mixed_models/" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 10 Generalized linear mixed-effects models | Course on Mixed-effects Models" />
+  <meta name="twitter:title" content="Chapter 11 Generalized linear mixed-effects models | Course on Mixed-effects Models" />
   
   
   
@@ -23,15 +23,15 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2025-04-23" />
+<meta name="date" content="2025-04-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="contrast-coding.html"/>
-<link rel="next" href="multilevel-models.html"/>
+<link rel="prev" href="multilevel-models.html"/>
+<link rel="next" href="data-simulation-in-r.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -255,15 +255,15 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path="contrast-coding.html"><a href="contrast-coding.html#exercise-2-5"><i class="fa fa-check"></i>Exercise 2</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html"><i class="fa fa-check"></i><b>10</b> Generalized linear mixed-effects models</a>
+<li class="chapter" data-level="10" data-path="multilevel-models.html"><a href="multilevel-models.html"><i class="fa fa-check"></i><b>10</b> Multilevel models</a>
 <ul>
-<li class="chapter" data-level="10.1" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html#slides-9"><i class="fa fa-check"></i><b>10.1</b> Slides</a></li>
-<li class="chapter" data-level="10.2" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html#exercises-9"><i class="fa fa-check"></i><b>10.2</b> Exercises</a></li>
+<li class="chapter" data-level="10.1" data-path="multilevel-models.html"><a href="multilevel-models.html#slides-9"><i class="fa fa-check"></i><b>10.1</b> Slides</a></li>
+<li class="chapter" data-level="10.2" data-path="multilevel-models.html"><a href="multilevel-models.html#exercises-9"><i class="fa fa-check"></i><b>10.2</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="11" data-path="multilevel-models.html"><a href="multilevel-models.html"><i class="fa fa-check"></i><b>11</b> Multilevel models</a>
+<li class="chapter" data-level="11" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html"><i class="fa fa-check"></i><b>11</b> Generalized linear mixed-effects models</a>
 <ul>
-<li class="chapter" data-level="11.1" data-path="multilevel-models.html"><a href="multilevel-models.html#slides-10"><i class="fa fa-check"></i><b>11.1</b> Slides</a></li>
-<li class="chapter" data-level="11.2" data-path="multilevel-models.html"><a href="multilevel-models.html#exercises-10"><i class="fa fa-check"></i><b>11.2</b> Exercises</a></li>
+<li class="chapter" data-level="11.1" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html#slides-10"><i class="fa fa-check"></i><b>11.1</b> Slides</a></li>
+<li class="chapter" data-level="11.2" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html#exercises-10"><i class="fa fa-check"></i><b>11.2</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="12" data-path="data-simulation-in-r.html"><a href="data-simulation-in-r.html"><i class="fa fa-check"></i><b>12</b> Data simulation in R</a>
 <ul>
@@ -301,10 +301,10 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="generalized-linear-mixed-effects-models" class="section level1 hasAnchor" number="10">
-<h1><span class="header-section-number">Chapter 10</span> Generalized linear mixed-effects models<a href="generalized-linear-mixed-effects-models.html#generalized-linear-mixed-effects-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="slides-9" class="section level2 hasAnchor" number="10.1">
-<h2><span class="header-section-number">10.1</span> Slides<a href="generalized-linear-mixed-effects-models.html#slides-9" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="generalized-linear-mixed-effects-models" class="section level1 hasAnchor" number="11">
+<h1><span class="header-section-number">Chapter 11</span> Generalized linear mixed-effects models<a href="generalized-linear-mixed-effects-models.html#generalized-linear-mixed-effects-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="slides-10" class="section level2 hasAnchor" number="11.1">
+<h2><span class="header-section-number">11.1</span> Slides<a href="generalized-linear-mixed-effects-models.html#slides-10" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>TODO</p>
 <!--
 ```{=html}
@@ -316,8 +316,8 @@ div.csl-indent {
 ```
 -->
 </div>
-<div id="exercises-9" class="section level2 hasAnchor" number="10.2">
-<h2><span class="header-section-number">10.2</span> Exercises<a href="generalized-linear-mixed-effects-models.html#exercises-9" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="exercises-10" class="section level2 hasAnchor" number="11.2">
+<h2><span class="header-section-number">11.2</span> Exercises<a href="generalized-linear-mixed-effects-models.html#exercises-10" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>TODO</p>
 
 </div>
@@ -327,8 +327,8 @@ div.csl-indent {
           </div>
         </div>
       </div>
-<a href="contrast-coding.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="multilevel-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="multilevel-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data-simulation-in-r.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -349,7 +349,7 @@ gitbook.start({
     "size": 2
   },
   "edit": {
-    "link": "https://github.com/nwickel/mixed_models/edit/master/10_glmm.Rmd",
+    "link": "https://github.com/nwickel/mixed_models/edit/master/11_glmm.Rmd",
     "text": "Edit"
   },
   "history": {

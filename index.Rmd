@@ -70,7 +70,7 @@ need more support or materials, just let me know.
 |        8 | 14.04.2025 | Random effects for within-subject designs|
 |        9 | 28.04.2025 | Contrast coding                          |
 |       10 | 12.05.2025 | Multilevel models                        |
-|       11 | 26.05.2025 | Generalized linear mixed-effects model   |
+|       11 | 26.05.2025 | Generalized linear mixed-effects models  |
 |       12 | 23.06.2025 | Data simulation in R                     |
 |       13 | 07.07.2025 | Power simulation longitudinal data       |
 |       14 | 21.07.2025 | Power simulation (G)LMM within design    |

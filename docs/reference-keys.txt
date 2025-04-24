@@ -26,10 +26,10 @@ exercises-7
 contrast-coding
 slides-8
 exercises-8
-generalized-linear-mixed-effects-models
+multilevel-models
 slides-9
 exercises-9
-multilevel-models
+generalized-linear-mixed-effects-models
 slides-10
 exercises-10
 data-simulation-in-r
