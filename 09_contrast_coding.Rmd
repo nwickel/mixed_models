@@ -2,19 +2,98 @@
 
 ## Slides
 
-TODO
-
-<!--
 ```{=html}
-<object data="slides/07_crossed_random/07_crossed_random.pdf" type="application/pdf" width="100%" height="500px">
+<object data="slides/09_contrast_coding/09_contrast_coding.pdf" type="application/pdf" width="100%" height="500px">
   <p>
-    Unable to display PDF file. <a href="slides/07_crossed_random/07_crossed_random.pdf">Download</a> instead.
+    Unable to display PDF file. <a href="slides/09_contrast_coding/09_contrast_coding.pdf">Download</a> instead.
   </p>
 </object>
 ```
--->
 
 ## Exercises
 
-TODO
+### Exercise 1 {-}
+
+* Simulate data based on the example by @Brehm2022 for a 2x2 between-subjects
+  design
+
+```{r ex09.1, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+library(lme4)
+set.seed(1012)
+
+# Average time to eat in min
+SpoonSoup  <- 5
+ForkSoup   <- 10
+SpoonSalad <- 10
+ForkSalad  <- 5
+
+# Standard deviation for all groups
+Groupsd <- 2
+
+# Number of subjects (ps) and ingredients (ii) - crossed random design
+ps <- 20
+ii <- 10
+
+ds <- data.frame(
+  Utensils    = factor(rep(c("Spoon", "Fork"), each = ps * ii, times = 2)),
+  Foods       = factor(rep(c("Soup", "Salad"), each = ps * ii * 2)),
+  Participant = factor(rep(paste0("p", 1:ps), times = ii * 4)),
+  Item        = factor(rep(paste0("i", 1:ii), each = ps, times = 4)))
+
+ds$RT <- c(rnorm(ps * ii, mean = SpoonSoup,  sd = Groupsd),
+           rnorm(ps * ii, mean = ForkSoup,   sd = Groupsd),
+           rnorm(ps * ii, mean = SpoonSalad, sd = Groupsd),
+           rnorm(ps * ii, mean = ForkSalad,  sd = Groupsd))
+
+psre <- rnorm(ps, mean = 0, sd = Groupsd / 5)
+iire <- rnorm(ii, mean = 0, sd = Groupsd / 5)
+
+ds$RT <- ds$RT + psre[ds$Participant] + iire[ds$Item]
+```
+
+* Fit the following model to your simulated data
+  $$
+    RT = \beta_0 + \beta_1 UtensilsSpoon + \beta_2 FoodsSoup + \beta_3
+    UtensilsSpoon \times FoodsSoup + \upsilon_0 + \eta_0 + \varepsilon
+  $$
+  with $\upsilon_0 \sim N(0, \sigma_{\upsilon}^2)$, $\eta_0 \sim N(0,
+  \sigma_{\eta}^2)$, $\varepsilon \sim N(0, \sigma_{\varepsilon}^2)$, all
+  i.i.d.
+
+  1. with dummy coding
+  2. with effects coding
+
+```{r ex09.2, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+# Treatment coding
+m1 <- lmer(RT ~ Utensils * Foods + (1 | Participant) + (1 | Item), data = ds)
+summary(m1)
+
+# Effects coding
+contrasts(ds$Utensils) <- contr.sum(levels(ds$Utensils))
+contrasts(ds$Foods)    <- contr.sum(levels(ds$Foods))
+m2 <- lmer(RT ~ Utensils * Foods + (1 | Participant) + (1 | Item), data = ds)
+summary(m2)
+```
+
+* Interpret the fixed parameters and compare the variance components for the
+  random effects for the two models
+
+* What is the interpretation of the intercept for the two models? Why does it
+  differ?
+
+### Exercise 2 {-}
+
+* Fit linear models with all contrasts we looked at
+
+  1. Treatment contrasts
+  2. Sum contrasts
+  3. Helmert contrasts
+  4. Sequential difference contrasts
+  5. Custom contrasts
+
+* Interpret the fixed parameters
+
+* Predict data with each model and compare the results
+
+* Look again at the intercepts for all models and compare
 
