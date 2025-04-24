@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2025-04-14" />
+<meta name="date" content="2025-04-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -249,7 +249,11 @@ div.csl-indent {
 <li class="chapter" data-level="9" data-path="contrast-coding.html"><a href="contrast-coding.html"><i class="fa fa-check"></i><b>9</b> Contrast coding</a>
 <ul>
 <li class="chapter" data-level="9.1" data-path="contrast-coding.html"><a href="contrast-coding.html#slides-8"><i class="fa fa-check"></i><b>9.1</b> Slides</a></li>
-<li class="chapter" data-level="9.2" data-path="contrast-coding.html"><a href="contrast-coding.html#exercises-8"><i class="fa fa-check"></i><b>9.2</b> Exercises</a></li>
+<li class="chapter" data-level="9.2" data-path="contrast-coding.html"><a href="contrast-coding.html#exercises-8"><i class="fa fa-check"></i><b>9.2</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="" data-path="contrast-coding.html"><a href="contrast-coding.html#exercise-1-8"><i class="fa fa-check"></i>Exercise 1</a></li>
+<li class="chapter" data-level="" data-path="contrast-coding.html"><a href="contrast-coding.html#exercise-2-5"><i class="fa fa-check"></i>Exercise 2</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html"><i class="fa fa-check"></i><b>10</b> Generalized linear mixed-effects models</a>
 <ul>
@@ -301,21 +305,107 @@ div.csl-indent {
 <h1><span class="header-section-number">Chapter 9</span> Contrast coding<a href="contrast-coding.html#contrast-coding" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="slides-8" class="section level2 hasAnchor" number="9.1">
 <h2><span class="header-section-number">9.1</span> Slides<a href="contrast-coding.html#slides-8" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>TODO</p>
-<!--
-```{=html}
-<object data="slides/07_crossed_random/07_crossed_random.pdf" type="application/pdf" width="100%" height="500px">
+<object data="slides/09_contrast_coding/09_contrast_coding.pdf" type="application/pdf" width="100%" height="500px">
   <p>
-    Unable to display PDF file. <a href="slides/07_crossed_random/07_crossed_random.pdf">Download</a> instead.
+    Unable to display PDF file. <a href="slides/09_contrast_coding/09_contrast_coding.pdf">Download</a> instead.
   </p>
 </object>
-```
--->
 </div>
 <div id="exercises-8" class="section level2 hasAnchor" number="9.2">
 <h2><span class="header-section-number">9.2</span> Exercises<a href="contrast-coding.html#exercises-8" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>TODO</p>
+<div id="exercise-1-8" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 1<a href="contrast-coding.html#exercise-1-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Simulate data based on the example by <span class="citation">Brehm &amp; Alday (<a href="#ref-Brehm2022" role="doc-biblioref">2022</a>)</span> for a 2x2 between-subjects
+design</li>
+</ul>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb64-1"><a href="contrast-coding.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb64-2"><a href="contrast-coding.html#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1012</span>)</span>
+<span id="cb64-3"><a href="contrast-coding.html#cb64-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-4"><a href="contrast-coding.html#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Average time to eat in min</span></span>
+<span id="cb64-5"><a href="contrast-coding.html#cb64-5" aria-hidden="true" tabindex="-1"></a>SpoonSoup  <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb64-6"><a href="contrast-coding.html#cb64-6" aria-hidden="true" tabindex="-1"></a>ForkSoup   <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb64-7"><a href="contrast-coding.html#cb64-7" aria-hidden="true" tabindex="-1"></a>SpoonSalad <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb64-8"><a href="contrast-coding.html#cb64-8" aria-hidden="true" tabindex="-1"></a>ForkSalad  <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb64-9"><a href="contrast-coding.html#cb64-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-10"><a href="contrast-coding.html#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Standard deviation for all groups</span></span>
+<span id="cb64-11"><a href="contrast-coding.html#cb64-11" aria-hidden="true" tabindex="-1"></a>Groupsd <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb64-12"><a href="contrast-coding.html#cb64-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-13"><a href="contrast-coding.html#cb64-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of subjects (ps) and ingredients (ii) - crossed random design</span></span>
+<span id="cb64-14"><a href="contrast-coding.html#cb64-14" aria-hidden="true" tabindex="-1"></a>ps <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb64-15"><a href="contrast-coding.html#cb64-15" aria-hidden="true" tabindex="-1"></a>ii <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb64-16"><a href="contrast-coding.html#cb64-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-17"><a href="contrast-coding.html#cb64-17" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb64-18"><a href="contrast-coding.html#cb64-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">Utensils    =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;Spoon&quot;</span>, <span class="st">&quot;Fork&quot;</span>), <span class="at">each =</span> ps <span class="sc">*</span> ii, <span class="at">times =</span> <span class="dv">2</span>)),</span>
+<span id="cb64-19"><a href="contrast-coding.html#cb64-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">Foods       =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">&quot;Soup&quot;</span>, <span class="st">&quot;Salad&quot;</span>), <span class="at">each =</span> ps <span class="sc">*</span> ii <span class="sc">*</span> <span class="dv">2</span>)),</span>
+<span id="cb64-20"><a href="contrast-coding.html#cb64-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">Participant =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">paste0</span>(<span class="st">&quot;p&quot;</span>, <span class="dv">1</span><span class="sc">:</span>ps), <span class="at">times =</span> ii <span class="sc">*</span> <span class="dv">4</span>)),</span>
+<span id="cb64-21"><a href="contrast-coding.html#cb64-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">Item        =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">paste0</span>(<span class="st">&quot;i&quot;</span>, <span class="dv">1</span><span class="sc">:</span>ii), <span class="at">each =</span> ps, <span class="at">times =</span> <span class="dv">4</span>)))</span>
+<span id="cb64-22"><a href="contrast-coding.html#cb64-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-23"><a href="contrast-coding.html#cb64-23" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>RT <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(ps <span class="sc">*</span> ii, <span class="at">mean =</span> SpoonSoup,  <span class="at">sd =</span> Groupsd),</span>
+<span id="cb64-24"><a href="contrast-coding.html#cb64-24" aria-hidden="true" tabindex="-1"></a>           <span class="fu">rnorm</span>(ps <span class="sc">*</span> ii, <span class="at">mean =</span> ForkSoup,   <span class="at">sd =</span> Groupsd),</span>
+<span id="cb64-25"><a href="contrast-coding.html#cb64-25" aria-hidden="true" tabindex="-1"></a>           <span class="fu">rnorm</span>(ps <span class="sc">*</span> ii, <span class="at">mean =</span> SpoonSalad, <span class="at">sd =</span> Groupsd),</span>
+<span id="cb64-26"><a href="contrast-coding.html#cb64-26" aria-hidden="true" tabindex="-1"></a>           <span class="fu">rnorm</span>(ps <span class="sc">*</span> ii, <span class="at">mean =</span> ForkSalad,  <span class="at">sd =</span> Groupsd))</span>
+<span id="cb64-27"><a href="contrast-coding.html#cb64-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-28"><a href="contrast-coding.html#cb64-28" aria-hidden="true" tabindex="-1"></a>psre <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(ps, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> Groupsd <span class="sc">/</span> <span class="dv">5</span>)</span>
+<span id="cb64-29"><a href="contrast-coding.html#cb64-29" aria-hidden="true" tabindex="-1"></a>iire <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(ii, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> Groupsd <span class="sc">/</span> <span class="dv">5</span>)</span>
+<span id="cb64-30"><a href="contrast-coding.html#cb64-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-31"><a href="contrast-coding.html#cb64-31" aria-hidden="true" tabindex="-1"></a>ds<span class="sc">$</span>RT <span class="ot">&lt;-</span> ds<span class="sc">$</span>RT <span class="sc">+</span> psre[ds<span class="sc">$</span>Participant] <span class="sc">+</span> iire[ds<span class="sc">$</span>Item]</span></code></pre></div>
+</details>
+<ul>
+<li><p>Fit the following model to your simulated data
+<span class="math display">\[
+  RT = \beta_0 + \beta_1 UtensilsSpoon + \beta_2 FoodsSoup + \beta_3
+  UtensilsSpoon \times FoodsSoup + \upsilon_0 + \eta_0 + \varepsilon
+\]</span>
+with <span class="math inline">\(\upsilon_0 \sim N(0, \sigma_{\upsilon}^2)\)</span>, <span class="math inline">\(\eta_0 \sim N(0, \sigma_{\eta}^2)\)</span>, <span class="math inline">\(\varepsilon \sim N(0, \sigma_{\varepsilon}^2)\)</span>, all
+i.i.d.</p>
+<ol style="list-style-type: decimal">
+<li>with dummy coding</li>
+<li>with effects coding</li>
+</ol></li>
+</ul>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb65-1"><a href="contrast-coding.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Treatment coding</span></span>
+<span id="cb65-2"><a href="contrast-coding.html#cb65-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> Utensils <span class="sc">*</span> Foods <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Participant) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Item), <span class="at">data =</span> ds)</span>
+<span id="cb65-3"><a href="contrast-coding.html#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span>
+<span id="cb65-4"><a href="contrast-coding.html#cb65-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-5"><a href="contrast-coding.html#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Effects coding</span></span>
+<span id="cb65-6"><a href="contrast-coding.html#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(ds<span class="sc">$</span>Utensils) <span class="ot">&lt;-</span> <span class="fu">contr.sum</span>(<span class="fu">levels</span>(ds<span class="sc">$</span>Utensils))</span>
+<span id="cb65-7"><a href="contrast-coding.html#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(ds<span class="sc">$</span>Foods)    <span class="ot">&lt;-</span> <span class="fu">contr.sum</span>(<span class="fu">levels</span>(ds<span class="sc">$</span>Foods))</span>
+<span id="cb65-8"><a href="contrast-coding.html#cb65-8" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(RT <span class="sc">~</span> Utensils <span class="sc">*</span> Foods <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Participant) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Item), <span class="at">data =</span> ds)</span>
+<span id="cb65-9"><a href="contrast-coding.html#cb65-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
+</details>
+<ul>
+<li><p>Interpret the fixed parameters and compare the variance components for the
+random effects for the two models</p></li>
+<li><p>What is the interpretation of the intercept for the two models? Why does it
+differ?</p></li>
+</ul>
+</div>
+<div id="exercise-2-5" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 2<a href="contrast-coding.html#exercise-2-5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><p>Fit linear models with all contrasts we looked at</p>
+<ol style="list-style-type: decimal">
+<li>Treatment contrasts</li>
+<li>Sum contrasts</li>
+<li>Helmert contrasts</li>
+<li>Sequential difference contrasts</li>
+<li>Custom contrasts</li>
+</ol></li>
+<li><p>Interpret the fixed parameters</p></li>
+<li><p>Predict data with each model and compare the results</p></li>
+<li><p>Look again at the intercepts for all models and compare</p></li>
+</ul>
 
+</div>
+</div>
+</div>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-Brehm2022" class="csl-entry">
+Brehm, L. &amp; Alday, P. M. (2022). Contrast coding choices in a decade of mixed models. <em>Journal of Memory and Language</em>, <em>125</em>, 104334. <a href="https://doi.org/10.1016/j.jml.2022.104334">https://doi.org/10.1016/j.jml.2022.104334</a>
 </div>
 </div>
             </section>
