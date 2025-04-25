@@ -397,7 +397,7 @@ which corresponds to
   \end{itemize}
   %\vspace{.2cm}
 \[
-  \boldsymbol{\mu} = \mat{X} \, \gvect{\beta}
+  \boldsymbol{\mu} = \mat{C} \, \gvect{\beta}
 \]
 \[
   \begin{pmatrix}
@@ -425,10 +425,10 @@ which corresponds to
 
 \begin{frame}[<+->]{Example by \citet{Schad2020}}
   \begin{itemize}
-    \item The contrast matrix $\mat{X}$ defines how the model parameters
+    \item The contrast matrix $\mat{C}$ defines how the model parameters
       are ``combined'' to estimate $\boldsymbol{\mu}$
     \item $\boldsymbol{\mu}$ is our data and will always be the same
-    \item $\mat{X}$ depends on the contrast coding we choose and, therefore, so
+    \item $\mat{C}$ depends on the contrast coding we choose and, therefore, so
       does $\boldsymbol{\beta}$
     \item We will go through different possibilities, all testing different
       hypotheses
@@ -474,8 +474,8 @@ mm %*% beta
       obtain $\gvect{\mu}$, then the hypothesis matrix defines how to add up the
       means to obtain the parameters
   \[
-    \boldsymbol{\mu} = \mat{X} \, \gvect{\beta} ~~~~~\Leftrightarrow ~~~~~
-    \boldsymbol{\beta} = \mat{X}^{-1} \, \gvect{\mu}
+    \boldsymbol{\mu} = \mat{C} \, \gvect{\beta} ~~~~~\Leftrightarrow ~~~~~
+    \boldsymbol{\beta} = \mat{C}^{-1} \, \gvect{\mu}
   \]
     \item Hence, the hypothesis matrix is the inverse of the contrast matrix
     \item It is sometimes easier to define the hypothesis matrix and then obtain
