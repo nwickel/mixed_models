@@ -1,0 +1,104 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage{listings}
+\usepackage[utf8,latin1]{inputenc}
+\usepackage[style = apa, backend = biber, natbib = true]{biblatex}
+\addbibresource{../../literature/lit.bib}
+
+\makeatletter \def\newblock{\beamer@newblock} \makeatother
+
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{section in toc}[circle]
+\mode<beamer>{\setbeamercolor{math text displayed}{fg=iwmgray}}
+\setbeamercolor{block body}{bg=iwmorange!50!white}
+\setbeamercolor{block title}{fg=white, bg=iwmorange}
+
+% Definitions for biblatex
+\setbeamercolor{bibliography entry note}{fg=iwmgray}
+\setbeamercolor{bibliography entry author}{fg=iwmgray}
+\setbeamertemplate{bibliography item}{}
+
+\definecolor{iwmorange}{RGB}{255,105,0}
+\definecolor{iwmgray}{RGB}{67,79,79}
+\definecolor{iwmblue}{RGB}{60,180,220}
+\definecolor{iwmgreen}{RGB}{145,200,110}
+\definecolor{iwmpurple}{RGB}{120,0,75}
+
+\setbeamercolor{title}{fg=iwmorange}
+\setbeamercolor{frametitle}{fg=iwmorange}
+\setbeamercolor{structure}{fg=iwmorange}
+\setbeamercolor{normal text}{fg=iwmgray}
+\setbeamercolor{author}{fg=iwmgray}
+\setbeamercolor{date}{fg=iwmgray}
+
+\lstset{language = R,%
+  basicstyle = \ttfamily\color{iwmgray},
+  frame = single,
+  rulecolor = \color{iwmgray},
+  commentstyle = \slshape\color{iwmgreen},
+  keywordstyle = \bfseries\color{iwmgray},
+  identifierstyle = \color{iwmpurple},
+  stringstyle = \color{iwmblue},
+  numbers = none,%left,numberstyle = \tiny,
+  basewidth = {.5em, .4em},
+  showstringspaces = false,
+  emphstyle = \color{red!50!white}}
+
+\title{Generalized linear mixed-effects models}
+\author{Nora Wickelmaier}
+\date{Last modified: \today}
+
+\AtBeginSection[]{
+  \frame{
+    \tableofcontents[sectionstyle=show/hide, subsectionstyle=show/show/hide]}}
+
+% \setbeamertemplate{headline}{
+%  \begin{beamercolorbox}{section in head}
+%    \vskip5pt\insertsectionnavigationhorizontal{\paperwidth}{}{}\vskip2pt
+%  \end{beamercolorbox}
+% }
+
+\setbeamertemplate{footline}{\vskip-2pt\hfill\insertframenumber$\;$\vskip2pt}
+
+\begin{document}
+
+\begin{frame}{}
+\thispagestyle{empty}
+\titlepage
+\end{frame}
+
+% \begin{frame}{Outline}
+% \tableofcontents
+% \end{frame}
+
+\begin{frame}[fragile]{GLMMs}
+  \begin{itemize}
+    \item Like linear models, mixed-effects models can be extended so that they
+      allow for response variables that have arbitrary distributions
+    \item A GLM(M) is a specific combination of a response distribution, a link
+      function, and a linear predictor 
+    \item We can choose (almost) all the link functions that work with
+      \texttt{glm()} for \texttt{glmer()}
+  \end{itemize}
+\begin{lstlisting}
+## Family name       Link functions
+   binomial          logit, probit, log, cloglog
+   gaussian          identity, log, inverse
+   Gamma             identity, inverse, log
+   inverse.gaussian  1/mu^2, identity, inverse, log
+   poisson           log, identity, sqrt
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Example: }
+\end{frame}
+
+\appendix
+%\begin{frame}[allowframebreaks]{References}
+\begin{frame}{References}
+  \printbibliography
+\end{frame}
+
+\end{document}
+
