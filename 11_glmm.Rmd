@@ -2,19 +2,73 @@
 
 ## Slides
 
-TODO
-
-<!--
 ```{=html}
-<object data="slides/07_crossed_random/07_crossed_random.pdf" type="application/pdf" width="100%" height="500px">
+<object data="slides/11_glmm/11_glmm.pdf" type="application/pdf" width="100%" height="500px">
   <p>
-    Unable to display PDF file. <a href="slides/07_crossed_random/07_crossed_random.pdf">Download</a> instead.
+    Unable to display PDF file. <a href="slides/11_glmm/11_glmm.pdf">Download</a> instead.
   </p>
 </object>
 ```
--->
 
 ## Exercises
 
-TODO
+### Exercise 1 {-}
+
+* Load the example data from https://github.com/eveskew/glmm_tutorial
+
+```{r ex11.1}
+# Download the data from https://github.com/eveskew/glmm_tutorial
+
+dat <- read.csv("https://raw.githubusercontent.com/eveskew/glmm_tutorial/refs/heads/master/glmm_tutorial_data.csv")
+```
+
+* The data set contains data on 11 studies investigating how many animals got
+  tested positive for a certain disease (sorry, I could not find out which one)
+
+* Additional variables are `Habitat` indicating if the animals were tested in a
+  forest (`Forest`) or in a agricultural context (`Ag`) and `Season` with levels
+  `Spring` and `Fall`
+
+* Create a plot with prevalence on the y-axis, habitat on the x-axis, two panels
+  for season and one line for each study
+
+* Fit GLMMs predicting the probability that an animal is tested positive using
+  `Season` and `Habitat` as predictors
+
+* What would you choose as random effect here?
+
+* Which model would you choose?
+
+* Interpret your results
+
+```{r ex11.2, results = "hide", class.source = "fold-hide", fig.show = "hide"}
+library(lme4)
+
+dat$Habitat <- factor(dat$Habitat, levels = c("Forest", "Ag"))
+dat$Season  <- factor(dat$Season)
+dat$Study   <- factor(dat$Study)
+
+dat$Prev <- dat$Positive / dat$Num_Tested
+
+# Plot data
+lattice::xyplot(Prev ~ Habitat | Season, data = dat, type = "b", groups = Study)
+
+# Fit GLMMs
+gm1 <- glmer(cbind(Positive, Num_Tested - Positive) ~ 1 + (1 | Study),
+             data = dat, family = binomial)
+gm2 <- glmer(cbind(Positive, Num_Tested - Positive) ~ Habitat + (1 | Study),
+             data = dat, family = binomial)
+gm3 <- glmer(cbind(Positive, Num_Tested - Positive) ~ Habitat + Season +
+             (1 | Study),
+             data = dat, family = binomial)
+gm4 <- glmer(cbind(Positive, Num_Tested - Positive) ~ Habitat * Season +
+             (1 | Study),
+             data = dat, family = binomial)
+
+anova(gm1, gm2, gm3, gm4)
+
+# Odds ratio for Habitat
+exp(fixef(gm2))[2]
+```
+
 

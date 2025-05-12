@@ -19,8 +19,19 @@ names(dat) <- c("dist", "use", "livch", "age", "urban")
 # has, whether she lives in an urban or rural setting, and the political
 # district in which she lives.
 
+pdf("slides/figures/contra_data.pdf", width = 6.5, height = 4.5)
 lattice::xyplot(use ~ age | urban, dat, groups = livch,
-                type = "smooth", auto.key = TRUE)
+                type = "smooth", auto.key = list(space = "top", columns = 4))
+dev.off()
+
+# library(ggplot2)
+# 
+# ggplot(dat, aes(x = age, y = use, color = livch)) +
+#   geom_smooth(se = FALSE) +
+#   facet_wrap(~ urban) +
+#   theme_minimal() +
+#   labs(color = "Livch")
+
 # Smoothed relative frequency of contraception use versus centered age for women
 # in the 1989 Bangladesh Fertility Survey
 
@@ -29,7 +40,8 @@ lattice::xyplot(use ~ age | urban, dat, groups = livch,
 
 # Fit model
 gm1 <- glmer(use ~ age + I(age^2) + urban + livch + (1 | dist), data = dat,
-             family = binomial("logit"))
+             family = binomial("logit"),
+             control = glmerControl(calc.derivs = FALSE))
 
 # Create binary variable for livch
 
@@ -39,7 +51,8 @@ dat$children <- factor(ifelse(dat$livch == 0, "false", "true"),
 
 # Fit model with interaction
 gm2 <- glmer(use ~ age * children + I(age^2) + urban + (1 | dist), data = dat,
-             family = binomial("logit"))
+             family = binomial("logit"),
+             control = glmerControl(calc.derivs = FALSE))
 
 # Compare models
 data.frame(models = c("gm1", "gm2"),
