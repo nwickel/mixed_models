@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2025-04-28" />
+<meta name="date" content="2025-05-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -266,7 +266,10 @@ div.csl-indent {
 <li class="chapter" data-level="11" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html"><i class="fa fa-check"></i><b>11</b> Generalized linear mixed-effects models</a>
 <ul>
 <li class="chapter" data-level="11.1" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html#slides-10"><i class="fa fa-check"></i><b>11.1</b> Slides</a></li>
-<li class="chapter" data-level="11.2" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html#exercises-10"><i class="fa fa-check"></i><b>11.2</b> Exercises</a></li>
+<li class="chapter" data-level="11.2" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html#exercises-10"><i class="fa fa-check"></i><b>11.2</b> Exercises</a>
+<ul>
+<li class="chapter" data-level="" data-path="generalized-linear-mixed-effects-models.html"><a href="generalized-linear-mixed-effects-models.html#exercise-1-10"><i class="fa fa-check"></i>Exercise 1</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="12" data-path="data-simulation-in-r.html"><a href="data-simulation-in-r.html"><i class="fa fa-check"></i><b>12</b> Data simulation in R</a>
 <ul>
@@ -308,21 +311,70 @@ div.csl-indent {
 <h1><span class="header-section-number">Chapter 11</span> Generalized linear mixed-effects models<a href="generalized-linear-mixed-effects-models.html#generalized-linear-mixed-effects-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <div id="slides-10" class="section level2 hasAnchor" number="11.1">
 <h2><span class="header-section-number">11.1</span> Slides<a href="generalized-linear-mixed-effects-models.html#slides-10" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>TODO</p>
-<!--
-```{=html}
-<object data="slides/07_crossed_random/07_crossed_random.pdf" type="application/pdf" width="100%" height="500px">
+<object data="slides/11_glmm/11_glmm.pdf" type="application/pdf" width="100%" height="500px">
   <p>
-    Unable to display PDF file. <a href="slides/07_crossed_random/07_crossed_random.pdf">Download</a> instead.
+    Unable to display PDF file. <a href="slides/11_glmm/11_glmm.pdf">Download</a> instead.
   </p>
 </object>
-```
--->
 </div>
 <div id="exercises-10" class="section level2 hasAnchor" number="11.2">
 <h2><span class="header-section-number">11.2</span> Exercises<a href="generalized-linear-mixed-effects-models.html#exercises-10" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>TODO</p>
+<div id="exercise-1-10" class="section level3 unnumbered hasAnchor">
+<h3>Exercise 1<a href="generalized-linear-mixed-effects-models.html#exercise-1-10" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Load the example data from <a href="https://github.com/eveskew/glmm_tutorial" class="uri">https://github.com/eveskew/glmm_tutorial</a></li>
+</ul>
+<details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="generalized-linear-mixed-effects-models.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download the data from https://github.com/eveskew/glmm_tutorial</span></span>
+<span id="cb69-2"><a href="generalized-linear-mixed-effects-models.html#cb69-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-3"><a href="generalized-linear-mixed-effects-models.html#cb69-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/eveskew/glmm_tutorial/refs/heads/master/glmm_tutorial_data.csv&quot;</span>)</span></code></pre></div>
+</details>
+<ul>
+<li><p>The data set contains data on 11 studies investigating how many animals got
+tested positive for a certain disease (sorry, I could not find out which one)</p></li>
+<li><p>Additional variables are <code>Habitat</code> indicating if the animals were tested in a
+forest (<code>Forest</code>) or in a agricultural context (<code>Ag</code>) and <code>Season</code> with levels
+<code>Spring</code> and <code>Fall</code></p></li>
+<li><p>Create a plot with prevalence on the y-axis, habitat on the x-axis, two panels
+for season and one line for each study</p></li>
+<li><p>Fit GLMMs predicting the probability that an animal is tested positive using
+<code>Season</code> and <code>Habitat</code> as predictors</p></li>
+<li><p>What would you choose as random effect here?</p></li>
+<li><p>Which model would you choose?</p></li>
+<li><p>Interpret your results</p></li>
+</ul>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb70-1"><a href="generalized-linear-mixed-effects-models.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb70-2"><a href="generalized-linear-mixed-effects-models.html#cb70-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-3"><a href="generalized-linear-mixed-effects-models.html#cb70-3" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>Habitat <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>Habitat, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">&quot;Forest&quot;</span>, <span class="st">&quot;Ag&quot;</span>))</span>
+<span id="cb70-4"><a href="generalized-linear-mixed-effects-models.html#cb70-4" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>Season  <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>Season)</span>
+<span id="cb70-5"><a href="generalized-linear-mixed-effects-models.html#cb70-5" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>Study   <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>Study)</span>
+<span id="cb70-6"><a href="generalized-linear-mixed-effects-models.html#cb70-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-7"><a href="generalized-linear-mixed-effects-models.html#cb70-7" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>Prev <span class="ot">&lt;-</span> dat<span class="sc">$</span>Positive <span class="sc">/</span> dat<span class="sc">$</span>Num_Tested</span>
+<span id="cb70-8"><a href="generalized-linear-mixed-effects-models.html#cb70-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-9"><a href="generalized-linear-mixed-effects-models.html#cb70-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot data</span></span>
+<span id="cb70-10"><a href="generalized-linear-mixed-effects-models.html#cb70-10" aria-hidden="true" tabindex="-1"></a>lattice<span class="sc">::</span><span class="fu">xyplot</span>(Prev <span class="sc">~</span> Habitat <span class="sc">|</span> Season, <span class="at">data =</span> dat, <span class="at">type =</span> <span class="st">&quot;b&quot;</span>, <span class="at">groups =</span> Study)</span></code></pre></div>
+</details>
+<details class=chunk-details><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r fold-hide"><code class="sourceCode r"><span id="cb71-1"><a href="generalized-linear-mixed-effects-models.html#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit GLMMs</span></span>
+<span id="cb71-2"><a href="generalized-linear-mixed-effects-models.html#cb71-2" aria-hidden="true" tabindex="-1"></a>gm1 <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(Positive, Num_Tested <span class="sc">-</span> Positive) <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Study),</span>
+<span id="cb71-3"><a href="generalized-linear-mixed-effects-models.html#cb71-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> dat, <span class="at">family =</span> binomial)</span>
+<span id="cb71-4"><a href="generalized-linear-mixed-effects-models.html#cb71-4" aria-hidden="true" tabindex="-1"></a>gm2 <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(Positive, Num_Tested <span class="sc">-</span> Positive) <span class="sc">~</span> Habitat <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Study),</span>
+<span id="cb71-5"><a href="generalized-linear-mixed-effects-models.html#cb71-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> dat, <span class="at">family =</span> binomial)</span>
+<span id="cb71-6"><a href="generalized-linear-mixed-effects-models.html#cb71-6" aria-hidden="true" tabindex="-1"></a>gm3 <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(Positive, Num_Tested <span class="sc">-</span> Positive) <span class="sc">~</span> Habitat <span class="sc">+</span> Season <span class="sc">+</span></span>
+<span id="cb71-7"><a href="generalized-linear-mixed-effects-models.html#cb71-7" aria-hidden="true" tabindex="-1"></a>             (<span class="dv">1</span> <span class="sc">|</span> Study),</span>
+<span id="cb71-8"><a href="generalized-linear-mixed-effects-models.html#cb71-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> dat, <span class="at">family =</span> binomial)</span>
+<span id="cb71-9"><a href="generalized-linear-mixed-effects-models.html#cb71-9" aria-hidden="true" tabindex="-1"></a>gm4 <span class="ot">&lt;-</span> <span class="fu">glmer</span>(<span class="fu">cbind</span>(Positive, Num_Tested <span class="sc">-</span> Positive) <span class="sc">~</span> Habitat <span class="sc">*</span> Season <span class="sc">+</span></span>
+<span id="cb71-10"><a href="generalized-linear-mixed-effects-models.html#cb71-10" aria-hidden="true" tabindex="-1"></a>             (<span class="dv">1</span> <span class="sc">|</span> Study),</span>
+<span id="cb71-11"><a href="generalized-linear-mixed-effects-models.html#cb71-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">data =</span> dat, <span class="at">family =</span> binomial)</span>
+<span id="cb71-12"><a href="generalized-linear-mixed-effects-models.html#cb71-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-13"><a href="generalized-linear-mixed-effects-models.html#cb71-13" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(gm1, gm2, gm3, gm4)</span>
+<span id="cb71-14"><a href="generalized-linear-mixed-effects-models.html#cb71-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-15"><a href="generalized-linear-mixed-effects-models.html#cb71-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Odds ratio for Habitat</span></span>
+<span id="cb71-16"><a href="generalized-linear-mixed-effects-models.html#cb71-16" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">fixef</span>(gm2))[<span class="dv">2</span>]</span></code></pre></div>
+</details>
 
+</div>
 </div>
 </div>
             </section>
