@@ -96,8 +96,8 @@ Subset containing variables about
   \begin{itemize}
     \item District where women live
     \item Age (mean centered)
-    \item Living children (coded 1~=~no~children, 2~=~one~child,
-      3~=~two~children, 4~=~three or more children)
+    \item Living children (1~=~no~children, 2~=~one~child, 3~=~two~children,
+      4~=~three or more children)
     \item Use of artificial contraception (yes or no)
     \item Area where women live is rural or urban
   \end{itemize}
@@ -106,12 +106,15 @@ Subset containing variables about
 \begin{frame}{}
   \begin{block}{Exercise}
     \begin{itemize}
-      \item Read the data into R
-      \item Create a plot showing the probability to use artificial
+      \item Read the data set \texttt{contra.dat} into R
+      \item Create a plot
+        \begin{itemize}
+          \item Showing the probability to use artificial
         contraception depending on age
-      \item Draw separate lines for number of living children
-      \item Make two panels: one for rural and one for urban
-      \item Use \texttt{ggplot2} or \texttt{lattice}\\[1.8ex]
+          \item Draw separate lines for number of living children
+          \item Make two panels: one for rural and one for urban
+          \item Use \texttt{ggplot2} or \texttt{lattice}\\[1.8ex]
+        \end{itemize}
             Hint: Use \texttt{geom\_smooth()} for \texttt{ggplot2} and
             \texttt{type = "smooth"} for \texttt{lattice::xyplot()}
     \end{itemize}
@@ -130,7 +133,7 @@ dat$isUrban <- factor(dat$isUrban,
                       levels = 0:1,
                       labels = c("n", "y"))
 
-# simplify names
+# Simplify names
 names(dat) <- c("dist", "use", "livch", "age", "urban")
 \end{lstlisting}
 \end{frame}
@@ -142,9 +145,9 @@ names(dat) <- c("dist", "use", "livch", "age", "urban")
 
 \begin{frame}{GLMM}
   \begin{itemize}
-    \item Fit the following model to the data
+    \item We fit the following model to the data
       \[
-        log(\frac{p}{1-p}) = \beta_0 + \beta_1 age + \beta_2 age^2 + \beta_3
+        log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 age + \beta_2 age^2 + \beta_3
         urban + \beta_4 livch + \upsilon_0
       \]
       with $\upsilon_0 \sim N(0, \sigma_{\upsilon_0}^2)$
