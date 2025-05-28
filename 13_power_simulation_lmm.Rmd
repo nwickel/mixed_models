@@ -5,8 +5,8 @@ library(lattice)
 library(lme4)
 ```
 
-# Reanalysis
-## Application context: Depression and type of diagnosis
+## Reanalysis
+### Application context: Depression and type of diagnosis
 
 - @ReisbyGram77 studied the effect of Imipramin on 66 inpatients
   treated for depression
@@ -14,10 +14,10 @@ library(lme4)
 - Patients were classified into endogenous and non-endogenous depressed
 - Depression was measured weekly for 6 time points
 
-Data: [reisby.txt](data/reisby.txt)
+Data: [reisby.dat](data/reisby.dat)
 
 ```{r}
-dat      <- read.table("data/reisby.txt", header = TRUE)
+dat      <- read.table("data/reisby.dat", header = TRUE)
 dat$id   <- factor(dat$id)
 dat$diag <- factor(dat$diag, levels = c("nonen", "endog"))
 dat      <- na.omit(dat)     # drop missing values
@@ -27,7 +27,7 @@ xyplot(hamd ~ week | id, data = dat, type=c("g", "r", "p"),
   pch = 16, layout = c(11, 6), ylab = "HDRS score", xlab = "Time (week)")
 ```
 
-## Random-intercept model
+### Random-intercept model
 
 $$
 \begin{aligned}
@@ -45,7 +45,7 @@ m1 <- lmer(hamd ~ week + (1 | id), data = dat, REML = FALSE)
 summary(m1)
 ```
 
-## Random-slope model
+### Random-slope model
 
 $$
 \begin{aligned}
@@ -71,7 +71,7 @@ m2 <- lmer(hamd ~ week + (week | id), data = dat, REML = FALSE)
 summary(m2)
 ```
 
-## Partial pooling
+### Partial pooling
 
 ```{r fig.height = 10, fig.width = 6.5, fig.aling = "center"}
 indiv <- unlist(
@@ -92,7 +92,7 @@ xyplot(hamd + predict(m2, re.form = ~ 0) + predict(m2) + indiv ~ week | id,
   )
 ```
 
-## By-group random-slope model
+### By-group random-slope model
 
 ```{r}
 m3 <- lmer(hamd ~ week + diag + (week | id), data = dat, REML = FALSE)
@@ -100,7 +100,7 @@ m4 <- lmer(hamd ~ week * diag + (week | id), data = dat, REML = FALSE)
 anova(m3, m4)
 ```
 
-## Means and predicted HDRS score by group
+### Means and predicted HDRS score by group
 
 ```{r}
 dat2 <- aggregate(hamd ~ week + diag, dat, mean)
@@ -115,9 +115,9 @@ legend("topright", c("Endogenous", "Non endogenous"),
        lty = 1:2, pch = c(16, 21), pt.bg = "white", bty = "n")
 ```
 
-# Power simulation
+## Power simulation
 
-## Setup
+### Setup
 
 ```{r}
 ## Study design and sample sizes
@@ -131,7 +131,7 @@ dat <- data.frame(
 )
 
 ## Fixed effects and variance components
-beta <- c("(Intercept)" = 23, week = -0.5, treat = 0, "week:treat" = -1)
+beta <- c("(Intercept)" = 23, week = -0.5, treattrt = 0, "week:treattrt" = -1)
 se <- 3.5                # residual sd
 r <- -0.3
 t(chol(VarCorr(m4)$id))[lower.tri(diag(2), diag = TRUE)] / sigma(m3)
@@ -144,9 +144,9 @@ su2 <- 1.5
 Su <- matrix(c(su1^2, r * su1 * su2, r * su1 * su2, su2^2), nrow = 2, ncol = 2)
 ```
 
-## Power
+### Power
 
-### Simulate data with bivariate normal distribution
+#### Simulate data with bivariate normal distribution
 
 ```{r cache = TRUE, warning = FALSE}
 pval <- replicate(200, {
@@ -168,7 +168,7 @@ pval <- replicate(200, {
 mean(pval < 0.05)
 ```
 
-### Simulate data with `lme4::simulate()`
+#### Simulate data with `lme4::simulate()`
 
 
 ```{r cache = TRUE, warning = FALSE}
@@ -178,9 +178,9 @@ getME(m4, "theta")
 t(chol(VarCorr(m4)$id))[lower.tri(diag(2), diag = TRUE)] / sigma(m4)
 
 # Cholesky decomposition
-Lt <- chol(Su) / s
+Lt <- chol(Su) / se
 pars <- list(theta = t(Lt)[lower.tri(Lt, TRUE)],
-             beta = beta, sigma = s)
+             beta = beta, sigma = se)
 names(pars$theta) <- c("id.(Intercept)", "id.week.(Intercept)", "id.week")
 
 pval <- replicate(200, {
@@ -193,7 +193,7 @@ pval <- replicate(200, {
 mean(pval < 0.05)
 ```
 
-## Parameter recovery
+### Parameter recovery
 
 ```{r}
 par <- replicate(200, {
@@ -219,5 +219,5 @@ t(Lt)[lower.tri(Lt, diag = TRUE)] / se
 se
 ```
 
-### References
+## References
 
