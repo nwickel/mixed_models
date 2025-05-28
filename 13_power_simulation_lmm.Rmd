@@ -1,20 +1,223 @@
 # Power simulation for LMMs
 
-## Slides
-
-TODO
-
-<!--
-```{=html}
-<object data="slides/07_crossed_random/07_crossed_random.pdf" type="application/pdf" width="100%" height="500px">
-  <p>
-    Unable to display PDF file. <a href="slides/07_crossed_random/07_crossed_random.pdf">Download</a> instead.
-  </p>
-</object>
+```{r}
+library(lattice)
+library(lme4)
 ```
--->
 
-## Exercises
+# Reanalysis
+## Application context: Depression and type of diagnosis
 
-TODO
+- @ReisbyGram77 studied the effect of Imipramin on 66 inpatients
+  treated for depression
+- Depression was measured with the Hamilton depression rating scale
+- Patients were classified into endogenous and non-endogenous depressed
+- Depression was measured weekly for 6 time points
+
+Data: [reisby.txt](data/reisby.txt)
+
+```{r}
+dat      <- read.table("data/reisby.txt", header = TRUE)
+dat$id   <- factor(dat$id)
+dat$diag <- factor(dat$diag, levels = c("nonen", "endog"))
+dat      <- na.omit(dat)     # drop missing values
+head(dat, n = 13)
+
+xyplot(hamd ~ week | id, data = dat, type=c("g", "r", "p"),
+  pch = 16, layout = c(11, 6), ylab = "HDRS score", xlab = "Time (week)")
+```
+
+## Random-intercept model
+
+$$
+\begin{aligned}
+Y_{ij} &= \beta_0 + \beta_1 \, \mathtt{week}_{ij}
+        + \upsilon_{0i}
+        + \varepsilon_{ij} \\
+\upsilon_{0i} &\sim N(0, \sigma^2_{\upsilon_0}) \text{ i.i.d.} \\
+\mathbf{\varepsilon}_i &\sim N(0, \, \sigma^2)  \text{ i.i.d.} \\
+i &= 1, \ldots, I, \quad j = 1, \ldots n_i
+\end{aligned}
+$$
+
+```{r}
+m1 <- lmer(hamd ~ week + (1 | id), data = dat, REML = FALSE)
+summary(m1)
+```
+
+## Random-slope model
+
+$$
+\begin{aligned}
+Y_{ij} &= \beta_0 + \beta_1 \, \mathtt{week}_{ij}
+        + \upsilon_{0i} + \upsilon_{1i}\, \mathtt{week}_{ij}
+        + \varepsilon_{ij} \\
+\begin{pmatrix} \upsilon_{0i}\\ \upsilon_{1i} \end{pmatrix} &\sim
+   N \left(\begin{pmatrix} 0\\ 0 \end{pmatrix}, \,
+           \mathbf{\Sigma}_\upsilon =
+\begin{pmatrix}
+          \sigma^2_{\upsilon_0} & \sigma_{\upsilon_0 \upsilon_1} \\
+          \sigma_{\upsilon_0 \upsilon_1} & \sigma^2_{\upsilon_1} \\
+\end{pmatrix} \right)
+      \text{ i.i.d.} \\
+\mathbf{\varepsilon}_i &\sim N(\mathbf{0}, \, \sigma^2 \mathbf{I}_{n_i})
+      \text{ i.i.d.} \\
+i &= 1, \ldots, I, \quad j = 1, \ldots n_i
+\end{aligned}
+$$
+
+```{r}
+m2 <- lmer(hamd ~ week + (week | id), data = dat, REML = FALSE)
+summary(m2)
+```
+
+## Partial pooling
+
+```{r fig.height = 10, fig.width = 6.5, fig.aling = "center"}
+indiv <- unlist(
+  sapply(unique(dat$id),
+         function(i) predict(lm(hamd ~ week, dat[dat$id == i, ])))
+)
+
+xyplot(hamd + predict(m2, re.form = ~ 0) + predict(m2) + indiv ~ week | id,
+  data = dat, type = c("p", "l", "l", "l"), pch = 16, grid = TRUE,
+  distribute.type = TRUE, layout = c(11, 6), ylab = "HDRS score",
+  xlab = "Time (week)",
+  # customize colors
+  col = c("#434F4F", "#3CB4DC", "#FF6900", "#78004B"),
+  # add legend
+  key = list(space = "top", columns = 3,
+             text = list(c("Population", "Mixed model", "Within-subject")),
+             lines = list(col = c("#3CB4DC", "#FF6900", "#78004B")))
+  )
+```
+
+## By-group random-slope model
+
+```{r}
+m3 <- lmer(hamd ~ week + diag + (week | id), data = dat, REML = FALSE)
+m4 <- lmer(hamd ~ week * diag + (week | id), data = dat, REML = FALSE)
+anova(m3, m4)
+```
+
+## Means and predicted HDRS score by group
+
+```{r}
+dat2 <- aggregate(hamd ~ week + diag, dat, mean)
+dat2$m4 <- predict(m4, newdata = dat2, re.form = ~ 0)
+
+plot(m4 ~ week, dat2[dat2$diag == "endog", ], type = "l",
+     ylim=c(0, 28), xlab="Week", ylab = "HDRS score")
+lines(m4 ~ week, dat2[dat2$diag == "nonen", ], lty = 2)
+points(hamd ~ week, dat2[dat2$diag == "endog", ], pch = 16)
+points(hamd ~ week, dat2[dat2$diag == "nonen", ], pch = 21, bg = "white")
+legend("topright", c("Endogenous", "Non endogenous"),
+       lty = 1:2, pch = c(16, 21), pt.bg = "white", bty = "n")
+```
+
+# Power simulation
+
+## Setup
+
+```{r}
+## Study design and sample sizes
+n_week <- 6
+n_subj <- 80
+n <- n_week * n_subj
+dat <- data.frame(
+     id = factor(rep(seq_len(n_subj), each = n_week)),
+   week = rep(0:(n_week - 1), times = n_subj),
+  treat = factor(rep(0:1, each = n/2), labels = c("ctr", "trt"))
+)
+
+## Fixed effects and variance components
+beta <- c("(Intercept)" = 23, week = -0.5, treat = 0, "week:treat" = -1)
+se <- 3.5                # residual sd
+r <- -0.3
+t(chol(VarCorr(m4)$id))[lower.tri(diag(2), diag = TRUE)] / sigma(m3)
+# su <- c(3.5, 1.5)
+# Su <- r * su %o% su
+# diag(Su) <- su^2        # covariance matrix of random effects
+
+su1 <- 3.5
+su2 <- 1.5
+Su <- matrix(c(su1^2, r * su1 * su2, r * su1 * su2, su2^2), nrow = 2, ncol = 2)
+```
+
+## Power
+
+### Simulate data with bivariate normal distribution
+
+```{r cache = TRUE, warning = FALSE}
+pval <- replicate(200, {
+  
+  # Data generation
+  means <- model.matrix( ~ week * treat, dat) %*% beta
+  ranu <- MASS::mvrnorm(n_subj, mu = c(0, 0), Sigma = Su)
+  e <- rnorm(n_subj * n_week, mean = 0, sd = se)
+  
+  y <- means + ranu[dat$id, 1] + ranu[dat$id, 2] * dat$week + e
+  
+  # Fitting model to test H0
+  m0 <- lmer(y ~ week + treat + (1 + week | id), data = dat, REML = FALSE)
+  m1 <- lmer(y ~ week * treat + (1 + week | id), data = dat, REML = FALSE)
+  anova(m0, m1)["m1", "Pr(>Chisq)"]
+  }
+)
+
+mean(pval < 0.05)
+```
+
+### Simulate data with `lme4::simulate()`
+
+
+```{r cache = TRUE, warning = FALSE}
+## Gory details
+fixef(m4)
+getME(m4, "theta")
+t(chol(VarCorr(m4)$id))[lower.tri(diag(2), diag = TRUE)] / sigma(m4)
+
+# Cholesky decomposition
+Lt <- chol(Su) / s
+pars <- list(theta = t(Lt)[lower.tri(Lt, TRUE)],
+             beta = beta, sigma = s)
+names(pars$theta) <- c("id.(Intercept)", "id.week.(Intercept)", "id.week")
+
+pval <- replicate(200, {
+  y <- simulate(~ week * treat + (week | id),
+                newparams = pars, newdata = dat)$sim_1
+  m1 <- lmer(y ~ week + treat + (week | id), data = dat, REML = FALSE)
+  m2 <- lmer(y ~ week * treat + (week | id), data = dat, REML = FALSE)
+  anova(m1, m2)$"Pr(>Chisq)"[2]
+})
+mean(pval < 0.05)
+```
+
+## Parameter recovery
+
+```{r}
+par <- replicate(200, {
+  
+  means <- model.matrix( ~ week * treat, dat) %*% beta
+  ranu <- MASS::mvrnorm(n_subj, mu = c(0, 0), Sigma = Su)
+  e <- rnorm(n_subj * n_week, mean = 0, sd = se)
+  
+  y <- means + ranu[dat$id, 1] + ranu[dat$id, 2] * dat$week + e
+  
+  m1 <- lmer(y ~ week * treat + (1 + week | id), data = dat, REML = FALSE)
+  list(fixef = fixef(m1), theta = getME(m1, "theta"), sigma = sigma(m1))
+  }, simplify = FALSE
+)
+
+rowMeans(sapply(par, function(x) x$fixef))
+rowMeans(sapply(par, function(x) x$theta))
+mean(sapply(par, function(x) x$sigma))
+
+beta
+Lt <- chol(Su)
+t(Lt)[lower.tri(Lt, diag = TRUE)] / se
+se
+```
+
+### References
 
