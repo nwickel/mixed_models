@@ -3,8 +3,7 @@
 In this session, we will use R to simulate data sets. Simulating data can be
 considered as the key idea behind hypothesis testing in the frequentist
 framework, where we assume that we can repeat the data collection under
-identical conditions. In this course, I will (hopefully) show you how to
-use it to draw meaningful conclusions from your data.
+identical conditions.
 
 
 ## Overview
@@ -261,6 +260,8 @@ fit_model <- function(data) {
 models <- lapply(data_sets, fit_model)  # create list of fitted models
 
 summary(models[[1]])
+
+# Use apply functions to extract parameters from each model
 
 pars <- sapply(models, coef)
 

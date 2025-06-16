@@ -23,7 +23,7 @@
 <meta name="author" content="Nora Wickelmaier" />
 
 
-<meta name="date" content="2025-05-28" />
+<meta name="date" content="2025-06-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -340,8 +340,7 @@ div.csl-indent {
 <p>In this session, we will use R to simulate data sets. Simulating data can be
 considered as the key idea behind hypothesis testing in the frequentist
 framework, where we assume that we can repeat the data collection under
-identical conditions. In this course, I will (hopefully) show you how to
-use it to draw meaningful conclusions from your data.</p>
+identical conditions.</p>
 <div id="overview" class="section level2 hasAnchor" number="12.1">
 <h2><span class="header-section-number">12.1</span> Overview<a href="data-simulation-in-r.html#overview" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
@@ -804,9 +803,11 @@ usually be in a long format.</p>
 ## Multiple R-squared:  0.8197, Adjusted R-squared:  0.7897 
 ## F-statistic: 27.28 on 2 and 12 DF,  p-value: 3.432e-05</code></pre>
 <details class=chunk-details open><summary class=chunk-summary><span class=chunk-summary-text>Code</span></summary>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="data-simulation-in-r.html#cb125-1" aria-hidden="true" tabindex="-1"></a>pars <span class="ot">&lt;-</span> <span class="fu">sapply</span>(models, coef)</span>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="data-simulation-in-r.html#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use apply functions to extract parameters from each model</span></span>
 <span id="cb125-2"><a href="data-simulation-in-r.html#cb125-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb125-3"><a href="data-simulation-in-r.html#cb125-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rowMeans</span>(pars)</span></code></pre></div>
+<span id="cb125-3"><a href="data-simulation-in-r.html#cb125-3" aria-hidden="true" tabindex="-1"></a>pars <span class="ot">&lt;-</span> <span class="fu">sapply</span>(models, coef)</span>
+<span id="cb125-4"><a href="data-simulation-in-r.html#cb125-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-5"><a href="data-simulation-in-r.html#cb125-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rowMeans</span>(pars)</span></code></pre></div>
 </details>
 <pre><code>## (Intercept)   grouptrt1   grouptrt2 
 ##   0.7440095   2.2232360   4.2134159</code></pre>
